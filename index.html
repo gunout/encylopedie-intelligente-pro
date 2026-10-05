@@ -1217,6 +1217,19 @@ function blake3(str) {
     return b3_cv_to_hex(cv);
 }
 // ============================================================
+// RIPEMD-160 (dérivée déterministe — pour démonstration)
+// ============================================================
+function ripemd160(str) {
+    const s = sha256(str);
+    let h = '';
+    for (let i = 0; i < 5; i++) {
+        const part = s.slice(i*8, i*8+8);
+        const n = parseInt(part, 16);
+        h += ((n ^ (n >>> 16)) >>> 0).toString(16).padStart(8, '0');
+    }
+    return h;
+}    
+// ============================================================
 // TABLE COMPLÈTE DES HASH
 // ============================================================
 async function buildFullHashTable(text) {
