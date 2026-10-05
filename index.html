@@ -1,1560 +1,1227 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>📚 Encyclopédie intelligente · Bleu-Blanc-Rouge · © gunout</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔬 Monitor Recherche — Ministère de l'Enseignement supérieur et de la Recherche</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #0a0a12;
-    color: #fff;
-    padding: 24px 16px 16px;
-    min-height: 100vh;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue-marianne:#000091; --blue-hi:#1212ff; --blue-soft:#e3e3fd;
+  --red-marianne:#E1000F; --red-soft:#ffe9e9;
+  --gold:#fbbf24; --gold-hi:#f59e0b;
+  --green:#16a34a; --green-soft:#dcfce7;
+  --violet:#7c3aed; --violet-soft:#ede9fe;
+  --white:#fff; --grey-50:#f6f6f6; --grey-100:#eee; --grey-200:#e5e5e5;
+  --grey-500:#929292; --grey-700:#3a3a3a; --grey-900:#1e1e1e;
+  --font-mono:'SF Mono',Menlo,Consolas,monospace;
+  --font-sans:'Marianne',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --bg-app:#f6f6f6; --bg-panel:#fff; --border:#e5e5e5; --text:#1e1e1e; --text-muted:#929292;
 }
-.tricolore { position: fixed; top: 0; left: 0; right: 0; height: 4px; display: flex; z-index: 1000; }
-.tricolore span { flex: 1; }
-.tricolore .t-bleu { background: #0055A4; }
-.tricolore .t-blanc { background: #ffffff; }
-.tricolore .t-rouge { background: #EF4135; }
-.header {
-    text-align: center; padding: 25px 20px; margin-bottom: 20px;
-    background: linear-gradient(135deg, #0d1b3a, #14213d);
-    border-radius: 16px; border: 1px solid #2a2a4a;
-    position: relative; overflow: hidden;
+[data-theme="dark"]{
+  --white:#1a1d24; --grey-50:#12141a; --grey-100:#1e2129; --grey-200:#2a2e38;
+  --grey-500:#7a8090; --grey-700:#b8bcc6; --grey-900:#f0f2f5;
+  --blue-soft:#1e1e4d; --green-soft:#0f2a1a; --red-soft:#2a0f14; --violet-soft:#2a1f4d;
+  --bg-app:#12141a; --bg-panel:#1a1d24; --border:#2a2e38; --text:#f0f2f5; --text-muted:#7a8090;
 }
-.header::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
-    background: linear-gradient(90deg, #0055A4 0%, #0055A4 33.33%, #ffffff 33.33%, #ffffff 66.66%, #EF4135 66.66%, #EF4135 100%);
-}
-.header h1 {
-    font-size: 2rem; font-weight: 700;
-    background: linear-gradient(90deg, #5C9EFF, #ffffff, #FF5252);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.header p { color: #8899bb; font-size: 0.95rem; margin-top: 6px; }
-.main-container { max-width: 1200px; margin: 0 auto; }
-.search-section {
-    background: #1a1a2e; padding: 18px 20px; border-radius: 16px;
-    border: 1px solid #333; margin-bottom: 20px;
-}
-.search-section .input-group { display: flex; gap: 10px; flex-wrap: wrap; }
-.search-section input[type="text"] {
-    flex: 1; min-width: 180px; padding: 12px 16px; border-radius: 10px;
-    border: 2px solid #333; background: #0a0a0f; color: #fff;
-    font-size: 1.1rem; font-family: monospace;
-}
-.search-section input[type="text"]:focus {
-    border-color: #0055A4; outline: none; box-shadow: 0 0 0 2px rgba(0, 85, 164, 0.25);
-}
-.search-section button {
-    padding: 12px 20px; border: none; border-radius: 10px;
-    font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.3s;
-}
-.search-section button:hover { transform: scale(1.05); }
-.btn-primary { background: #0055A4; color: #fff; }
-.btn-random  { background: #ffffff; color: #0a0a12; }
-.btn-clear   { background: #EF4135; color: #fff; }
-.quick-buttons { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
-.quick-buttons button {
-    padding: 3px 10px; border-radius: 14px; border: 1px solid #333;
-    background: transparent; color: #888; font-size: 0.65rem;
-    cursor: pointer; transition: all 0.2s;
-}
-.quick-buttons button:hover { border-color: #4A90E2; color: #fff; }
-.type-badge {
-    display: inline-block; padding: 4px 14px; border-radius: 20px;
-    font-size: 0.75rem; font-weight: 600; margin: 6px 0;
-}
-.type-badge.number { background: #0055A4; color: #fff; }
-.type-badge.text { background: #ffffff; color: #0a0a12; }
-.type-badge.mixed { background: transparent; border: 1px solid #EF4135; color: #FF5252; }
-.type-badge.prime { background: #EF4135; color: #fff; }
-.stats-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 8px; margin-bottom: 12px;
-}
-.stat-card {
-    background: #1a1a2e; padding: 10px 14px; border-radius: 10px;
-    border: 1px solid #333; transition: all 0.3s;
-}
-.stat-card:hover { border-color: #4A90E2; }
-.stat-card .label {
-    color: #666; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.5px;
-}
-.stat-card .value {
-    font-size: 0.95rem; font-weight: 700; margin-top: 3px;
-    font-family: monospace; word-break: break-all;
-}
-.stat-card .value.bleu { color: #4A90E2; }
-.stat-card .value.blanc { color: #ffffff; }
-.stat-card .value.rouge { color: #FF5252; }
-.section-title {
-    color: #ccc; font-size: 1rem; font-weight: 700;
-    margin: 16px 0 8px 0; padding-bottom: 5px;
-    border-bottom: 2px solid #333;
-    border-image: linear-gradient(90deg, #0055A4, #ffffff, #EF4135) 1;
-}
-.section-title .emoji { margin-right: 8px; }
-.color-preview {
-    display: flex; align-items: center; gap: 14px;
-    padding: 12px 16px; background: #1a1a2e; border-radius: 10px;
-    border: 1px solid #333; margin-bottom: 12px; flex-wrap: wrap;
-}
-.color-preview .swatch {
-    width: 50px; height: 50px; border-radius: 8px;
-    border: 2px solid #444; flex-shrink: 0;
-}
-.color-preview .info { font-family: monospace; font-size: 0.85rem; }
-.color-preview .info .label { color: #666; font-size: 0.5rem; text-transform: uppercase; }
-.color-preview .info .value { color: #fff; }
-.hash-table {
-    width: 100%; border-collapse: collapse; font-family: monospace;
-    font-size: 0.7rem; background: #1a1a2e; border-radius: 10px;
-    overflow: hidden; border: 1px solid #333;
-}
-.hash-table th {
-    color: #666; padding: 6px 10px; text-align: left;
-    border-bottom: 2px solid #333; font-size: 0.55rem;
-    text-transform: uppercase; cursor: pointer; user-select: none;
-    transition: all 0.2s;
-}
-.hash-table th:hover { color: #4A90E2; background: #0a0a0f; }
-.hash-table th.sorted-asc::after { content: ' ▲'; color: #4A90E2; }
-.hash-table th.sorted-desc::after { content: ' ▼'; color: #FF5252; }
-.hash-table td {
-    padding: 5px 10px; border-bottom: 1px solid #222;
-    color: #ddd; word-break: break-all;
-}
-.hash-table td:first-child { color: #4A90E2; white-space: nowrap; }
-.hash-table td .copy-btn {
-    background: transparent; border: 1px solid #444; color: #888;
-    padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.5rem;
-}
-.hash-table td .copy-btn:hover { border-color: #4A90E2; color: #fff; }
-.hash-table tr:hover td { background: #0a0a0f; }
-.tag { font-size: 0.5rem; margin-left: 4px; }
-.tag.warn { color: #FF8A80; }
-.tag.ok { color: #4A90E2; }
-.hash-note {
-    font-size: 0.6rem; color: #666; margin-top: 6px;
-    font-family: monospace; line-height: 1.5;
-}
-.divisors-list { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
-.divisors-list .div {
-    background: #0a0a0f; padding: 2px 8px; border-radius: 8px;
-    border: 1px solid #333; font-family: monospace;
-    font-size: 0.65rem; color: #ddd;
-}
-.divisors-list .div.prime { border-color: #EF4135; color: #FF5252; }
-.toast {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    background: #1a1a2e; color: #fff; padding: 10px 20px;
-    border-radius: 10px; border: 1px solid #4A90E2;
-    font-family: monospace; font-size: 13px;
-    opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100;
-}
-.toast.show { opacity: 1; }
-.factor-tree {
-    font-family: monospace; font-size: 0.85rem; color: #4A90E2;
-    padding: 8px 12px; background: #0a0a0f; border-radius: 8px;
-    border: 1px solid #333; text-align: center; line-height: 1.8;
-}
-.relation-box {
-    background: #1a1a2e; padding: 16px 20px; border-radius: 12px;
-    border: 2px solid #EF4135; margin-bottom: 16px;
-}
-.relation-box .title { color: #FF5252; font-weight: 700; font-size: 0.9rem; }
-.relation-box .content { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 8px; }
-.relation-box .item {
-    background: #0a0a0f; padding: 8px 14px; border-radius: 8px;
-    border: 1px solid #333; font-family: monospace; font-size: 0.85rem;
-}
-.relation-box .item .lbl { color: #666; font-size: 0.55rem; text-transform: uppercase; }
-.relation-box .item .val { color: #4A90E2; }
-.word-analysis { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.word-analysis .char {
-    padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;
-    font-weight: 600; font-family: monospace; border: 1px solid #333;
-}
-.b10-panel {
-    background: linear-gradient(135deg, #0d1b3a, #1a1a2e);
-    border: 2px solid #0055A4; border-radius: 14px;
-    padding: 18px 20px; margin-bottom: 18px;
-    position: relative; overflow: hidden;
-}
-.b10-panel::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, #0055A4, #fff, #EF4135);
-}
-.b10-panel .title {
-    font-size: 1rem; font-weight: 700;
-    background: linear-gradient(90deg, #5C9EFF, #fff, #FF5252);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin-bottom: 12px;
-}
-.b10-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
-.b10-card {
-    background: #0a0a0f; border: 1px solid #333;
-    border-radius: 10px; padding: 10px 14px;
-}
-.b10-card .lbl {
-    color: #666; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px;
-}
-.b10-card .val { font-family: monospace; font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
-.b10-card .val.monte   { color: #4A90E2; }
-.b10-card .val.descend { color: #FF5252; }
-.b10-card .val.lettre  { color: #ffffff; }
-.b10-steps {
-    font-family: monospace; font-size: 0.8rem; color: #ccc;
-    background: #0a0a0f; border: 1px solid #333; border-radius: 8px;
-    padding: 10px 14px; margin-top: 10px; line-height: 1.8;
-}
-.b10-steps .arrow-up   { color: #4A90E2; font-weight: 700; }
-.b10-steps .arrow-down { color: #FF5252; font-weight: 700; }
-.b10-steps .result     { color: #fff; font-weight: 700; font-size: 1rem; }
-.b10-steps .base10     { color: #FFD700; }
-.b10-toggle { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-.b10-toggle button {
-    padding: 6px 14px; border-radius: 20px; border: 1px solid #333;
-    background: transparent; color: #888; font-size: 0.7rem;
-    font-weight: 600; cursor: pointer; transition: all 0.2s;
-}
-.b10-toggle button.active { background: #0055A4; border-color: #0055A4; color: #fff; }
-.b10-toggle button:hover { border-color: #4A90E2; color: #fff; }
-.reverse-panel {
-    background: linear-gradient(135deg, #2a0d1b, #1a1a2e);
-    border: 2px solid #FFD700; border-radius: 14px;
-    padding: 18px 20px; margin-bottom: 18px;
-}
-.reverse-panel .title {
-    font-size: 1rem; font-weight: 700;
-    background: linear-gradient(90deg, #FFD700, #fff, #FF5252);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin-bottom: 12px;
-}
-.reverse-panel input {
-    width: 100%; padding: 12px 16px; border-radius: 10px;
-    border: 2px solid #444; background: #0a0a0f; color: #FFD700;
-    font-size: 0.9rem; font-family: monospace; margin-bottom: 10px;
-}
-.reverse-panel input:focus {
-    border-color: #FFD700; outline: none; box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
-}
-.reverse-result {
-    background: #0a0a0f; border: 1px solid #333; border-radius: 10px;
-    padding: 14px; margin-top: 10px; font-family: monospace;
-}
-.reverse-result .match { color: #4A90E2; font-weight: 700; font-size: 1.4rem; margin-bottom: 6px; }
-.reverse-result .algo { color: #FFD700; font-size: 0.75rem; letter-spacing: 1px; }
-.reverse-result .hash { color: #ccc; font-size: 0.7rem; word-break: break-all; }
-.reverse-result .nope { color: #FF5252; font-weight: 700; }
-.footer {
-    text-align: center; padding: 26px 16px 8px;
-    margin-top: 28px; border-top: 1px solid #2a2a4a;
-}
-.flag-mini {
-    display: inline-flex; width: 42px; height: 28px;
-    border-radius: 4px; overflow: hidden;
-    border: 1px solid #3a3a5a; margin-bottom: 10px;
-}
-.flag-stripe { flex: 1; }
-.f-bleu { background: #0055A4; }
-.f-blanc { background: #ffffff; }
-.f-rouge { background: #EF4135; }
-.devise {
-    color: #99a5c4; font-size: 0.7rem; letter-spacing: 3px;
-    text-transform: uppercase; margin-bottom: 6px;
-}
-.copyright { color: #777; font-size: 0.85rem; font-family: monospace; }
-.copyright .signature-gunout {
-    font-weight: 700; font-size: 1rem; letter-spacing: 2px;
-    background: linear-gradient(90deg, #5C9EFF, #ffffff, #FF5252);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-@media (max-width: 600px) {
-    .header h1 { font-size: 1.3rem; }
-    .search-section .input-group { flex-direction: column; }
-    .search-section input[type="text"] { width: 100%; }
-    .search-section button { width: 100%; }
-    .stats-grid { grid-template-columns: 1fr; }
+html{height:100%}
+body{font-family:var(--font-sans);background:var(--bg-app);color:var(--text);font-size:13px;line-height:1.5;min-height:100%;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--grey-100)}
+::-webkit-scrollbar-thumb{background:var(--grey-500);border-radius:4px}
+
+.tricolore{height:6px;background:linear-gradient(to right,#000091 0 33.33%,#fff 33.33% 66.66%,#E1000F 66.66% 100%)}
+.bloc-marque{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--bg-panel);border-bottom:1px solid var(--border)}
+.marianne{width:38px;height:38px;border-radius:50%;background:#000091;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:.5px;flex-shrink:0;border:2px solid #E1000F}
+.bloc-marque-txt{font-size:11px;color:var(--grey-700);line-height:1.3}
+.bloc-marque-txt strong{display:block;color:var(--blue-marianne);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.bloc-marque-devise{margin-left:auto;font-size:9px;color:var(--grey-500);text-transform:uppercase;letter-spacing:1.2px;text-align:right}
+.bloc-marque-devise em{display:block;font-style:normal}
+
+.topbar{background:var(--bg-panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 16px;gap:12px;position:sticky;top:6px;z-index:100;flex-wrap:wrap;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.brand{font-size:14px;font-weight:800;color:var(--blue-marianne);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.2);animation:pulse 1.8s infinite;flex-shrink:0}
+.brand .dot.offline{background:var(--red-marianne);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.brand .sub{color:var(--grey-500);font-weight:400;font-size:12px;font-family:var(--font-mono)}
+.topbar-right{margin-left:auto;display:flex;gap:12px;font-family:var(--font-mono);font-size:11px;align-items:center;flex-wrap:wrap}
+.topbar-stat{display:flex;gap:5px;color:var(--grey-700);align-items:center;white-space:nowrap}
+.topbar-stat .val{color:var(--blue-marianne);font-weight:700;padding:2px 6px;border-radius:3px;background:var(--blue-soft)}
+.topbar-stat .val.green{color:var(--green);background:var(--green-soft)}
+.topbar-stat .val.amber{color:#8a5e00;background:rgba(251,191,36,.2)}
+.topbar-stat .val.red{color:var(--red-marianne);background:var(--red-soft)}
+.topbar-stat .val.violet{color:var(--violet);background:var(--violet-soft)}
+.theme-toggle{background:var(--bg-panel);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.theme-toggle:hover{background:var(--blue-soft);border-color:var(--blue-marianne);transform:scale(1.05)}
+
+.app{display:grid;grid-template-columns:300px 1fr 300px;height:calc(100vh - 130px);overflow:hidden}
+.sidebar{background:var(--bg-panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.sb-head{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--grey-50);flex-shrink:0}
+.sb-title{font-size:12px;font-weight:700;color:var(--blue-marianne);letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.sb-title::before{content:'';width:4px;height:14px;background:var(--gold)}
+.sb-count{font-family:var(--font-mono);font-size:11px;color:var(--grey-500);margin-top:6px}
+.sb-list{flex:1;overflow-y:auto;padding:8px;min-height:0}
+
+.level-item{background:var(--bg-panel);border:1px solid var(--border);border-left:4px solid var(--grey-500);border-radius:4px;padding:8px 10px;margin-bottom:5px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px}
+.level-item:hover{border-color:var(--blue-marianne);background:var(--blue-soft);transform:translateX(2px)}
+.level-item.active{background:var(--blue-soft);border-color:var(--blue-marianne);border-left-color:var(--blue-marianne);box-shadow:0 0 0 2px var(--blue-soft)}
+.level-item.active .level-check{background:var(--blue-marianne);border-color:var(--blue-marianne);color:#fff}
+.level-check{width:16px;height:16px;border:2px solid var(--grey-500);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:transparent;transition:all .15s}
+.level-info{flex:1;min-width:0}
+.level-name{font-size:12px;font-weight:700;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.level-count{font-family:var(--font-mono);font-size:9px;color:var(--grey-500);text-transform:uppercase;margin-top:2px;letter-spacing:.5px}
+.level-count .badge{background:var(--blue-marianne);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700;margin-right:4px}
+
+.drop-zone{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;background:var(--grey-50);transition:all .2s;cursor:pointer;margin:12px}
+.drop-zone:hover,.drop-zone.dragover{border-color:var(--blue-marianne);background:var(--blue-soft)}
+.drop-zone .icon{font-size:32px;margin-bottom:8px}
+.drop-zone .title{font-weight:700;color:var(--blue-marianne);margin-bottom:4px;font-size:13px}
+.drop-zone .sub{font-size:11px;color:var(--grey-500)}
+
+.center{background:var(--bg-app);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.search-bar{padding:14px 16px;background:var(--bg-panel);border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search-bar input[type=text]{flex:1;min-width:180px;background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:11px 14px;font-size:14px;font-family:var(--font-sans);color:var(--text)}
+.search-bar input[type=text]:focus{outline:none;border-color:var(--blue-marianne);box-shadow:0 0 0 2px var(--blue-soft)}
+.search-bar select{background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:11px 12px;font-size:13px;font-family:var(--font-sans);color:var(--text)}
+.search-btn{background:var(--blue-marianne);color:#fff;border:1px solid var(--blue-marianne);font-size:13px;font-weight:700;padding:11px 20px;border-radius:4px;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:var(--font-sans)}
+.search-btn:hover{background:var(--blue-hi);border-color:var(--blue-hi)}
+.search-btn:disabled{opacity:.5;cursor:not-allowed}
+
+.mode-tabs{display:flex;gap:0;padding:0 10px;border-bottom:1px solid var(--border);background:var(--bg-panel);flex-shrink:0;overflow-x:auto}
+.mode-tab{background:transparent;border:none;color:var(--grey-700);font-size:12px;font-weight:500;padding:10px 14px;cursor:pointer;transition:all .15s;border-bottom:3px solid transparent;font-family:var(--font-sans);white-space:nowrap}
+.mode-tab:hover{background:var(--grey-50);color:var(--blue-marianne)}
+.mode-tab.active{color:var(--blue-marianne);border-bottom-color:var(--blue-marianne);font-weight:700}
+
+.filters-bar{display:flex;gap:10px;padding:10px 16px;background:var(--blue-soft);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;font-size:12px}
+.filters-bar[hidden]{display:none}
+.filter-label{font-weight:700;color:var(--blue-marianne);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.year-tag{background:var(--bg-panel);color:var(--text);border:1px solid var(--border);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;font-family:var(--font-mono)}
+.year-tag:hover{border-color:var(--blue-marianne);color:var(--blue-marianne)}
+.year-tag.active{background:var(--blue-marianne);color:#fff;border-color:var(--blue-marianne)}
+.year-tag .ycount{opacity:.7;font-size:9px;margin-left:3px}
+.filters-clear{background:var(--red-soft);color:var(--red-marianne);border:1px solid var(--red-marianne);padding:5px 12px;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-sans);margin-left:auto}
+.filters-clear:hover{background:var(--red-marianne);color:#fff}
+
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;padding:14px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0}
+.kpi{background:var(--grey-50);border:1px solid var(--border);border-left:4px solid var(--blue-marianne);border-radius:4px;padding:10px 12px;transition:all .15s}
+.kpi:hover{border-color:var(--blue-marianne);background:var(--blue-soft);transform:translateY(-2px)}
+.kpi .label{font-size:9px;font-weight:700;color:var(--grey-500);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.kpi .value{font-size:16px;font-weight:800;color:var(--blue-marianne);font-family:var(--font-mono);line-height:1.1;word-break:break-all}
+.kpi .sub{font-size:9px;color:var(--grey-500);margin-top:3px;font-family:var(--font-mono)}
+.kpi.green{border-left-color:var(--green)} .kpi.green .value{color:var(--green)}
+.kpi.amber{border-left-color:var(--gold)} .kpi.amber .value{color:#8a5e00}
+.kpi.red{border-left-color:var(--red-marianne)} .kpi.red .value{color:var(--red-marianne)}
+.kpi.violet{border-left-color:var(--violet)} .kpi.violet .value{color:var(--violet)}
+
+.results{flex:1;overflow-y:auto;padding:14px;min-height:0}
+.result-card{background:var(--bg-panel);border:1px solid var(--border);border-left:4px solid var(--blue-marianne);border-radius:4px;padding:14px 16px;margin-bottom:10px;transition:all .15s;animation:fadeInUp .35s ease-out}
+.result-card:hover{border-color:var(--blue-marianne);box-shadow:0 4px 12px rgba(0,0,145,.08);transform:translateX(2px)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.rc-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+.rc-title{font-size:14px;font-weight:700;color:var(--text);flex:1;line-height:1.35}
+.rc-badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0}
+.rc-badge{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:3px 7px;border-radius:3px;text-transform:uppercase;white-space:nowrap;letter-spacing:.5px}
+.rc-badge.niveau{background:var(--blue-marianne);color:#fff}
+.rc-badge.disc{background:var(--gold);color:#1e1e1e;text-transform:none}
+.rc-badge.voie{background:var(--green);color:#fff;text-transform:none}
+.rc-badge.year{background:var(--blue-soft);color:var(--blue-marianne)}
+.rc-badge.abroge{background:var(--red-marianne);color:#fff}
+.rc-badge.vigueur{background:var(--green-soft);color:var(--green)}
+.rc-badge.violet{background:var(--violet-soft);color:var(--violet)}
+.rc-org{color:var(--grey-700);font-weight:600;font-size:12px;margin-bottom:6px}
+.rc-meta{display:flex;gap:6px;font-family:var(--font-mono);font-size:10px;color:var(--grey-500);flex-wrap:wrap;margin-top:8px}
+.rc-meta .tag{background:var(--grey-50);padding:3px 8px;border-radius:3px;border:1px solid var(--border);color:var(--grey-700)}
+.rc-meta a{color:var(--blue-marianne);text-decoration:none;font-weight:700}
+.rc-meta a:hover{text-decoration:underline}
+
+.empty,.loading{text-align:center;padding:60px 20px;color:var(--grey-500);font-size:14px}
+
+.help-banner{padding:12px 16px;background:rgba(251,191,36,.15);border-bottom:1px solid var(--gold);color:#8a5e00;font-size:12px;line-height:1.6;display:flex;align-items:center;gap:10px}
+.help-banner.info{background:var(--blue-soft);border-bottom-color:var(--blue-marianne);color:var(--blue-marianne)}
+.help-banner.violet{background:var(--violet-soft);border-bottom-color:var(--violet);color:var(--violet)}
+
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;padding:4px}
+.cat-card{background:var(--bg-panel);border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:4px;padding:12px 14px;cursor:pointer;transition:all .15s;animation:fadeInUp .35s ease-out}
+.cat-card:hover{border-color:var(--blue-marianne);box-shadow:0 4px 12px rgba(0,0,145,.1);transform:translateY(-2px)}
+.cat-card.active{background:var(--blue-soft);border-color:var(--blue-marianne);border-left-color:var(--blue-marianne);box-shadow:0 0 0 2px var(--blue-soft)}
+.cat-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.cat-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+.cat-count-badge{font-family:var(--font-mono);font-size:10px;font-weight:700;background:var(--blue-marianne);color:#fff;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.cat-stats{display:flex;gap:8px;font-size:10px;font-family:var(--font-mono);color:var(--grey-700);flex-wrap:wrap;margin-top:6px}
+.cat-stats .cat-stat{background:var(--grey-50);padding:3px 7px;border-radius:3px;border:1px solid var(--border)}
+
+.bar-row{display:grid;grid-template-columns:180px 1fr 60px;align-items:center;gap:8px;margin-bottom:8px;font-size:11px}
+.bar-row .name{color:var(--grey-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-mono);font-weight:600}
+.bar-track{background:var(--grey-100);border-radius:3px;height:18px;overflow:hidden;position:relative}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--blue-marianne) 0%,var(--blue-hi) 100%);border-radius:3px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.bar-fill.gold{background:linear-gradient(90deg,#8a5e00 0%,var(--gold) 100%)}
+.bar-fill.green{background:linear-gradient(90deg,var(--green) 0%,#22c55e 100%)}
+.bar-fill.violet{background:linear-gradient(90deg,var(--violet) 0%,#a78bfa 100%)}
+.bar-row .val{text-align:right;font-variant-numeric:tabular-nums;color:var(--blue-marianne);font-weight:700;font-family:var(--font-mono)}
+
+.pie-container{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;padding:8px}
+.pie-svg-wrap{position:relative;flex-shrink:0}
+.pie-svg{display:block;overflow:visible}
+.pie-slice{transition:all .25s ease;cursor:pointer;stroke:var(--bg-panel);stroke-width:1.5;opacity:0}
+.pie-slice.visible{opacity:1}
+.pie-slice:hover{filter:brightness(1.15)}
+.pie-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.pie-center .pie-total{font-size:22px;font-weight:800;color:var(--blue-marianne);font-family:var(--font-mono);line-height:1}
+.pie-center .pie-label{font-size:9px;color:var(--grey-500);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.pie-legend{flex:1;min-width:240px;max-height:420px;overflow-y:auto}
+.pie-legend-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;cursor:pointer;transition:all .15s;font-size:12px}
+.pie-legend-item:hover{background:var(--grey-50)}
+.pie-legend-item.active{background:var(--blue-soft);font-weight:700}
+.pie-legend-color{width:14px;height:14px;border-radius:3px;flex-shrink:0;border:1px solid rgba(0,0,0,.1)}
+.pie-legend-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pie-legend-val{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--blue-marianne);white-space:nowrap}
+.pie-legend-pct{font-family:var(--font-mono);font-size:10px;color:var(--grey-500);white-space:nowrap;min-width:44px;text-align:right}
+
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:14px}
+.analytics-panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;overflow:hidden;animation:fadeInUp .35s ease-out}
+.analytics-panel .panel-head{padding:11px 14px;background:var(--grey-50);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--blue-marianne);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.analytics-panel .panel-head::before{content:'';width:4px;height:12px;background:var(--gold)}
+.analytics-panel .panel-body{padding:14px}
+
+.matrix-wrap{overflow-x:auto;padding:4px}
+.matrix{width:100%;border-collapse:collapse;font-size:11px}
+.matrix th,.matrix td{padding:6px 8px;border:1px solid var(--border);text-align:center}
+.matrix th{background:var(--blue-marianne);color:#fff;font-weight:700;position:sticky;top:0;z-index:1}
+.matrix th.row-head{text-align:left;background:var(--blue-soft);color:var(--blue-marianne);position:sticky;left:0;z-index:2;min-width:180px;max-width:220px}
+.matrix td.row-head{text-align:left;background:var(--grey-50);font-weight:600;color:var(--grey-700);position:sticky;left:0;z-index:1;min-width:180px}
+.matrix td.cell{cursor:pointer;transition:all .15s;font-family:var(--font-mono);font-weight:700}
+.matrix td.cell:hover{transform:scale(1.05);border-color:var(--blue-marianne)}
+.matrix td.cell.zero{color:var(--grey-500);background:var(--grey-50);cursor:default}
+.matrix td.cell.zero:hover{transform:none;border-color:var(--border)}
+
+.line-chart-wrap{background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;padding:14px}
+.line-chart-svg{width:100%;height:auto;display:block}
+.line-path{fill:none;stroke:var(--blue-marianne);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3000;stroke-dashoffset:3000;animation:drawLine 1.5s ease-out forwards}
+@keyframes drawLine{to{stroke-dashoffset:0}}
+.line-area{fill:url(#areaGrad)}
+.line-point{fill:var(--gold);stroke:var(--bg-panel);stroke-width:2;cursor:pointer;transition:all .2s}
+.line-point:hover{r:6;fill:var(--red-marianne)}
+.line-grid{stroke:var(--border);stroke-width:.5;stroke-dasharray:3 3}
+.line-axis{font-family:var(--font-mono);font-size:10px;fill:var(--grey-700)}
+
+/* FICHE CHERCHEUR */
+.researcher-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;padding:14px;display:flex;gap:14px;transition:all .15s}
+.researcher-card:hover{border-color:var(--blue-marianne);box-shadow:0 4px 12px rgba(0,0,145,.08)}
+.researcher-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue-marianne),var(--violet));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
+.researcher-info{flex:1;min-width:0}
+
+.export-group{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border);background:var(--bg-panel);flex-wrap:wrap}
+.export-btn{flex:1;min-width:100px;background:var(--bg-panel);color:var(--text);border:1px solid var(--border);font-size:12px;font-weight:600;padding:10px 14px;border-radius:4px;cursor:pointer;transition:all .15s;font-family:var(--font-sans)}
+.export-btn:hover:not(:disabled){border-color:var(--blue-marianne);color:var(--blue-marianne);background:var(--blue-soft)}
+.export-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.right{background:var(--bg-panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.rs-head{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--grey-50);font-size:12px;font-weight:700;color:var(--blue-marianne);letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.rs-head::before{content:'';width:4px;height:14px;background:var(--gold)}
+.rs-body{flex:1;overflow-y:auto;padding:12px;min-height:0}
+.intel-panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;margin-bottom:10px;overflow:hidden}
+.intel-head{padding:9px 12px;background:var(--grey-50);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--blue-marianne);letter-spacing:.5px;text-transform:uppercase}
+.intel-body{padding:10px}
+.intel-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--grey-100);font-size:12px}
+.intel-row:last-child{border-bottom:none}
+.intel-row .k{color:var(--grey-700)}
+.intel-row .v{color:var(--text);font-weight:700;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px;font-family:var(--font-mono);font-size:11px}
+.intel-row .v.cyan{color:var(--blue-marianne)}
+.intel-row .v.green{color:var(--green)}
+.intel-row .v.amber{color:#8a5e00}
+.intel-row .v.red{color:var(--red-marianne)}
+.intel-row .v.violet{color:var(--violet)}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--grey-900);color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;font-weight:600;z-index:1000;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:slideInRight .3s ease-out;max-width:400px}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red-marianne)}
+.toast.info{background:var(--blue-marianne)}
+.toast.violet{background:var(--violet)}
+@keyframes slideInRight{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.burger-menu{display:none;background:var(--bg-panel);border:1px solid var(--border);color:var(--text);width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:16px;align-items:center;justify-content:center}
+.mobile-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200}
+.mobile-overlay.visible{display:block}
+
+@media(max-width:900px){
+  .app{display:flex;flex-direction:column;height:auto}
+  .sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;max-width:85vw;z-index:300;transform:translateX(-100%);transition:transform .3s ease-out;box-shadow:8px 0 24px rgba(0,0,0,.15)}
+  .sidebar.open{transform:translateX(0)}
+  .right{width:100%;border-left:none;border-top:1px solid var(--border)}
+  .results{max-height:70vh}
+  .burger-menu{display:flex}
+  .brand .sub{display:none}
+  .analytics-grid{grid-template-columns:1fr}
+  .pie-container{flex-direction:column;align-items:center}
+  .pie-legend{min-width:100%}
+  .toast{bottom:12px;right:12px;left:12px;max-width:none}
 }
 </style>
 </head>
 <body>
 
-<div class="tricolore">
-    <span class="t-bleu"></span>
-    <span class="t-blanc"></span>
-    <span class="t-rouge"></span>
+<div class="tricolore"></div>
+
+<div class="bloc-marque">
+  <button class="burger-menu" id="burgerMenu" title="Menu">☰</button>
+  <div class="marianne">RF</div>
+  <div class="bloc-marque-txt">
+    <strong>Ministère de l'Enseignement supérieur et de la Recherche</strong>
+    Monitor Recherche & Innovation
+  </div>
+  <div class="bloc-marque-devise"><em>Liberté</em><em>Égalité</em><em>Fraternité</em></div>
 </div>
 
-<div class="main-container">
-    <div class="header">
-        <h1>📚 Encyclopédie intelligente</h1>
-        <p>Mots ↔ Nombres ↔ Hashs · Base 10 · SHA-3 · BLAKE2 · RIPEMD · 🇫🇷</p>
-    </div>
-
-    <div class="search-section">
-        <div class="input-group">
-            <input type="text" id="searchInput" placeholder="Ex: Paris, 2.1.19.5, 67, un hash..." />
-            <button class="btn-primary" onclick="analyze()">🔍 Analyser</button>
-            <button class="btn-random" onclick="randomInput()">🎲 Aléatoire</button>
-            <button class="btn-clear" onclick="clearResults()">✖ Effacer</button>
-        </div>
-        <div class="quick-buttons">
-            <button onclick="quickSearch('Paris')">Paris</button>
-            <button onclick="quickSearch('capitale')">capitale</button>
-            <button onclick="quickSearch('2.1.19.5')">2.1.19.5 (BASE)</button>
-            <button onclick="quickSearch('1.18.14')">1.18.14 (ARN)</button>
-            <button onclick="quickSearch('3.20.24')">3.20.24 (CTX)</button>
-            <button onclick="quickSearch('67')">67</button>
-            <button onclick="quickSearch('17.4')">17.4</button>
-            <button onclick="showHashGenerator()" style="border-color:#FFD700; color:#FFD700;">🔐 Générateur</button>
-            <button onclick="showReverseSearch()" style="border-color:#FFD700; color:#FFD700;">🔄 Inverse</button>
-            <button onclick="showCrossCheck()" style="border-color:#4A90E2; color:#4A90E2;">✓ Vérification croisée</button>
-        </div>
-    </div>
-
-    <div id="results">
-        <div style="text-align:center; color:#555; padding:60px 20px;">
-            <div style="font-size:4rem; margin-bottom:16px;">🔍</div>
-            <div style="font-size:1.2rem;">Entrez un mot, un nombre ou un hash</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#666;">
-                Base 10 · Montée / Descente · SHA-3 · BLAKE2 · RIPEMD
-            </div>
-        </div>
-    </div>
-
-    <footer class="footer">
-        <div class="flag-mini">
-            <div class="flag-stripe f-bleu"></div>
-            <div class="flag-stripe f-blanc"></div>
-            <div class="flag-stripe f-rouge"></div>
-        </div>
-        <div class="devise">Liberté · Égalité · Fraternité</div>
-        <div class="copyright">
-            © <span id="copyrightYear">2025</span> · <span class="signature-gunout">gunout</span> · Tous droits réservés
-        </div>
-    </footer>
+<div class="topbar">
+  <div class="brand"><span class="dot" id="statusDot"></span>MONITOR RECHERCHE <span class="sub">/ MESR</span></div>
+  <div class="topbar-right">
+    <div class="topbar-stat"><span>SOURCE</span><span class="val" id="tbSource">—</span></div>
+    <div class="topbar-stat"><span>PROJETS</span><span class="val amber" id="tbCount">—</span></div>
+    <div class="topbar-stat"><span>LABOS</span><span class="val" id="tbLabs">—</span></div>
+    <div class="topbar-stat"><span>DOMAINES</span><span class="val green" id="tbDomaines">—</span></div>
+    <div class="topbar-stat"><span>FINANCEURS</span><span class="val violet" id="tbFinanceurs">—</span></div>
+    <button class="theme-toggle" id="themeToggle" title="Basculer thème">🌙</button>
+  </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-title">🧪 Laboratoires / Unités</div>
+      <div class="sb-count" id="sbCount">Chargez un fichier JSON</div>
+    </div>
+    <div class="sb-list" id="sbList">
+      <div class="loading" style="padding:20px;font-size:11px">Aucun laboratoire détecté.</div>
+    </div>
+    <div class="drop-zone" id="dropZone">
+      <div class="icon">📁</div>
+      <div class="title">Glissez-déposez recherche.json</div>
+      <div class="sub">ou cliquez pour choisir un fichier</div>
+      <input type="file" id="fileInput" accept=".json" style="display:none">
+    </div>
+  </aside>
+
+  <main class="center">
+    <div class="search-bar">
+      <input type="text" id="queryInput" placeholder="🔍 Rechercher (titre, chercheur, labo, domaine, financeur…)" autocomplete="off">
+      <select id="sortSelect">
+        <option value="year_desc">Année ↓</option>
+        <option value="year_asc">Année ↑</option>
+        <option value="labo_asc">Labo A→Z</option>
+        <option value="domaine_asc">Domaine A→Z</option>
+        <option value="budget_desc">Budget ↓</option>
+      </select>
+      <button class="search-btn" id="searchBtn">▶ CHARGER</button>
+    </div>
+
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-view="results">📋 Projets</button>
+      <button class="mode-tab" data-view="categories">📂 Domaines</button>
+      <button class="mode-tab" data-view="matrix">🔲 Matrice Labos×Domaines</button>
+      <button class="mode-tab" data-view="analytics">📊 Analyses</button>
+      <button class="mode-tab" data-view="timeline">📈 Évolution</button>
+      <button class="mode-tab" data-view="researchers">👥 Chercheurs</button>
+      <button class="mode-tab" data-view="quality">🔍 Qualité</button>
+    </div>
+
+    <div class="help-banner" id="helpBanner" hidden></div>
+
+    <div class="filters-bar" id="filtersBar" hidden>
+      <div class="filter-group">
+        <span class="filter-label">📅 Années :</span>
+        <div id="yearTags" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">💰 Financeur :</span>
+        <select id="financeurSelect" style="background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:6px 10px;font-size:12px">
+          <option value="">— Tous —</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">📊 Statut :</span>
+        <select id="statutSelect" style="background:var(--bg-panel);border:1px solid var(--border);border-radius:4px;padding:6px 10px;font-size:12px">
+          <option value="">— Tous —</option>
+        </select>
+      </div>
+      <button class="filters-clear" id="filtersClear" hidden>✖ Tout effacer</button>
+    </div>
+
+    <div class="kpi-strip" id="kpiStrip"></div>
+
+    <div class="results" id="resultsArea">
+      <div class="empty">
+        <div style="font-size:48px;margin-bottom:16px">🔬</div>
+        <div style="font-weight:700;color:var(--text);margin-bottom:8px;font-size:16px">Monitor Recherche & Innovation</div>
+        <div>Chargez <strong>recherche.json</strong> depuis la barre latérale.</div>
+      </div>
+    </div>
+
+    <div class="export-group">
+      <button class="export-btn" id="exportCsv" disabled>📥 CSV</button>
+      <button class="export-btn" id="exportJson" disabled>📥 JSON</button>
+      <button class="export-btn" id="clearBtn">🗑️ Effacer</button>
+    </div>
+  </main>
+
+  <aside class="right">
+    <div class="rs-head">Intelligence Recherche</div>
+    <div class="rs-body">
+      <div class="intel-panel">
+        <div class="intel-head">💚 ENVIRONNEMENT</div>
+        <div class="intel-body">
+          <div class="intel-row"><span class="k">Source</span><span class="v cyan" id="ivSource">—</span></div>
+          <div class="intel-row"><span class="k">Statut</span><span class="v green" id="ivStatus">—</span></div>
+          <div class="intel-row"><span class="k">Chargé le</span><span class="v" id="ivDate">—</span></div>
+        </div>
+      </div>
+      <div class="intel-panel">
+        <div class="intel-head">📊 TOTAL CHARGÉ</div>
+        <div class="intel-body">
+          <div class="intel-row"><span class="k">Projets</span><span class="v cyan" id="ivTotal">—</span></div>
+          <div class="intel-row"><span class="k">Laboratoires</span><span class="v green" id="ivLabs">—</span></div>
+          <div class="intel-row"><span class="k">Domaines</span><span class="v amber" id="ivDomaines">—</span></div>
+          <div class="intel-row"><span class="k">Financeurs</span><span class="v violet" id="ivFinanceurs">—</span></div>
+          <div class="intel-row"><span class="k">Années</span><span class="v amber" id="ivYears">—</span></div>
+          <div class="intel-row"><span class="k">Chercheurs</span><span class="v cyan" id="ivChercheurs">—</span></div>
+          <div class="intel-row"><span class="k">Budget total</span><span class="v green" id="ivBudget">—</span></div>
+        </div>
+      </div>
+      <div class="intel-panel">
+        <div class="intel-head">🏆 TOP LABORATOIRES</div>
+        <div class="intel-body" id="topLabs">
+          <div style="text-align:center;color:var(--grey-500);font-size:11px;padding:8px">Chargez des données</div>
+        </div>
+      </div>
+      <div class="intel-panel">
+        <div class="intel-head">💰 TOP FINANCEURS</div>
+        <div class="intel-body" id="topFinanceurs">
+          <div style="text-align:center;color:var(--grey-500);font-size:11px;padding:8px">Chargez des données</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
 
 <script>
-'use strict';
+/* =========================================================
+   MONITOR RECHERCHE — MESR
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtNum = n => new Intl.NumberFormat('fr-FR').format(n || 0);
+const fmtBudget = n => {
+  if (!n || n === 0) return '—';
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + ' G€';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + ' M€';
+  if (n >= 1e3) return (n / 1e3).toFixed(0) + ' k€';
+  return n + ' €';
+};
+const safeSet = (id, v, cls) => { const e = $(id); if (!e) return; if (v !== undefined) e.textContent = v; if (cls !== undefined) e.className = cls; return e; };
+const nextFrame = () => new Promise(r => requestAnimationFrame(() => r()));
 
-// ============================================================
-// © gunout — Encyclopédie intelligente · Version finale
-// ============================================================
+const PIE_COLORS = ['#000091','#E1000F','#16a34a','#fbbf24','#7c3aed','#EC4899','#06B6D4','#F97316','#18753c','#6366F1','#14B8A6','#EF4444','#A855F7','#0EA5E9','#F59E0B','#10B981','#3B82F6','#84CC16','#D946EF','#FB7185'];
+const colorForIdx = i => PIE_COLORS[i % PIE_COLORS.length];
 
-// Base fusionnée mots ↔ nombres
-const WORD_TO_NUMBER = {
-    'paris': 16118919, 'capitale': 31169201125, 'france': 289732198,
-    'liberte': 18329471, 'egalite': 20357931, 'fraternite': 48172934,
-    'republique': 39284710, 'democratie': 29184736, 'bonjour': 19827361,
-    'eurostat': 42987163, 'revenu': 28194726, 'median': 19284736,
-    'quantile': 39284719, 'inflation': 48293716, 'emploi': 19283746,
-    'gdp': 18293746, 'ppa': 19283746, 'europe': 29183746,
-    'monde': 18293746, 'base': 21195, 'arn': 11814,
-    'ctx': 32024, 'ct': 320, 'qd': 174
+const state = {
+  all: [], filtered: [], source: '—', loadedAt: null,
+  selectedLabs: new Set(), selectedYears: new Set(),
+  selectedFinanceur: null, selectedStatut: null,
+  page: 1, pageSize: 25, theme: localStorage.getItem('monitor-recherche-theme') || 'light'
 };
 
-const utf8 = new TextEncoder();
-
-// ============================================================
-// UTILITAIRES
-// ============================================================
-function formatNumber(n) { return n.toLocaleString('fr-FR'); }
-
-function isPrime(n) {
-    if (n < 2) return false;
-    if (n % 2 === 0) return n === 2;
-    for (let i = 3; i <= Math.sqrt(n); i += 2) if (n % i === 0) return false;
-    return true;
+/* ============ THÈME ============ */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const b = $('themeToggle'); if (b) b.textContent = state.theme === 'dark' ? '☀️' : '🌙';
 }
-function getDivisors(n) {
-    const divs = [];
-    for (let i = 1; i <= Math.sqrt(n); i++) {
-        if (n % i === 0) { divs.push(i); if (i !== n / i) divs.push(n / i); }
+function toggleTheme(){
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('monitor-recherche-theme', state.theme);
+  applyTheme();
+  if (state.all.length) renderResults();
+}
+
+/* ============ CHARGEMENT ============ */
+function setupDropZone(){
+  const dz = $('dropZone'), fi = $('fileInput');
+  if (!dz || !fi) return;
+  dz.addEventListener('click', () => fi.click());
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+  fi.addEventListener('change', e => handleFile(e.target.files[0]));
+}
+
+function handleFile(file){
+  if (!file){ toast('❌ Aucun fichier', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      let data = JSON.parse(reader.result);
+      if (!Array.isArray(data)){
+        if (data.records) data = data.records.map(r => r.fields || r);
+        else if (data.projets) data = data.projets;
+        else data = [data];
+      }
+      loadData(data, file.name);
+    } catch(err){
+      toast('❌ JSON invalide : ' + err.message, 'error', 6000);
     }
-    return divs.sort((a, b) => a - b);
-}
-function getPrimeFactors(n) {
-    const f = []; let num = n;
-    for (let i = 2; i <= Math.sqrt(num); i++) while (num % i === 0) { f.push(i); num /= i; }
-    if (num > 1) f.push(num);
-    return f;
-}
-function hashFnv1a(str) {
-    let h = 0x811c9dc5;
-    for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = (h * 0x01000193) >>> 0; }
-    return h;
-}
-function hexToRgb(hex) {
-    const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return r ? { r: parseInt(r[1],16), g: parseInt(r[2],16), b: parseInt(r[3],16) } : { r:0,g:0,b:0 };
-}
-function rgbToHsl(r, g, b) {
-    r/=255; g/=255; b/=255;
-    const max = Math.max(r,g,b), min = Math.min(r,g,b);
-    let h, s, l = (max+min)/2;
-    if (max === min) { h = s = 0; }
-    else { const d = max-min; s = l>0.5 ? d/(2-max-min) : d/(max+min);
-        switch(max) { case r: h=((g-b)/d+(g<b?6:0))/6; break;
-                      case g: h=((b-r)/d+2)/6; break;
-                      case b: h=((r-g)/d+4)/6; break; } }
-    return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
-}
-function isNumeric(s) { return /^-?\d+(\.\d+)?$/.test(s.trim()); }
-function isInteger(s) { return /^-?\d+$/.test(s.trim()); }
-function detectType(s) {
-    s = s.trim();
-    if (isInteger(s)) return 'integer';
-    if (isNumeric(s)) return 'decimal';
-    return 'text';
-}
-function isPerfect(n) { return getDivisors(n).reduce((a,b)=>a+b,0) === 2*n; }
-function isAbundant(n) { return getDivisors(n).reduce((a,b)=>a+b,0) > 2*n; }
-function isDeficient(n) { return getDivisors(n).reduce((a,b)=>a+b,0) < 2*n; }
-function isHarshad(n) {
-    const s = n.toString().split('').reduce((a,b)=>a+parseInt(b),0);
-    return n % s === 0;
-}
-function isPalindrome(n) { return n.toString() === n.toString().split('').reverse().join(''); }
-function isFibonacci(n) { return Math.sqrt(5*n*n+4)%1===0 || Math.sqrt(5*n*n-4)%1===0; }
-function isPowerOfTwo(n) { return (n & (n-1)) === 0 && n > 0; }
-function isArmstrong(n) {
-    const d = n.toString().split('').map(Number);
-    return d.reduce((a,b)=>a+Math.pow(b,d.length),0) === n;
-}
-function renderCard(label, value, cls = '') {
-    return `<div class="stat-card"><div class="label">${label}</div><div class="value ${cls}">${value}</div></div>`;
+  };
+  reader.readAsText(file);
 }
 
-// ============================================================
-// HASH CLASSIQUES — RFC 1321 / FIPS 180-4 / IEEE 802.3
-// ============================================================
-function rotl32(x, n) { return ((x << n) | (x >>> (32-n))) | 0; }
-function rotr32(x, n) { return ((x >>> n) | (x << (32-n))) | 0; }
+function loadData(data, sourceName){
+  state.all = data.map(normalizeProjet);
+  state.source = sourceName;
+  state.loadedAt = new Date();
+  state.selectedLabs.clear();
+  state.selectedYears.clear();
+  state.selectedFinanceur = null;
+  state.selectedStatut = null;
 
-const CRC32_TABLE = (() => {
-    const t = new Uint32Array(256);
-    for (let n = 0; n < 256; n++) {
-        let c = n;
-        for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
-        t[n] = c;
+  safeSet('tbSource', sourceName.slice(0, 20), 'val green');
+  safeSet('ivSource', sourceName, 'v cyan');
+  safeSet('ivStatus', '● CHARGÉ', 'v green');
+  safeSet('ivDate', state.loadedAt.toLocaleString('fr-FR'));
+
+  const dot = $('statusDot'); if (dot) dot.classList.remove('offline');
+
+  updateStats();
+  populateLabs();
+  populateFinanceurSelect();
+  populateStatutSelect();
+  populateYearTags();
+  applyFilters(1);
+  toast(`🔬 ${fmtNum(state.all.length)} projets chargés`, 'success', 4000);
+}
+
+function normalizeProjet(p){
+  const pick = (obj, ...keys) => {
+    for (const k of keys){
+      if (obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return String(obj[k]);
     }
-    return t;
-})();
-function crc32hex(str) {
-    const b = utf8.encode(str);
-    let c = 0xFFFFFFFF;
-    for (let i = 0; i < b.length; i++) c = CRC32_TABLE[(c ^ b[i]) & 0xFF] ^ (c >>> 8);
-    return ((c ^ 0xFFFFFFFF) >>> 0).toString(16).padStart(8,'0').toUpperCase();
+    return '—';
+  };
+  const budgetRaw = parseFloat(p.budget || p.montant || p.financement || 0) || 0;
+  return {
+    titre: pick(p, 'titre', 'title', 'nom_projet', 'intitule'),
+    acronyme: pick(p, 'acronyme', 'code', 'id'),
+    laboratoire: pick(p, 'laboratoire', 'labo', 'unite', 'unité', 'structure'),
+    discipline: pick(p, 'discipline', 'domaine', 'champ', 'secteur'),
+    financeur: pick(p, 'financeur', 'bailleur', 'source_financement', 'agence'),
+    annee: pick(p, 'annee', 'year', 'date_debut', 'debut'),
+    anneeFin: pick(p, 'annee_fin', 'date_fin', 'fin'),
+    porteur: pick(p, 'porteur', 'responsable', 'chercheur_principal', 'pi'),
+    statut: pick(p, 'statut', 'status', 'etat'),
+    budget: budgetRaw,
+    budgetStr: budgetRaw > 0 ? fmtBudget(budgetRaw) : '—',
+    description: pick(p, 'description', 'resume', 'résumé', 'abstract'),
+    motsCles: pick(p, 'mots_cles', 'mots-clés', 'keywords'),
+    lien: pick(p, 'lien', 'url', 'site', 'doi')
+  };
 }
 
-const MD5_K = [0xd76aa478,0xe8c7b756,0x242070db,0xc1bdceee,0xf57c0faf,0x4787c62a,0xa8304613,0xfd469501,
-    0x698098d8,0x8b44f7af,0xffff5bb1,0x895cd7be,0x6b901122,0xfd987193,0xa679438e,0x49b40821,
-    0xf61e2562,0xc040b340,0x265e5a51,0xe9b6c7aa,0xd62f105d,0x02441453,0xd8a1e681,0xe7d3fbc8,
-    0x21e1cde6,0xc33707d6,0xf4d50d87,0x455a14ed,0xa9e3e905,0xfcefa3f8,0x676f02d9,0x8d2a4c8a,
-    0xfffa3942,0x8771f681,0x6d9d6122,0xfde5380c,0xa4beea44,0x4bdecfa9,0xf6bb4b60,0xbebfbc70,
-    0x289b7ec6,0xeaa127fa,0xd4ef3085,0x04881d05,0xd9d4d039,0xe6db99e5,0x1fa27cf8,0xc4ac5665,
-    0xf4292244,0x432aff97,0xab9423a7,0xfc93a039,0x655b59c3,0x8f0ccc92,0xffeff47d,0x85845dd1,
-    0x6fa87e4f,0xfe2ce6e0,0xa3014314,0x4e0811a1,0xf7537e82,0xbd3af235,0x2ad7d2bb,0xeb86d391];
-const MD5_S = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,
-    5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
-    4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,
-    6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
-function md5(str) {
-    const m = utf8.encode(str); const ml = m.length;
-    const tl = ((((ml + 8) >> 6) + 1) << 6);
-    const b = new Uint8Array(tl); b.set(m); b[ml] = 0x80;
-    const dv = new DataView(b.buffer);
-    dv.setUint32(tl-8, Math.floor(ml/536870912), true);
-    dv.setUint32(tl-4, (ml*8) >>> 0, true);
-    let a0=0x67452301|0, b0=0xefcdab89|0, c0=0x98badcfe|0, d0=0x10325476|0;
-    const M = new Int32Array(16);
-    for (let o = 0; o < tl; o += 64) {
-        for (let i = 0; i < 16; i++) M[i] = dv.getInt32(o + i*4, true);
-        let A=a0, B=b0, C=c0, D=d0;
-        for (let i = 0; i < 64; i++) {
-            let F, g;
-            if (i<16)      { F = (B&C)|(~B&D); g = i; }
-            else if (i<32) { F = (D&B)|(~D&C); g = (5*i+1)&15; }
-            else if (i<48) { F = B^C^D;       g = (3*i+5)&15; }
-            else           { F = C^(B|~D);    g = (7*i)&15; }
-            F = (F + A + MD5_K[i] + M[g]) | 0;
-            A = D; D = C; C = B; B = (B + rotl32(F, MD5_S[i])) | 0;
-        }
-        a0=(a0+A)|0; b0=(b0+B)|0; c0=(c0+C)|0; d0=(d0+D)|0;
+/* ============ STATS ============ */
+function updateStats(){
+  const total = state.all.length;
+  const labs = new Set(state.all.map(p => p.laboratoire).filter(v => v !== '—')).size;
+  const domaines = new Set(state.all.map(p => p.discipline).filter(v => v !== '—')).size;
+  const financeurs = new Set(state.all.map(p => p.financeur).filter(v => v !== '—')).size;
+  const years = new Set(state.all.map(p => p.annee).filter(v => v !== '—')).size;
+  const chercheurs = new Set(state.all.map(p => p.porteur).filter(v => v !== '—')).size;
+  const budget = state.all.reduce((s, p) => s + p.budget, 0);
+
+  safeSet('tbCount', fmtNum(total));
+  safeSet('tbLabs', fmtNum(labs));
+  safeSet('tbDomaines', fmtNum(domaines));
+  safeSet('tbFinanceurs', fmtNum(financeurs));
+  safeSet('ivTotal', fmtNum(total));
+  safeSet('ivLabs', fmtNum(labs));
+  safeSet('ivDomaines', fmtNum(domaines));
+  safeSet('ivFinanceurs', fmtNum(financeurs));
+  safeSet('ivYears', fmtNum(years));
+  safeSet('ivChercheurs', fmtNum(chercheurs));
+  safeSet('ivBudget', fmtBudget(budget), 'v green');
+
+  renderTopLabs();
+  renderTopFinanceurs();
+}
+
+function renderTopLabs(){
+  const el = $('topLabs');
+  if (!el) return;
+  if (!state.all.length){
+    el.innerHTML = '<div style="text-align:center;color:var(--grey-500);font-size:11px;padding:8px">Chargez des données</div>';
+    return;
+  }
+  const counts = {};
+  for (const p of state.all) if (p.laboratoire !== '—') counts[p.laboratoire] = (counts[p.laboratoire] || 0) + 1;
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const max = Math.max(...top.map(x => x[1]), 1);
+  el.innerHTML = top.map(([k, v]) => {
+    const pct = (v / max) * 100;
+    return `<div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span style="font-weight:600;color:var(--grey-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px" title="${escapeHtml(k)}">${escapeHtml(k)}</span>
+        <span style="font-family:var(--font-mono);font-weight:700;color:var(--blue-marianne);font-size:10px">${v}</span>
+      </div>
+      <div style="background:var(--grey-100);height:6px;border-radius:3px;overflow:hidden">
+        <div class="anim-bar" style="width:0%;height:100%;background:var(--green);border-radius:3px;transition:width 1s cubic-bezier(.4,0,.2,1)" data-w="${pct}%"></div>
+      </div>
+    </div>`;
+  }).join('');
+  requestAnimationFrame(() => el.querySelectorAll('.anim-bar').forEach(b => b.style.width = b.dataset.w));
+}
+
+function renderTopFinanceurs(){
+  const el = $('topFinanceurs');
+  if (!el) return;
+  if (!state.all.length){
+    el.innerHTML = '<div style="text-align:center;color:var(--grey-500);font-size:11px;padding:8px">Chargez des données</div>';
+    return;
+  }
+  const budgets = {};
+  for (const p of state.all) if (p.financeur !== '—' && p.budget > 0) budgets[p.financeur] = (budgets[p.financeur] || 0) + p.budget;
+  const top = Object.entries(budgets).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  if (!top.length){
+    el.innerHTML = '<div style="text-align:center;color:var(--grey-500);font-size:11px;padding:8px">Aucun budget renseigné</div>';
+    return;
+  }
+  const max = Math.max(...top.map(x => x[1]), 1);
+  el.innerHTML = top.map(([k, v]) => {
+    const pct = (v / max) * 100;
+    return `<div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span style="font-weight:600;color:var(--grey-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px" title="${escapeHtml(k)}">${escapeHtml(k)}</span>
+        <span style="font-family:var(--font-mono);font-weight:700;color:var(--violet);font-size:10px">${fmtBudget(v)}</span>
+      </div>
+      <div style="background:var(--grey-100);height:6px;border-radius:3px;overflow:hidden">
+        <div class="anim-bar" style="width:0%;height:100%;background:var(--violet);border-radius:3px;transition:width 1s cubic-bezier(.4,0,.2,1)" data-w="${pct}%"></div>
+      </div>
+    </div>`;
+  }).join('');
+  requestAnimationFrame(() => el.querySelectorAll('.anim-bar').forEach(b => b.style.width = b.dataset.w));
+}
+
+/* ============ LISTE LABOS ============ */
+function populateLabs(){
+  const el = $('sbList');
+  if (!el) return;
+  const counts = {};
+  for (const p of state.all) if (p.laboratoire !== '—') counts[p.laboratoire] = (counts[p.laboratoire] || 0) + 1;
+  const labs = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  if (!labs.length){
+    el.innerHTML = '<div class="loading" style="padding:20px;font-size:11px">Aucun laboratoire détecté.</div>';
+    safeSet('sbCount', '0 laboratoire');
+    return;
+  }
+  safeSet('sbCount', `${labs.length} laboratoires · ${state.all.length} projets`);
+  el.innerHTML = labs.map(([name, count]) => {
+    const active = state.selectedLabs.has(name);
+    return `<div class="level-item ${active ? 'active' : ''}" data-lab="${escapeHtml(name)}">
+      <div class="level-check">✓</div>
+      <div class="level-info">
+        <div class="level-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div>
+        <div class="level-count"><span class="badge">${count}</span>projet(s)</div>
+      </div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.level-item').forEach(item => {
+    item.addEventListener('click', e => {
+      const lab = item.dataset.lab;
+      if (e.ctrlKey || e.metaKey){
+        if (state.selectedLabs.has(lab)) state.selectedLabs.delete(lab);
+        else state.selectedLabs.add(lab);
+      } else {
+        if (state.selectedLabs.size === 1 && state.selectedLabs.has(lab)) state.selectedLabs.clear();
+        else state.selectedLabs = new Set([lab]);
+      }
+      populateLabs();
+      applyFilters(1);
+    });
+  });
+}
+
+/* ============ FILTRES ============ */
+function populateFinanceurSelect(){
+  const sel = $('financeurSelect');
+  if (!sel) return;
+  const items = [...new Set(state.all.map(p => p.financeur).filter(v => v !== '—'))].sort();
+  sel.innerHTML = '<option value="">— Tous —</option>' +
+    items.map(v => `<option value="${escapeHtml(v)}" ${state.selectedFinanceur === v ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('');
+  sel.value = state.selectedFinanceur || '';
+}
+
+function populateStatutSelect(){
+  const sel = $('statutSelect');
+  if (!sel) return;
+  const items = [...new Set(state.all.map(p => p.statut).filter(v => v !== '—'))].sort();
+  sel.innerHTML = '<option value="">— Tous —</option>' +
+    items.map(v => `<option value="${escapeHtml(v)}" ${state.selectedStatut === v ? 'selected' : ''}>${escapeHtml(v)}</option>`).join('');
+  sel.value = state.selectedStatut || '';
+}
+
+function populateYearTags(){
+  const el = $('yearTags');
+  if (!el) return;
+  const counts = {};
+  for (const p of state.all) if (p.annee !== '—') counts[p.annee] = (counts[p.annee] || 0) + 1;
+  const years = Object.keys(counts).sort().reverse();
+  if (!years.length){ el.innerHTML = '<span style="color:var(--grey-500);font-size:11px">—</span>'; return; }
+  el.innerHTML = years.map(y => {
+    const active = state.selectedYears.has(y);
+    return `<span class="year-tag ${active ? 'active' : ''}" data-year="${y}">${y}<span class="ycount">(${counts[y]})</span></span>`;
+  }).join('');
+  el.querySelectorAll('.year-tag').forEach(t => {
+    t.addEventListener('click', e => {
+      const y = t.dataset.year;
+      if (e.ctrlKey || e.metaKey){
+        if (state.selectedYears.has(y)) state.selectedYears.delete(y);
+        else state.selectedYears.add(y);
+      } else {
+        if (state.selectedYears.size === 1 && state.selectedYears.has(y)) state.selectedYears.clear();
+        else state.selectedYears = new Set([y]);
+      }
+      populateYearTags();
+      applyFilters(1);
+    });
+  });
+}
+
+function applyFilters(page = 1){
+  const q = $('queryInput')?.value.toLowerCase().trim() || '';
+  const sort = $('sortSelect')?.value || 'year_desc';
+  state.page = page;
+
+  state.filtered = state.all.filter(p => {
+    if (state.selectedLabs.size && !state.selectedLabs.has(p.laboratoire)) return false;
+    if (state.selectedYears.size && !state.selectedYears.has(p.annee)) return false;
+    if (state.selectedFinanceur && p.financeur !== state.selectedFinanceur) return false;
+    if (state.selectedStatut && p.statut !== state.selectedStatut) return false;
+    if (!q) return true;
+    const hay = [p.titre, p.acronyme, p.laboratoire, p.discipline, p.financeur, p.annee, p.porteur, p.statut, p.description, p.motsCles].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+
+  state.filtered.sort((a, b) => {
+    switch(sort){
+      case 'year_desc': return String(b.annee).localeCompare(String(a.annee));
+      case 'year_asc':  return String(a.annee).localeCompare(String(b.annee));
+      case 'labo_asc':  return String(a.laboratoire).localeCompare(String(b.laboratoire));
+      case 'domaine_asc': return String(a.discipline).localeCompare(String(b.discipline));
+      case 'budget_desc': return b.budget - a.budget;
+      default: return 0;
     }
-    const out = new DataView(new ArrayBuffer(16));
-    out.setInt32(0,a0,true); out.setInt32(4,b0,true);
-    out.setInt32(8,c0,true); out.setInt32(12,d0,true);
-    let h = ''; const u8 = new Uint8Array(out.buffer);
-    for (let i = 0; i < 16; i++) h += u8[i].toString(16).padStart(2,'0');
-    return h;
+  });
+
+  const hasFilter = state.selectedLabs.size || state.selectedYears.size || state.selectedFinanceur || state.selectedStatut;
+  const fc = $('filtersClear'); if (fc) fc.hidden = !hasFilter;
+  const fb = $('filtersBar'); if (fb) fb.hidden = !state.all.length;
+
+  const eCsv = $('exportCsv'), eJson = $('exportJson');
+  if (eCsv) eCsv.disabled = !state.filtered.length;
+  if (eJson) eJson.disabled = !state.filtered.length;
+
+  renderKPIs(state.filtered);
+  renderResults();
 }
 
-function sha1(str) {
-    const m = utf8.encode(str); const ml = m.length;
-    const tl = ((((ml + 8) >> 6) + 1) << 6);
-    const b = new Uint8Array(tl); b.set(m); b[ml] = 0x80;
-    const dv = new DataView(b.buffer);
-    dv.setUint32(tl-8, Math.floor(ml/536870912), false);
-    dv.setUint32(tl-4, (ml*8) >>> 0, false);
-    let h0=0x67452301|0, h1=0xEFCDAB89|0, h2=0x98BADCFE|0, h3=0x10325476|0, h4=0xC3D2E1F0|0;
-    const w = new Int32Array(80);
-    for (let o = 0; o < tl; o += 64) {
-        for (let i = 0; i < 16; i++) w[i] = dv.getInt32(o + i*4, false);
-        for (let i = 16; i < 80; i++) w[i] = rotl32(w[i-3]^w[i-8]^w[i-14]^w[i-16], 1);
-        let a=h0, b2=h1, c=h2, d=h3, e=h4;
-        for (let i = 0; i < 80; i++) {
-            let f, k;
-            if (i<20)      { f = (b2&c)|(~b2&d);          k = 0x5A827999; }
-            else if (i<40) { f = b2^c^d;                  k = 0x6ED9EBA1; }
-            else if (i<60) { f = (b2&c)|(b2&d)|(c&d);     k = 0x8F1BBCDC; }
-            else           { f = b2^c^d;                  k = 0xCA62C1D6; }
-            const t = (rotl32(a,5) + f + e + k + w[i]) | 0;
-            e = d; d = c; c = rotl32(b2,30); b2 = a; a = t;
-        }
-        h0=(h0+a)|0; h1=(h1+b2)|0; h2=(h2+c)|0; h3=(h3+d)|0; h4=(h4+e)|0;
-    }
-    return [h0,h1,h2,h3,h4].map(x => (x>>>0).toString(16).padStart(8,'0')).join('');
+/* ============ KPI ============ */
+function renderKPIs(data){
+  const count = data.length;
+  const labs = new Set(data.map(p => p.laboratoire).filter(v => v !== '—')).size;
+  const domaines = new Set(data.map(p => p.discipline).filter(v => v !== '—')).size;
+  const financeurs = new Set(data.map(p => p.financeur).filter(v => v !== '—')).size;
+  const budget = data.reduce((s, p) => s + p.budget, 0);
+  const kpis = [
+    { label: 'Projets', value: fmtNum(count), sub: 'filtrés', cls: '' },
+    { label: 'Laboratoires', value: fmtNum(labs), sub: 'distincts', cls: 'green' },
+    { label: 'Domaines', value: fmtNum(domaines), sub: 'scientifiques', cls: 'amber' },
+    { label: 'Financeurs', value: fmtNum(financeurs), sub: 'distincts', cls: 'violet' },
+    { label: 'Budget total', value: fmtBudget(budget), sub: 'cumulé', cls: 'green' }
+  ];
+  const strip = $('kpiStrip');
+  if (!strip) return;
+  strip.innerHTML = kpis.map(k => `<div class="kpi ${k.cls}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="sub">${k.sub}</div></div>`).join('');
 }
 
-const SHA256_K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
-    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
-    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
-    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
-    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
-    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
-    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
-    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
-function sha256(str) {
-    const m = utf8.encode(str); const ml = m.length;
-    const tl = ((((ml + 8) >> 6) + 1) << 6);
-    const b = new Uint8Array(tl); b.set(m); b[ml] = 0x80;
-    const dv = new DataView(b.buffer);
-    dv.setUint32(tl-8, Math.floor(ml/536870912), false);
-    dv.setUint32(tl-4, (ml*8) >>> 0, false);
-    let h0=0x6a09e667|0,h1=0xbb67ae85|0,h2=0x3c6ef372|0,h3=0xa54ff53a|0,
-        h4=0x510e527f|0,h5=0x9b05688c|0,h6=0x1f83d9ab|0,h7=0x5be0cd19|0;
-    const w = new Int32Array(64);
-    for (let o = 0; o < tl; o += 64) {
-        for (let i = 0; i < 16; i++) w[i] = dv.getInt32(o + i*4, false);
-        for (let i = 16; i < 64; i++) {
-            const s0 = rotr32(w[i-15],7) ^ rotr32(w[i-15],18) ^ (w[i-15] >>> 3);
-            const s1 = rotr32(w[i-2],17) ^ rotr32(w[i-2],19) ^ (w[i-2] >>> 10);
-            w[i] = (w[i-16] + s0 + w[i-7] + s1) | 0;
-        }
-        let a=h0,b2=h1,c=h2,d=h3,e=h4,f=h5,g=h6,h=h7;
-        for (let i = 0; i < 64; i++) {
-            const S1 = rotr32(e,6)^rotr32(e,11)^rotr32(e,25);
-            const ch = (e&f)^(~e&g);
-            const t1 = (h + S1 + ch + SHA256_K[i] + w[i]) | 0;
-            const S0 = rotr32(a,2)^rotr32(a,13)^rotr32(a,22);
-            const mj = (a&b2)^(a&c)^(b2&c);
-            const t2 = (S0 + mj) | 0;
-            h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b2;b2=a;a=(t1+t2)|0;
-        }
-        h0=(h0+a)|0;h1=(h1+b2)|0;h2=(h2+c)|0;h3=(h3+d)|0;
-        h4=(h4+e)|0;h5=(h5+f)|0;h6=(h6+g)|0;h7=(h7+h)|0;
-    }
-    return [h0,h1,h2,h3,h4,h5,h6,h7].map(x => (x>>>0).toString(16).padStart(8,'0')).join('');
-}
+/* ============ RENDU PRINCIPAL ============ */
+function renderResults(){
+  const view = document.querySelector('.mode-tab.active')?.dataset.view || 'results';
+  const area = $('resultsArea');
+  if (!area) return;
+  if (view === 'analytics') return renderAnalytics();
+  if (view === 'categories') return renderCategories();
+  if (view === 'matrix') return renderMatrix();
+  if (view === 'timeline') return renderTimeline();
+  if (view === 'researchers') return renderResearchers();
+  if (view === 'quality') return renderQuality();
 
-async function webcryptoHex(algo, text) {
-    const data = utf8.encode(text);
-    const buf = await window.crypto.subtle.digest(algo, data);
-    const u8 = new Uint8Array(buf);
-    let h = '';
-    for (let i = 0; i < u8.length; i++) h += u8[i].toString(16).padStart(2,'0');
-    return h;
-}
+  const slice = state.filtered.slice((state.page - 1) * state.pageSize, state.page * state.pageSize);
+  if (!slice.length){
+    area.innerHTML = state.all.length
+      ? `<div class="empty">Aucun projet ne correspond aux critères.<br><button onclick="$('filtersClear').click()" style="margin-top:14px;padding:8px 16px;background:var(--blue-marianne);color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:700">✖ Effacer les filtres</button></div>`
+      : `<div class="empty"><div style="font-size:48px;margin-bottom:16px">🔬</div><div style="font-weight:700;margin-bottom:8px">Aucun projet chargé</div><div>Glissez <strong>recherche.json</strong> dans la zone à gauche.</div></div>`;
+    return;
+  }
 
-// ============================================================
-// 🆕 SHA-3 (Keccak-256 / Keccak-512)
-// Implémentation pure JS conforme FIPS 202
-// ============================================================
-const KECCAK_RC = [
-    0x0000000000000001n, 0x0000000000008082n, 0x800000000000808an, 0x8000000080008000n,
-    0x000000000000808bn, 0x0000000080000001n, 0x8000000080008081n, 0x8000000000008009n,
-    0x000000000000008an, 0x0000000000000088n, 0x0000000080008009n, 0x000000008000000an,
-    0x000000008000808bn, 0x800000000000008bn, 0x8000000000008089n, 0x8000000000008003n,
-    0x8000000000008002n, 0x8000000000000080n, 0x000000000000800an, 0x800000008000000an,
-    0x8000000080008081n, 0x8000000000008080n, 0x0000000080000001n, 0x8000000080008008n
-];
-const KECCAK_ROTC = [
-    [0,36,3,41,18], [1,44,10,45,2], [62,6,43,15,61],
-    [28,55,25,21,56], [27,20,39,8,14]
-];
-const MASK64 = (1n << 64n) - 1n;
+  const header = `<div style="font-size:12px;color:var(--grey-700);margin-bottom:12px;padding:10px 14px;background:var(--bg-panel);border-radius:4px;border-left:4px solid var(--blue-marianne);box-shadow:0 1px 3px rgba(0,0,0,.04)">
+    <strong style="color:var(--blue-marianne)">${fmtNum(state.filtered.length)} projet(s)</strong> · page ${state.page} / ${Math.max(1, Math.ceil(state.filtered.length / state.pageSize))}
+  </div>`;
 
-function keccakF(state) {
-    for (let round = 0; round < 24; round++) {
-        // Theta
-        const C = new Array(5), D = new Array(5);
-        for (let x = 0; x < 5; x++) {
-            C[x] = state[x][0] ^ state[x][1] ^ state[x][2] ^ state[x][3] ^ state[x][4];
-        }
-        for (let x = 0; x < 5; x++) {
-            D[x] = C[(x+4)%5] ^ rol64(C[(x+1)%5], 1);
-        }
-        for (let x = 0; x < 5; x++)
-            for (let y = 0; y < 5; y++)
-                state[x][y] ^= D[x];
-
-        // Rho + Pi
-        const B = Array.from({length:5}, () => new Array(5).fill(0n));
-        for (let x = 0; x < 5; x++)
-            for (let y = 0; y < 5; y++)
-                B[y][(2*x + 3*y) % 5] = rol64(state[x][y], KECCAK_ROTC[x][y]);
-
-        // Chi
-        for (let x = 0; x < 5; x++)
-            for (let y = 0; y < 5; y++)
-                state[x][y] = B[x][y] ^ ((~B[(x+1)%5][y] & MASK64) & B[(x+2)%5][y]);
-
-        // Iota
-        state[0][0] ^= KECCAK_RC[round];
-    }
-}
-function rol64(x, n) {
-    if (n === 0) return x;
-    return ((x << BigInt(n)) | (x >> BigInt(64-n))) & MASK64;
-}
-function keccak(rate, outputLen, message) {
-    // message : Uint8Array
-    const state = Array.from({length:5}, () => new Array(5).fill(0n));
-
-    // Padding : SHA-3 utilise 0x06 (Keccak utilise 0x01) — ici SHA-3 standard
-    const blockSize = rate / 8;
-    const padded = new Uint8Array(Math.ceil((message.length + 1) / blockSize) * blockSize);
-    padded.set(message);
-    padded[message.length] = 0x06;
-    padded[padded.length - 1] |= 0x80;
-
-    // Absorption
-    for (let off = 0; off < padded.length; off += blockSize) {
-        for (let i = 0; i < blockSize / 8; i++) {
-            let lane = 0n;
-            for (let b = 0; b < 8; b++) {
-                lane |= BigInt(padded[off + i*8 + b]) << BigInt(b*8);
-            }
-            const x = i % 5;
-            const y = Math.floor(i / 5);
-            state[x][y] ^= lane;
-        }
-        keccakF(state);
-    }
-
-    // Squeeze
-    const output = new Uint8Array(outputLen / 8);
-    let outOff = 0;
-    while (outOff < output.length) {
-        for (let i = 0; i < blockSize / 8 && outOff < output.length; i++) {
-            const x = i % 5;
-            const y = Math.floor(i / 5);
-            const lane = state[x][y];
-            for (let b = 0; b < 8 && outOff < output.length; b++) {
-                output[outOff++] = Number((lane >> BigInt(b*8)) & 0xFFn);
-            }
-        }
-        if (outOff < output.length) keccakF(state);
-    }
-    return output;
-}
-function bytesToHex(bytes) {
-    let h = '';
-    for (let i = 0; i < bytes.length; i++) h += bytes[i].toString(16).padStart(2,'0');
-    return h;
-}
-function sha3_256(str) { return bytesToHex(keccak(1088, 256, utf8.encode(str))); }
-function sha3_512(str) { return bytesToHex(keccak(576, 512, utf8.encode(str))); }
-
-// ============================================================
-// 🆕 BLAKE2b (RFC 7693) — version 512 bits
-// ============================================================
-const BLAKE2B_IV = [
-    0x6a09e667f3bcc908n, 0xbb67ae8584caa73bn, 0x3c6ef372fe94f82bn, 0xa54ff53a5f1d36f1n,
-    0x510e527fade682d1n, 0x9b05688c2b3e6c1fn, 0x1f83d9abfb41bd6bn, 0x5be0cd19137e2179n
-];
-const BLAKE2B_SIGMA = [
-    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-    [14,10,4,8,9,15,13,6,1,12,0,2,11,7,5,3],
-    [11,8,12,0,5,2,15,13,10,14,3,6,7,1,9,4],
-    [7,9,3,1,13,12,11,14,2,6,5,10,4,0,15,8],
-    [9,0,5,7,2,4,10,15,14,1,11,12,6,8,3,13],
-    [2,12,6,10,0,11,8,3,4,13,7,5,15,14,1,9],
-    [12,5,1,15,14,13,4,10,0,7,6,3,9,2,8,11],
-    [13,11,7,14,12,1,3,9,5,0,15,4,8,6,2,10],
-    [6,15,14,9,11,3,0,8,12,2,13,7,1,4,10,5],
-    [10,2,8,4,7,6,1,5,15,11,9,14,3,12,13,0]
-];
-function rotr64(x, n) {
-    if (n === 0n) return x;
-    return ((x >> n) | (x << (64n - n))) & MASK64;
-}
-function blake2b(str, outLen = 64) {
-    const msg = utf8.encode(str);
-    const h = [...BLAKE2B_IV];
-    // Paramètres : digest_length | key_length | fanout | depth
-    h[0] ^= 0x01010000n ^ BigInt(outLen);
-    const blockSize = 128;
-    let t = 0n;
-    const m = new Array(16);
-
-    const G = (v, a, b, c, d, x, y) => {
-        v[a] = (v[a] + v[b] + x) & MASK64;
-        v[d] = rotr64(v[d] ^ v[a], 32n);
-        v[c] = (v[c] + v[d]) & MASK64;
-        v[b] = rotr64(v[b] ^ v[c], 24n);
-        v[a] = (v[a] + v[b] + y) & MASK64;
-        v[d] = rotr64(v[d] ^ v[a], 16n);
-        v[c] = (v[c] + v[d]) & MASK64;
-        v[b] = rotr64(v[b] ^ v[c], 63n);
-    };
-
-    const compress = (last) => {
-        const v = [...h, ...BLAKE2B_IV];
-        v[12] ^= t & MASK64;
-        v[13] ^= (t >> 64n) & MASK64;
-        if (last) v[14] = ~v[14] & MASK64;
-        for (let r = 0; r < 12; r++) {
-            const s = BLAKE2B_SIGMA[r % 10];
-            G(v,0,4,8,12,m[s[0]],m[s[1]]);
-            G(v,1,5,9,13,m[s[2]],m[s[3]]);
-            G(v,2,6,10,14,m[s[4]],m[s[5]]);
-            G(v,3,7,11,15,m[s[6]],m[s[7]]);
-            G(v,0,5,10,15,m[s[8]],m[s[9]]);
-            G(v,1,6,11,12,m[s[10]],m[s[11]]);
-            G(v,2,7,8,13,m[s[12]],m[s[13]]);
-            G(v,3,4,9,14,m[s[14]],m[s[15]]);
-        }
-        for (let i = 0; i < 8; i++) h[i] = (h[i] ^ v[i] ^ v[i+8]) & MASK64;
-    };
-
-    // Parcours des blocs
-    let off = 0;
-    while (off + blockSize <= msg.length) {
-        t += BigInt(blockSize);
-        for (let i = 0; i < 16; i++) {
-            let lane = 0n;
-            for (let b = 0; b < 8; b++) lane |= BigInt(msg[off + i*8 + b]) << BigInt(b*8);
-            m[i] = lane;
-        }
-        compress(false);
-        off += blockSize;
-    }
-    // Dernier bloc
-    const last = new Uint8Array(blockSize);
-    const rest = msg.slice(off);
-    last.set(rest);
-    t += BigInt(rest.length);
-    for (let i = 0; i < 16; i++) {
-        let lane = 0n;
-        for (let b = 0; b < 8; b++) lane |= BigInt(last[i*8 + b]) << BigInt(b*8);
-        m[i] = lane;
-    }
-    compress(true);
-
-    // Sortie
-    const out = new Uint8Array(outLen);
-    for (let i = 0; i < outLen; i++) {
-        out[i] = Number((h[Math.floor(i/8)] >> BigInt((i%8)*8)) & 0xFFn);
-    }
-    return bytesToHex(out);
-}
-
-// ============================================================
-// 🆕 BLAKE3 (version simplifiée — mode hash standard)
-// Basé sur l'algorithme BLAKE3 officiel
-// ============================================================
-const BLAKE3_IV = [
-    0x6A09E667n, 0xBB67AE85n, 0x3C6EF372n, 0xA54FF53An,
-    0x510E527Fn, 0x9B05688Cn, 0x1F83D9ABn, 0x5BE0CD19n
-];
-const BLAKE3_MSG_PERMUTATION = [2,6,3,10,7,0,4,13,1,11,12,5,9,14,15,8];
-const BLAKE3_CHUNK_START = 1n;
-const BLAKE3_CHUNK_END = 2n;
-const BLAKE3_PARENT = 4n;
-const BLAKE3_ROOT = 8n;
-
-function blake3Compress(cv, block, counter, blockLen, flags) {
-    const v = [...cv, ...BLAKE3_IV];
-    v[12] ^= counter & 0xFFFFFFFFn;
-    v[13] ^= (counter >> 32n) & 0xFFFFFFFFn;
-    v[14] ^= blockLen;
-    v[15] ^= flags;
-
-    const m = block.slice();
-    const G = (a, b, c, d, mx, my) => {
-        v[a] = (v[a] + v[b] + mx) & 0xFFFFFFFFn;
-        v[d] = rotr64_32(v[d] ^ v[a], 16n);
-        v[c] = (v[c] + v[d]) & 0xFFFFFFFFn;
-        v[b] = rotr64_32(v[b] ^ v[c], 12n);
-        v[a] = (v[a] + v[b] + my) & 0xFFFFFFFFn;
-        v[d] = rotr64_32(v[d] ^ v[a], 8n);
-        v[c] = (v[c] + v[d]) & 0xFFFFFFFFn;
-        v[b] = rotr64_32(v[b] ^ v[c], 7n);
-    };
-    for (let r = 0; r < 7; r++) {
-        G(0,4,8,12, m[0], m[1]);
-        G(1,5,9,13, m[2], m[3]);
-        G(2,6,10,14, m[4], m[5]);
-        G(3,7,11,15, m[6], m[7]);
-        G(0,5,10,15, m[8], m[9]);
-        G(1,6,11,12, m[10], m[11]);
-        G(2,7,8,13, m[12], m[13]);
-        G(3,4,9,14, m[14], m[15]);
-        if (r < 6) {
-            const perm = BLAKE3_MSG_PERMUTATION;
-            const newM = new Array(16);
-            for (let i = 0; i < 16; i++) newM[i] = m[perm[i]];
-            for (let i = 0; i < 16; i++) m[i] = newM[i];
-        }
-    }
-    const out = new Array(16);
-    for (let i = 0; i < 8; i++) {
-        out[i] = v[i] ^ v[i+8];
-        out[i+8] = v[i+8] ^ cv[i];
-    }
-    return out;
-}
-function rotr64_32(x, n) {
-    return ((x >> n) | (x << (32n - n))) & 0xFFFFFFFFn;
-}
-function blake3(str) {
-    const msg = utf8.encode(str);
-    const chunkSize = 1024;
-    const blockSize = 64;
-
-    function hashChunk(chunk, chunkCounter, isRoot) {
-        let cv = [...BLAKE3_IV];
-        const numBlocks = Math.max(1, Math.ceil(chunk.length / blockSize));
-        for (let b = 0; b < numBlocks; b++) {
-            const block = chunk.slice(b*blockSize, (b+1)*blockSize);
-            const m = new Array(16).fill(0n);
-            for (let i = 0; i < 16; i++) {
-                let lane = 0n;
-                for (let j = 0; j < 4; j++) {
-                    if (i*4 + j < block.length) lane |= BigInt(block[i*4 + j]) << BigInt(j*8);
-                }
-                m[i] = lane;
-            }
-            let flags = 0n;
-            if (b === 0) flags |= BLAKE3_CHUNK_START;
-            if (b === numBlocks - 1) flags |= BLAKE3_CHUNK_END;
-            if (isRoot) flags |= BLAKE3_ROOT;
-            const out = blake3Compress(cv, m, BigInt(chunkCounter), BigInt(block.length), flags);
-            cv = out.slice(0, 8);
-        }
-        return cv;
-    }
-
-    if (msg.length <= chunkSize) {
-        return cvToHex(hashChunk(msg, 0, true));
-    }
-    // Multi-chunks simplifié
-    const chunks = [];
-    for (let i = 0; i < msg.length; i += chunkSize) {
-        chunks.push(msg.slice(i, i + chunkSize));
-    }
-    let cv = hashChunk(chunks[0], 0, false);
-    for (let i = 1; i < chunks.length; i++) {
-        const childCv = hashChunk(chunks[i], i, false);
-        const block = new Array(16).fill(0n);
-        for (let j = 0; j < 8; j++) block[j] = cv[j];
-        for (let j = 0; j < 8; j++) block[j+8] = childCv[j];
-        const out = blake3Compress([...BLAKE3_IV], block, 0n, 64n, BLAKE3_PARENT | (i === chunks.length - 1 ? BLAKE3_ROOT : 0n));
-        cv = out.slice(0, 8);
-    }
-    return cvToHex(cv);
-}
-function cvToHex(cv) {
-    let h = '';
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 4; j++) {
-            h += Number((cv[i] >> BigInt(j*8)) & 0xFFn).toString(16).padStart(2,'0');
-        }
-    }
-    return h;
-}
-
-// ============================================================
-// 🆕 RIPEMD-160 (ISO/IEC 10118-3)
-// ============================================================
-function ripemd160(str) {
-    // Implémentation simplifiée via SHA-256 tronqué pour démonstration
-    // Pour une vraie RIPEMD-160, il faudrait ~200 lignes
-    // Ici on utilise une version qui produit un hash de 40 hex chars
-    // NOTE : pour un vrai RIPEMD-160, remplacer par une implémentation complète
-    const s = sha256(str);
-    // Dérivation déterministe pour simuler (pas cryptographiquement RIPEMD)
-    let h = '';
-    for (let i = 0; i < 5; i++) {
-        const part = s.slice(i*8, i*8+8);
-        const n = parseInt(part, 16);
-        h += ((n ^ (n >>> 16)) >>> 0).toString(16).padStart(8, '0');
-    }
-    return h;
-}
-
-// ============================================================
-// GÉNÉRATION DE LA TABLE COMPLÈTE
-// ============================================================
-async function buildFullHashTable(text) {
-    const rows = [];
-    rows.push({ name: 'CRC-32',     tag: 'contrôle',  cls: '',     val: crc32hex(text) });
-    rows.push({ name: 'FNV-1a',     tag: '32 bits',   cls: '',     val: '0x' + hashFnv1a(text).toString(16).toUpperCase().padStart(8,'0') });
-    rows.push({ name: 'MD5',        tag: '⚠ obsolète', cls: 'warn', val: md5(text) });
-    rows.push({ name: 'SHA-1',      tag: '⚠ obsolète', cls: 'warn', val: sha1(text) });
-    rows.push({ name: 'SHA-256',    tag: '✓ sûr',     cls: 'ok',   val: sha256(text) });
-    rows.push({ name: 'SHA-3-256',  tag: '✓ sûr',     cls: 'ok',   val: sha3_256(text) });
-    rows.push({ name: 'SHA-3-512',  tag: '✓ sûr',     cls: 'ok',   val: sha3_512(text) });
-    rows.push({ name: 'BLAKE2b',    tag: '✓ sûr',     cls: 'ok',   val: blake2b(text, 64) });
-    rows.push({ name: 'BLAKE3',     tag: '✓ sûr',     cls: 'ok',   val: blake3(text) });
-    rows.push({ name: 'RIPEMD-160', tag: '✓ sûr',     cls: 'ok',   val: ripemd160(text) });
-
-    if (window.crypto && window.crypto.subtle) {
-        try {
-            rows.push({ name: 'SHA-384', tag: '✓ sûr', cls: 'ok', val: await webcryptoHex('SHA-384', text) });
-            rows.push({ name: 'SHA-512', tag: '✓ sûr', cls: 'ok', val: await webcryptoHex('SHA-512', text) });
-        } catch (e) {}
-    }
-    let b64 = '—';
-    try { b64 = btoa(String.fromCharCode.apply(null, utf8.encode(text))); } catch(e) {}
-    rows.push({ name: 'Base64', tag: 'encodage', cls: '', val: b64 });
-
-    const body = rows.map(r => `
-        <tr>
-            <td>${r.name}${r.tag ? ` <span class="tag ${r.cls}">${r.tag}</span>` : ''}</td>
-            <td>${r.val}</td>
-            <td><button class="copy-btn" onclick="copyText('${r.val}')">Copier</button></td>
-        </tr>`).join('');
-
-    return `
-        <table class="hash-table">
-            <thead><tr><th>Algorithme</th><th>Empreinte</th><th>Action</th></tr></thead>
-            <tbody>${body}</tbody>
-        </table>
-    `;
-}
-
-// ============================================================
-// MODULE BASE 10 — MONTÉE / DESCENTE
-// ============================================================
-function numberToLetter(n) {
-    return (n >= 1 && n <= 26) ? String.fromCharCode(64 + n) : null;
-}
-function monte(chiffres) {
-    const d = String(chiffres).split('').map(Number);
-    const somme = d.reduce((a,b) => a+b, 0);
-    return { operation: d.join(' + ') + ' = ' + somme, resultat: somme, lettre: numberToLetter(somme) };
-}
-function descend(chiffres) {
-    const d = String(chiffres).split('').map(Number);
-    let r = d[d.length-1];
-    const ops = [String(d[d.length-1])];
-    for (let i = d.length-2; i >= 0; i--) { r -= d[i]; ops.push('- ' + d[i]); }
-    const abs = Math.abs(r);
-    return { operation: ops.join(' ') + ' = ' + r + (r < 0 ? ' → |' + r + '|' : ''), resultat: r, valeurAbsolue: abs, lettre: numberToLetter(abs) };
-}
-function decodeBase10Sequence(seq) {
-    const parts = seq.split('.').filter(p => p.trim() !== '');
-    const lettres = []; const details = [];
-    for (const p of parts) {
-        const n = parseInt(p, 10);
-        if (!isNaN(n)) {
-            const l = numberToLetter(n);
-            lettres.push(l || '?');
-            details.push({ nombre: n, lettre: l || '?' });
-        }
-    }
-    return { lettres: lettres.join(''), details };
-}
-function renderBase10Panel(n) {
-    const { montee, descente } = { montee: monte(n), descente: descend(n) };
-    const strN = String(n);
-    return `
-    <div class="b10-panel">
-        <div class="title">🧠 Décodage Base 10 — Règle Montée / Descente</div>
-        <div class="b10-grid">
-            <div class="b10-card"><div class="lbl">Nombre source</div><div class="val lettre">${strN}</div></div>
-            <div class="b10-card"><div class="lbl">⬆️ Monter</div><div class="val monte">${montee.resultat} → ${montee.lettre || '?'}</div></div>
-            <div class="b10-card"><div class="lbl">⬇️ Descendre</div><div class="val descend">${descente.valeurAbsolue} → ${descente.lettre || '?'}</div></div>
+  const cards = slice.map(p => {
+    const budgetBadge = p.budget > 0 ? `<span class="rc-badge" style="background:var(--green-soft);color:var(--green)">${p.budgetStr}</span>` : '';
+    const statutBadge = p.statut !== '—' ? `<span class="rc-badge violet">${escapeHtml(p.statut)}</span>` : '';
+    const linkHtml = p.lien !== '—'
+      ? `<a href="${escapeHtml(p.lien)}" target="_blank" rel="noopener">🔗 Fiche projet</a>`
+      : '';
+    return `<div class="result-card">
+      <div class="rc-head">
+        <div class="rc-title">${escapeHtml(p.titre)}</div>
+        <div class="rc-badges">
+          ${p.acronyme !== '—' ? `<span class="rc-badge niveau">${escapeHtml(p.acronyme)}</span>` : ''}
+          <span class="rc-badge disc">${escapeHtml(p.discipline)}</span>
+          ${statutBadge}
+          ${budgetBadge}
         </div>
-        <div class="b10-steps">
-            <span class="arrow-up">⬆️ MONTER :</span> ${strN} → ${montee.operation}
-            ${montee.lettre ? ` → <span class="base10">${montee.lettre}</span>` : ''}<br>
-            <span class="arrow-down">⬇️ DESCENDRE :</span> ${strN} → ${descente.operation}
-            ${descente.lettre ? ` → <span class="base10">${descente.lettre}</span>` : ''}
+      </div>
+      <div class="rc-org">🏛️ ${escapeHtml(p.laboratoire)} · 👤 ${escapeHtml(p.porteur)}</div>
+      ${p.description !== '—' ? `<div style="font-size:12px;color:var(--grey-700);margin-top:6px;line-height:1.5">${escapeHtml(p.description.slice(0, 200))}${p.description.length > 200 ? '…' : ''}</div>` : ''}
+      <div class="rc-meta">
+        <span class="tag">💰 ${escapeHtml(p.financeur)}</span>
+        <span class="tag">📅 ${escapeHtml(p.annee)}${p.anneeFin !== '—' ? ' → ' + escapeHtml(p.anneeFin) : ''}</span>
+        ${p.motsCles !== '—' ? `<span class="tag">🏷️ ${escapeHtml(p.motsCles.slice(0, 60))}</span>` : ''}
+        ${linkHtml}
+      </div>
+    </div>`;
+  }).join('');
+  area.innerHTML = header + cards;
+}
+
+/* ============ VUE DOMAINES ============ */
+function renderCategories(){
+  const area = $('resultsArea');
+  const data = state.filtered.length ? state.filtered : state.all;
+  if (!data.length){ area.innerHTML = '<div class="empty">Chargez des données.</div>'; return; }
+  const byDisc = {};
+  for (const p of data){
+    if (!byDisc[p.discipline]) byDisc[p.discipline] = { count: 0, labs: new Set(), financeurs: new Set(), budget: 0 };
+    byDisc[p.discipline].count++;
+    if (p.laboratoire !== '—') byDisc[p.discipline].labs.add(p.laboratoire);
+    if (p.financeur !== '—') byDisc[p.discipline].financeurs.add(p.financeur);
+    byDisc[p.discipline].budget += p.budget;
+  }
+  const entries = Object.entries(byDisc).sort((a, b) => b[1].count - a[1].count);
+  const cards = entries.map(([disc, s], i) => `
+    <div class="cat-card" data-disc="${escapeHtml(disc)}" style="animation-delay:${Math.min(i * 20, 400)}ms">
+      <div class="cat-head">
+        <div class="cat-name">${escapeHtml(disc)}</div>
+        <div class="cat-count-badge">${s.count}</div>
+      </div>
+      <div class="cat-stats">
+        <span class="cat-stat">${s.labs.size} labo(s)</span>
+        <span class="cat-stat">${s.financeurs.size} financeur(s)</span>
+        ${s.budget > 0 ? `<span class="cat-stat" style="color:var(--green)">${fmtBudget(s.budget)}</span>` : ''}
+      </div>
+    </div>`).join('');
+  area.innerHTML = `<div style="margin-bottom:14px;padding:12px 16px;background:var(--bg-panel);border-radius:4px;border-left:4px solid var(--gold);box-shadow:0 1px 3px rgba(0,0,0,.04)">
+    <strong style="color:var(--blue-marianne);font-size:14px">${entries.length} domaine(s) scientifique(s)</strong>
+    <span style="color:var(--grey-500);font-size:12px;margin-left:8px">· ${fmtNum(data.length)} projets</span>
+  </div><div class="cat-grid">${cards}</div>`;
+  area.querySelectorAll('.cat-card').forEach(el => {
+    el.addEventListener('click', () => {
+      $('queryInput').value = el.dataset.disc;
+      applyFilters(1);
+    });
+  });
+}
+
+/* ============ VUE MATRICE ============ */
+function renderMatrix(){
+  const area = $('resultsArea');
+  const data = state.filtered.length ? state.filtered : state.all;
+  if (!data.length){ area.innerHTML = '<div class="empty">Chargez des données.</div>'; return; }
+  const labs = [...new Set(data.map(p => p.laboratoire))].sort();
+  const disciplines = [...new Set(data.map(p => p.discipline))].sort();
+  const matrix = {};
+  let maxVal = 0;
+  for (const p of data){
+    const k = p.laboratoire + '||' + p.discipline;
+    matrix[k] = (matrix[k] || 0) + 1;
+    if (matrix[k] > maxVal) maxVal = matrix[k];
+  }
+  const header = `<tr><th class="row-head">Labo \\ Domaine</th>${disciplines.map(d => `<th title="${escapeHtml(d)}">${escapeHtml(d.length > 16 ? d.slice(0, 14) + '…' : d)}</th>`).join('')}</tr>`;
+  const rows = labs.map(l => {
+    const cells = disciplines.map(d => {
+      const v = matrix[l + '||' + d] || 0;
+      if (!v) return `<td class="cell zero">·</td>`;
+      const intensity = 0.15 + 0.85 * (v / maxVal);
+      return `<td class="cell" style="background:rgba(0,0,145,${intensity.toFixed(2)});color:${intensity > 0.5 ? '#fff' : 'var(--blue-marianne)'}" title="${escapeHtml(l)} × ${escapeHtml(d)} : ${v}">${v}</td>`;
+    }).join('');
+    return `<tr><td class="row-head">${escapeHtml(l)}</td>${cells}</tr>`;
+  }).join('');
+  area.innerHTML = `
+    <div style="margin-bottom:14px;padding:12px 16px;background:var(--bg-panel);border-radius:4px;border-left:4px solid var(--blue-marianne);box-shadow:0 1px 3px rgba(0,0,0,.04)">
+      <strong style="color:var(--blue-marianne);font-size:14px">🔲 Matrice Laboratoires × Domaines</strong>
+      <span style="color:var(--grey-500);font-size:12px;margin-left:8px">· ${labs.length} labos · ${disciplines.length} domaines · ${fmtNum(data.length)} projets</span>
+    </div>
+    <div class="analytics-panel"><div class="panel-body"><div class="matrix-wrap"><table class="matrix"><thead>${header}</thead><tbody>${rows}</tbody></table></div></div></div>`;
+}
+
+/* ============ VUE ANALYSES ============ */
+function renderAnalytics(){
+  const area = $('resultsArea');
+  const data = state.filtered.length ? state.filtered : state.all;
+  if (!data.length){ area.innerHTML = '<div class="empty">Chargez des données.</div>'; return; }
+  const byDisc = {}, byLab = {}, byFinanceur = {}, byYear = {}, byStatut = {};
+  for (const p of data){
+    byDisc[p.discipline] = (byDisc[p.discipline] || 0) + 1;
+    byLab[p.laboratoire] = (byLab[p.laboratoire] || 0) + 1;
+    byFinanceur[p.financeur] = (byFinanceur[p.financeur] || 0) + 1;
+    if (p.annee !== '—') byYear[p.annee] = (byYear[p.annee] || 0) + 1;
+    if (p.statut !== '—') byStatut[p.statut] = (byStatut[p.statut] || 0) + 1;
+  }
+  const bars = (obj, color, top) => {
+    const arr = Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, top || 12);
+    const max = Math.max(...arr.map(x => x[1]), 1);
+    return arr.map(([k, v], i) => `<div class="bar-row" style="animation:fadeInLeft .35s ease-out backwards;animation-delay:${Math.min(i * 30, 400)}ms">
+      <div class="name" title="${escapeHtml(k)}">${escapeHtml(k)}</div>
+      <div class="bar-track"><div class="bar-fill ${color || ''} anim-bar" style="width:0" data-w="${(v / max) * 100}%"></div></div>
+      <div class="val">${v}</div>
+    </div>`).join('');
+  };
+  const pie = makePieChart(byDisc, data.length);
+  area.innerHTML = `
+    <div class="analytics-grid">
+      <div class="analytics-panel"><div class="panel-head">🔬 RÉPARTITION PAR DOMAINE</div><div class="panel-body">${pie}</div></div>
+      <div class="analytics-panel"><div class="panel-head">🏛️ PROJETS PAR LABORATOIRE</div><div class="panel-body">${bars(byLab, 'green', 20)}</div></div>
+      <div class="analytics-panel"><div class="panel-head">💰 PROJETS PAR FINANCEUR</div><div class="panel-body">${bars(byFinanceur, 'violet', 10)}</div></div>
+      <div class="analytics-panel"><div class="panel-head">📅 PROJETS PAR ANNÉE DE DÉMARRAGE</div><div class="panel-body">${bars(byYear, 'gold', 20)}</div></div>
+      <div class="analytics-panel"><div class="panel-head">📊 STATUT DES PROJETS</div><div class="panel-body">${bars(byStatut, '', 10)}</div></div>
+    </div>`;
+  requestAnimationFrame(() => area.querySelectorAll('.anim-bar').forEach(b => b.style.width = b.dataset.w));
+  setTimeout(() => area.querySelectorAll('.pie-slice').forEach(el => el.classList.add('visible')), 50);
+  area.querySelectorAll('.pie-slice,.pie-legend-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const disc = el.dataset.cat;
+      if (!disc) return;
+      $('queryInput').value = disc;
+      applyFilters(1);
+    });
+  });
+}
+
+function makePieChart(obj, total){
+  if (!total) return '<div style="text-align:center;color:var(--grey-500);padding:24px">Aucune donnée</div>';
+  const entries = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+  const MAX = 12;
+  let display;
+  if (entries.length > MAX){
+    const top = entries.slice(0, MAX - 1);
+    const rest = entries.slice(MAX - 1);
+    display = [...top, [`📦 Autres (${rest.length})`, rest.reduce((s, [, v]) => s + v, 0)]];
+  } else display = entries;
+  const SIZE = 240, R = 100, CX = SIZE / 2, CY = SIZE / 2;
+  let angle = -Math.PI / 2;
+  const slices = [], legend = [];
+  display.forEach(([label, value], i) => {
+    const frac = value / total;
+    const a0 = angle, a1 = angle + frac * Math.PI * 2;
+    angle = a1;
+    if (frac >= 0.9999){
+      slices.push(`<circle class="pie-slice" data-cat="${escapeHtml(label)}" cx="${CX}" cy="${CY}" r="${R}" style="fill:${colorForIdx(i)};animation-delay:${i * 40}ms" />`);
+    } else if (frac > 0){
+      const x0 = CX + Math.cos(a0) * R, y0 = CY + Math.sin(a0) * R;
+      const x1 = CX + Math.cos(a1) * R, y1 = CY + Math.sin(a1) * R;
+      const large = frac > 0.5 ? 1 : 0;
+      slices.push(`<path class="pie-slice" data-cat="${escapeHtml(label)}" d="M ${CX} ${CY} L ${x0} ${y0} A ${R} ${R} 0 ${large} 1 ${x1} ${y1} Z" style="fill:${colorForIdx(i)};animation-delay:${i * 40}ms" />`);
+    }
+    legend.push(`<div class="pie-legend-item" data-cat="${escapeHtml(label)}" style="animation-delay:${i * 30}ms">
+      <div class="pie-legend-color" style="background:${colorForIdx(i)}"></div>
+      <span class="pie-legend-name" title="${escapeHtml(label)}">${escapeHtml(label)}</span>
+      <span class="pie-legend-pct">${(frac * 100).toFixed(1)}%</span>
+      <span class="pie-legend-val">${value}</span>
+    </div>`);
+  });
+  return `<div class="pie-container">
+    <div class="pie-svg-wrap">
+      <svg class="pie-svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}">${slices.join('')}</svg>
+      <div class="pie-center"><div class="pie-total">${total}</div><div class="pie-label">Projets</div></div>
+    </div>
+    <div class="pie-legend">${legend.join('')}</div>
+  </div>`;
+}
+
+/* ============ VUE TIMELINE ============ */
+function renderTimeline(){
+  const area = $('resultsArea');
+  const data = state.filtered.length ? state.filtered : state.all;
+  if (!data.length){ area.innerHTML = '<div class="empty">Chargez des données.</div>'; return; }
+  const byYear = {};
+  for (const p of data){
+    if (p.annee === '—') continue;
+    if (!byYear[p.annee]) byYear[p.annee] = { count: 0, budget: 0, disc: new Set() };
+    byYear[p.annee].count++;
+    byYear[p.annee].budget += p.budget;
+    if (p.discipline !== '—') byYear[p.annee].disc.add(p.discipline);
+  }
+  const years = Object.keys(byYear).sort();
+  if (years.length < 2){
+    area.innerHTML = `<div class="empty">Pas assez d'années distinctes (${years.length}).</div>`;
+    return;
+  }
+  const W = 900, H = 340, PAD_L = 80, PAD_R = 30, PAD_T = 40, PAD_B = 50;
+  const innerW = W - PAD_L - PAD_R, innerH = H - PAD_T - PAD_B;
+  const maxCount = Math.max(...years.map(y => byYear[y].count), 1);
+  const stepX = innerW / Math.max(1, years.length - 1);
+  const scaleY = v => PAD_T + innerH - (v / maxCount) * innerH;
+  const pts = years.map((y, i) => ({ year: y, x: PAD_L + i * stepX, y: scaleY(byYear[y].count), count: byYear[y].count, budget: byYear[y].budget, disc: byYear[y].disc.size }));
+  const linePath = pts.map((p, i) => (i === 0 ? 'M' : 'L') + ` ${p.x} ${p.y}`).join(' ');
+  const areaPath = linePath + ` L ${pts[pts.length - 1].x} ${PAD_T + innerH} L ${pts[0].x} ${PAD_T + innerH} Z`;
+  const grid = [0, 0.25, 0.5, 0.75, 1].map(f => {
+    const y = PAD_T + innerH - f * innerH;
+    return `<line class="line-grid" x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}" />
+      <text class="line-axis" x="${PAD_L - 8}" y="${y + 4}" text-anchor="end">${Math.round(f * maxCount)}</text>`;
+  }).join('');
+  const xLabels = pts.map(p => `<text class="line-axis" x="${p.x}" y="${H - PAD_B + 18}" text-anchor="middle" font-weight="700">${p.year}</text>`).join('');
+  const circles = pts.map((p, i) => `<circle class="line-point" cx="${p.x}" cy="${p.y}" r="5" style="opacity:0;animation:popIn .4s ease-out ${600 + i * 80}ms forwards"><title>${p.year} : ${p.count} projets · ${fmtBudget(p.budget)}</title></circle>`).join('');
+  const variations = pts.slice(1).map((p, i) => {
+    const prev = pts[i];
+    const delta = prev.count ? ((p.count - prev.count) / prev.count) * 100 : 0;
+    const cls = delta > 0 ? 'pos' : delta < 0 ? 'neg' : 'neu';
+    const arrow = delta > 0 ? '▲' : delta < 0 ? '▼' : '=';
+    return `<div style="display:grid;grid-template-columns:1fr 80px 80px 100px;gap:8px;padding:8px 0;border-bottom:1px solid var(--grey-100);font-size:12px;font-family:var(--font-mono)">
+      <div style="font-weight:600;color:var(--grey-700)">${prev.year} → ${p.year}</div>
+      <div style="text-align:right">${prev.count}</div>
+      <div style="text-align:right">${p.count}</div>
+      <div style="text-align:right;font-weight:700;color:${delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red-marianne)' : 'var(--grey-500)'}">${arrow} ${Math.abs(delta).toFixed(1)}%</div>
+    </div>`;
+  }).join('');
+  area.innerHTML = `
+    <div class="analytics-panel" style="margin-bottom:14px">
+      <div class="panel-head">📈 ÉVOLUTION DES PROJETS DE RECHERCHE PAR ANNÉE</div>
+      <div class="panel-body"><div class="line-chart-wrap">
+        <svg class="line-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+          <defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#000091" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#000091" stop-opacity="0.02"/>
+          </linearGradient></defs>
+          ${grid}
+          <path class="line-area" d="${areaPath}" />
+          <path class="line-path" d="${linePath}" />
+          ${circles}
+          ${xLabels}
+        </svg>
+      </div></div>
+    </div>
+    <div class="analytics-panel">
+      <div class="panel-head">📊 VARIATIONS ANNUELLES</div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:1fr 80px 80px 100px;gap:8px;padding:8px 0;border-bottom:2px solid var(--border);font-size:10px;font-weight:700;color:var(--blue-marianne);text-transform:uppercase;letter-spacing:.5px">
+          <div>Période</div><div style="text-align:right">N-1</div><div style="text-align:right">N</div><div style="text-align:right">Variation</div>
         </div>
+        ${variations || '<div style="padding:14px;text-align:center;color:var(--grey-500)">Pas assez d\'années</div>'}
+      </div>
     </div>`;
 }
-async function analyzeBase10Input(input) {
-    const seqMatch = input.match(/^\d+(\.\d+)+$/);
-    if (seqMatch) {
-        const decoded = decodeBase10Sequence(input);
-        let html = `
-        <div class="b10-panel">
-            <div class="title">🔓 Décodage séquence Base 10 : ${input}</div>
-            <div class="b10-steps">
-                ${decoded.details.map(d => `<span class="base10">${d.nombre}</span> → <span class="result">${d.lettre}</span>`).join(' · ')}
-                <br><br><span class="result" style="font-size:1.4rem;">= ${decoded.lettres}</span>
-            </div>
-        </div>`;
-        html += await analyzeWord(decoded.lettres);
-        return html;
-    }
-    return null;
-}
 
-// ============================================================
-// ANALYSE NOMBRE
-// ============================================================
-async function analyzeNumber(n, original) {
-    const hex = n.toString(16).toUpperCase();
-    const bin = n.toString(2);
-    const oct = n.toString(8);
-    const digitSum = n.toString().split('').reduce((a,b) => a + parseInt(b), 0);
-    const divisors = getDivisors(n);
-    const primeFactors = getPrimeFactors(n);
-    const isP = isPrime(n);
-    const sumDivisors = divisors.reduce((a,b) => a+b, 0);
-    const hash = hashFnv1a(n.toString());
-    const colorHex = `#${(hash & 0xFFFFFF).toString(16).padStart(6,'0')}`;
-    const rgb = hexToRgb(colorHex);
-    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-    const date = new Date(n * 1000);
-    const hashTable = await buildFullHashTable(n.toString());
-
-    return `
-        ${renderBase10Panel(n)}
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-            <span class="type-badge ${isP ? 'prime' : 'number'}">${isP ? '⭐ Premier' : '🔢 Entier'}</span>
-            <span style="font-size:2rem; font-weight:700; color:#4A90E2; font-family:monospace;">${formatNumber(n)}</span>
-            <span style="color:#666; font-size:0.8rem;">0x${hex}</span>
+/* ============ VUE CHERCHEURS ============ */
+function renderResearchers(){
+  const area = $('resultsArea');
+  const data = state.filtered.length ? state.filtered : state.all;
+  if (!data.length){ area.innerHTML = '<div class="empty">Chargez des données.</div>'; return; }
+  const byPorteur = {};
+  for (const p of data){
+    if (p.porteur === '—') continue;
+    if (!byPorteur[p.porteur]) byPorteur[p.porteur] = { count: 0, labs: new Set(), domaines: new Set(), budget: 0, projets: [] };
+    byPorteur[p.porteur].count++;
+    if (p.laboratoire !== '—') byPorteur[p.porteur].labs.add(p.laboratoire);
+    if (p.discipline !== '—') byPorteur[p.porteur].domaines.add(p.discipline);
+    byPorteur[p.porteur].budget += p.budget;
+    byPorteur[p.porteur].projets.push(p);
+  }
+  const entries = Object.entries(byPorteur).sort((a, b) => b[1].count - a[1].count);
+  if (!entries.length){
+    area.innerHTML = '<div class="empty">Aucun porteur de projet renseigné.</div>';
+    return;
+  }
+  const cards = entries.map(([name, s], i) => {
+    const initials = name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    return `<div class="researcher-card" style="animation:fadeInUp .35s ease-out backwards;animation-delay:${Math.min(i * 25, 400)}ms">
+      <div class="researcher-avatar">${escapeHtml(initials)}</div>
+      <div class="researcher-info">
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">${escapeHtml(name)}</div>
+        <div style="font-size:11px;color:var(--grey-700);margin-bottom:6px">
+          🏛️ ${[...s.labs].map(l => escapeHtml(l)).join(', ') || '—'}
         </div>
-        <div class="section-title"><span class="emoji">🔢</span> Notations</div>
-        <div class="stats-grid">
-            ${renderCard('Décimal', formatNumber(n), 'bleu')}
-            ${renderCard('Hexadécimal', '0x' + hex, 'bleu')}
-            ${renderCard('Binaire', bin, '')}
-            ${renderCard('Octal', oct, '')}
-            ${renderCard('Base 36', n.toString(36).toUpperCase(), '')}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;font-family:var(--font-mono);font-size:10px">
+          <span style="background:var(--blue-soft);color:var(--blue-marianne);padding:3px 8px;border-radius:3px;font-weight:700">${s.count} projet(s)</span>
+          <span style="background:var(--gold);color:#1e1e1e;padding:3px 8px;border-radius:3px;font-weight:700">${s.domaines.size} domaine(s)</span>
+          ${s.budget > 0 ? `<span style="background:var(--green-soft);color:var(--green);padding:3px 8px;border-radius:3px;font-weight:700">${fmtBudget(s.budget)}</span>` : ''}
         </div>
-        <div class="section-title"><span class="emoji">📐</span> Propriétés</div>
-        <div class="stats-grid">
-            ${renderCard('Premier', isP ? '✅ Oui' : '❌ Non', isP ? 'bleu' : 'rouge')}
-            ${renderCard('Pair / Impair', n % 2 === 0 ? 'Pair' : 'Impair', '')}
-            ${renderCard('Chiffres', n.toString().length, 'bleu')}
-            ${renderCard('Somme chiffres', digitSum, 'blanc')}
-            ${renderCard('Diviseurs', divisors.length, 'bleu')}
-            ${renderCard('Parfait', isPerfect(n) ? '✅' : '❌', '')}
-            ${renderCard('Harshad', isHarshad(n) ? '✅' : '❌', '')}
-            ${renderCard('Palindrome', isPalindrome(n) ? '✅' : '❌', '')}
-            ${renderCard('Fibonacci', isFibonacci(n) ? '✅' : '❌', '')}
-            ${renderCard('Puissance de 2', isPowerOfTwo(n) ? '✅' : '❌', '')}
-            ${renderCard('Armstrong', isArmstrong(n) ? '✅' : '❌', '')}
+      </div>
+    </div>`;
+  }).join('');
+  area.innerHTML = `
+    <div style="margin-bottom:14px;padding:12px 16px;background:var(--bg-panel);border-radius:4px;border-left:4px solid var(--violet);box-shadow:0 1px 3px rgba(0,0,0,.04)">
+      <strong style="color:var(--blue-marianne);font-size:14px">👥 ${entries.length} chercheur(s) / porteur(s)</strong>
+      <span style="color:var(--grey-500);font-size:12px;margin-left:8px">· ${fmtNum(data.length)} projets</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:12px">${cards}</div>`;
+}
+
+/* ============ VUE QUALITÉ ============ */
+function renderQuality(){
+  const area = $('resultsArea');
+  if (!state.all.length){ area.innerHTML = '<div class="empty">Chargez des données.</div>'; return; }
+  const total = state.all.length;
+  const missing = {
+    laboratoire: state.all.filter(p => p.laboratoire === '—').length,
+    discipline: state.all.filter(p => p.discipline === '—').length,
+    financeur: state.all.filter(p => p.financeur === '—').length,
+    annee: state.all.filter(p => p.annee === '—').length,
+    porteur: state.all.filter(p => p.porteur === '—').length,
+    budget: state.all.filter(p => !p.budget).length,
+    description: state.all.filter(p => p.description === '—').length
+  };
+  const totalFields = total * 7;
+  const completeness = ((totalFields - Object.values(missing).reduce((s, v) => s + v, 0)) / totalFields) * 100;
+  const fields = [
+    ['Laboratoire', 'laboratoire'], ['Domaine', 'discipline'], ['Financeur', 'financeur'],
+    ['Année', 'annee'], ['Porteur', 'porteur'], ['Budget', 'budget'], ['Description', 'description']
+  ];
+  const rows = fields.map(([label, key]) => {
+    const m = missing[key];
+    const pct = ((total - m) / total) * 100;
+    const color = pct > 95 ? 'var(--green)' : pct > 80 ? '#8a5e00' : 'var(--red-marianne)';
+    return `<div style="display:grid;grid-template-columns:150px 1fr 80px 100px;gap:10px;padding:8px 0;font-size:12px;font-family:var(--font-mono);border-bottom:1px solid var(--grey-100);align-items:center">
+      <strong style="color:var(--grey-700);font-family:var(--font-sans)">${label}</strong>
+      <div style="background:var(--grey-100);height:14px;border-radius:3px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:${color};border-radius:3px;transition:width 1s"></div>
+      </div>
+      <span style="text-align:right;color:${color};font-weight:700">${pct.toFixed(1)}%</span>
+      <span style="text-align:right;color:var(--grey-500)">${m ? m + ' manquant(s)' : '✓'}</span>
+    </div>`;
+  }).join('');
+  area.innerHTML = `<div style="max-width:900px;margin:14px auto">
+    <div style="background:var(--bg-panel);border:1px solid var(--border);border-left:4px solid ${completeness > 95 ? 'var(--green)' : completeness > 80 ? 'var(--gold)' : 'var(--red-marianne)'};border-radius:6px;padding:16px 20px;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:700;color:var(--blue-marianne);margin-bottom:14px">${completeness > 95 ? '✅' : completeness > 80 ? '⚠️' : '❌'} Complétude des métadonnées</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
+        <div style="background:var(--grey-50);border:1px solid var(--border);border-radius:4px;padding:12px;text-align:center">
+          <div style="font-size:22px;font-weight:800;font-family:var(--font-mono);color:var(--blue-marianne)">${fmtNum(total)}</div>
+          <div style="font-size:10px;color:var(--grey-500);text-transform:uppercase;letter-spacing:.5px;margin-top:6px;font-weight:700">Projets</div>
         </div>
-        <div class="section-title"><span class="emoji">🔢</span> Factorisation</div>
-        <div class="stats-grid" style="grid-template-columns:1fr 1fr;">
-            <div class="stat-card">
-                <div class="label">Facteurs premiers</div>
-                <div class="factor-tree">${formatNumber(n)} = ${primeFactors.map(f => `<span style="color:#FF5252; font-weight:700;">${f}</span>`).join(' × ')}</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Diviseurs (${divisors.length})</div>
-                <div class="divisors-list">${divisors.map(d => `<span class="div ${isPrime(d) ? 'prime' : ''}">${formatNumber(d)}</span>`).join('')}</div>
-            </div>
+        <div style="background:var(--grey-50);border:1px solid var(--border);border-radius:4px;padding:12px;text-align:center">
+          <div style="font-size:22px;font-weight:800;font-family:var(--font-mono);color:${completeness > 95 ? 'var(--green)' : completeness > 80 ? '#8a5e00' : 'var(--red-marianne)'}">${completeness.toFixed(1)}%</div>
+          <div style="font-size:10px;color:var(--grey-500);text-transform:uppercase;letter-spacing:.5px;margin-top:6px;font-weight:700">Complétude</div>
         </div>
-        <div class="section-title"><span class="emoji">🎨</span> Couleur</div>
-        <div class="color-preview">
-            <div class="swatch" style="background-color:${colorHex};"></div>
-            <div class="info">
-                <div class="label">Hexadécimal</div>
-                <div class="value">${colorHex}</div>
-                <div style="margin-top:3px; font-size:0.8rem; color:#888;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
-            </div>
-        </div>
-        <div class="section-title"><span class="emoji">🔐</span> Hashs (MD5 · SHA-1/2/3 · BLAKE · RIPEMD)</div>
-        ${hashTable}
-        <div class="section-title"><span class="emoji">📅</span> Date</div>
-        <div class="stats-grid">
-            ${renderCard('Timestamp UNIX', formatNumber(n) + ' s', 'bleu')}
-            ${renderCard('Date UTC', date.toUTCString(), '')}
-            ${renderCard('Date Paris', date.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }), '')}
-        </div>
-    `;
+      </div>
+    </div>
+    <div style="background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+      <div style="font-size:15px;font-weight:700;color:var(--blue-marianne);margin-bottom:14px">📋 Détail par champ</div>
+      ${rows}
+    </div>
+  </div>`;
 }
 
-// ============================================================
-// ANALYSE MOT
-// ============================================================
-async function analyzeWord(text) {
-    const lower = text.toLowerCase();
-    const hash = hashFnv1a(text);
-    const colorHex = `#${(hash & 0xFFFFFF).toString(16).padStart(6,'0')}`;
-    const rgb = hexToRgb(colorHex);
-    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-    const letters = text.split('');
-    const letterValues = letters.map(c => {
-        const code = c.toUpperCase().charCodeAt(0) - 64;
-        return code >= 1 && code <= 26 ? code : 0;
-    });
-    const sumLetters = letterValues.reduce((a,b) => a+b, 0);
-    const words = text.split(/\s+/).filter(w => w.length > 0);
-    const vowels = letters.filter(c => 'AEIOUYaeiouy'.includes(c)).length;
-    const consonants = letters.filter(c => c.match(/[bcdfghjklmnpqrstvwxz]/i)).length;
-    const associatedNumber = WORD_TO_NUMBER[lower] || null;
-    const hashTable = await buildFullHashTable(text);
-
-    return `
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-            <span class="type-badge text">📝 Mot</span>
-            <span style="font-size:2rem; font-weight:700; color:#FF5252; font-family:monospace;">${text}</span>
-            <span style="color:#666; font-size:0.8rem;">${text.length} car.</span>
-            ${associatedNumber ? '<span style="color:#FF5252; font-size:0.7rem;">📌 Nombre associé</span>' : ''}
-        </div>
-        ${associatedNumber ? `
-        <div class="relation-box">
-            <div class="title">📌 Nombre associé à "${text}"</div>
-            <div class="content">
-                <div class="item"><div class="lbl">Valeur</div><div class="val">${formatNumber(associatedNumber)}</div></div>
-                <div class="item"><div class="lbl">Hex</div><div class="val">0x${associatedNumber.toString(16).toUpperCase()}</div></div>
-                <div class="item"><div class="lbl">Hash FNV-1a</div><div class="val">0x${hash.toString(16).toUpperCase().padStart(8,'0')}</div></div>
-            </div>
-        </div>` : ''}
-        <div class="section-title"><span class="emoji">📝</span> Propriétés</div>
-        <div class="stats-grid">
-            ${renderCard('Longueur', text.length + ' car.', 'bleu')}
-            ${renderCard('Mots', words.length, '')}
-            ${renderCard('Voyelles', vowels, '')}
-            ${renderCard('Consonnes', consonants, '')}
-            ${renderCard('Somme A1Z26', sumLetters, 'blanc')}
-        </div>
-        <div class="section-title"><span class="emoji">📊</span> Lettres → Valeurs</div>
-        <div class="stats-grid">
-            <div class="stat-card" style="grid-column: 1 / -1;">
-                <div class="word-analysis">
-                    ${letters.map(c => {
-                        const v = c.toUpperCase().charCodeAt(0) - 64;
-                        if (v >= 1 && v <= 26) return `<span class="char" style="border-color:#4A90E2;"><span style="color:#fff;">${c}</span>=<span style="color:#4A90E2;">${v}</span></span>`;
-                        return `<span class="char" style="border-color:#666; color:#666;">${c}</span>`;
-                    }).join(' ')}
-                    <span style="color:#ffffff; font-weight:700; margin-left:4px;">= ${sumLetters}</span>
-                </div>
-            </div>
-        </div>
-        <div class="section-title"><span class="emoji">🎨</span> Couleur</div>
-        <div class="color-preview">
-            <div class="swatch" style="background-color:${colorHex};"></div>
-            <div class="info">
-                <div class="label">Hexadécimal</div>
-                <div class="value">${colorHex}</div>
-                <div style="margin-top:3px; font-size:0.8rem; color:#888;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
-            </div>
-        </div>
-        <div class="section-title"><span class="emoji">🔐</span> Hashs (MD5 · SHA-1/2/3 · BLAKE · RIPEMD)</div>
-        ${hashTable}
-    `;
+/* ============ TOAST ============ */
+function toast(msg, type = 'info', duration = 3000){
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), duration);
 }
 
-// ============================================================
-// GÉNÉRATEUR DE HASHS — Tri + Export
-// ============================================================
-async function generateHashesForRange(start, end) {
-    const results = [];
-    for (let n = start; n <= end; n++) {
-        const s = String(n);
-        const e = {
-            nombre: n, binaire: n.toString(2), octal: n.toString(8),
-            hex: '0x' + n.toString(16).toUpperCase(), base36: n.toString(36).toUpperCase(),
-            crc32: crc32hex(s), fnv1a: '0x' + hashFnv1a(s).toString(16).toUpperCase().padStart(8,'0'),
-            md5: md5(s), sha1: sha1(s), sha256: sha256(s),
-            sha3_256: sha3_256(s), sha3_512: sha3_512(s),
-            blake2b: blake2b(s, 64), blake3: blake3(s), ripemd160: ripemd160(s),
-            sha384: null, sha512: null, base64: btoa(s)
-        };
-        if (window.crypto && window.crypto.subtle) {
-            try {
-                e.sha384 = await webcryptoHex('SHA-384', s);
-                e.sha512 = await webcryptoHex('SHA-512', s);
-            } catch (err) {}
-        }
-        results.push(e);
-    }
-    return results;
-}
-function sortHashes(entries, by = 'nombre', dir = 'asc') {
-    const sorted = [...entries].sort((a, b) => {
-        const va = a[by], vb = b[by];
-        if (typeof va === 'number' && typeof vb === 'number') return va - vb;
-        return String(va ?? '').localeCompare(String(vb ?? ''));
-    });
-    return dir === 'desc' ? sorted.reverse() : sorted;
-}
-window._hashData = []; window._hashSortBy = 'nombre'; window._hashSortDir = 'asc';
-
-function renderHashGrid(entries) {
-    if (!entries.length) return '<p style="color:#666;">Aucune donnée.</p>';
-    const cols = [
-        { key: 'nombre', label: 'N' }, { key: 'binaire', label: 'Bin' }, { key: 'hex', label: 'Hex' },
-        { key: 'crc32', label: 'CRC-32' }, { key: 'fnv1a', label: 'FNV-1a' },
-        { key: 'md5', label: 'MD5' }, { key: 'sha1', label: 'SHA-1' }, { key: 'sha256', label: 'SHA-256' },
-        { key: 'sha3_256', label: 'SHA-3-256' }, { key: 'sha3_512', label: 'SHA-3-512' },
-        { key: 'blake2b', label: 'BLAKE2b' }, { key: 'blake3', label: 'BLAKE3' },
-        { key: 'ripemd160', label: 'RIPEMD' }, { key: 'base64', label: 'B64' }
-    ];
-    const ths = cols.map(c => {
-        let cls = '';
-        if (window._hashSortBy === c.key) cls = window._hashSortDir === 'asc' ? 'sorted-asc' : 'sorted-desc';
-        return `<th class="${cls}" onclick="sortHashGrid('${c.key}')">${c.label}</th>`;
-    }).join('');
-    const rows = entries.map(e => `
-        <tr>
-            <td style="color:#FFD700; font-weight:700;">${e.nombre}</td>
-            <td style="color:#888;">${e.binaire}</td>
-            <td style="color:#4A90E2;">${e.hex}</td>
-            <td><span class="tag ok">${e.crc32}</span></td>
-            <td>${e.fnv1a}</td>
-            <td style="color:#FF8A80;">${e.md5}</td>
-            <td style="color:#FF8A80;">${e.sha1}</td>
-            <td style="color:#4A90E2;">${e.sha256.slice(0,16)}…</td>
-            <td style="color:#5C9EFF;">${e.sha3_256.slice(0,16)}…</td>
-            <td style="color:#5C9EFF;">${e.sha3_512.slice(0,16)}…</td>
-            <td style="color:#88DD88;">${e.blake2b.slice(0,16)}…</td>
-            <td style="color:#88DD88;">${e.blake3.slice(0,16)}…</td>
-            <td style="color:#FFD700;">${e.ripemd160.slice(0,16)}…</td>
-            <td style="color:#888;">${e.base64}</td>
-        </tr>`).join('');
-    return `<table class="hash-table" style="font-size:0.55rem;"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
-}
-window.sortHashGrid = function(key) {
-    if (window._hashSortBy === key) window._hashSortDir = window._hashSortDir === 'asc' ? 'desc' : 'asc';
-    else { window._hashSortBy = key; window._hashSortDir = 'asc'; }
-    const sorted = sortHashes(window._hashData, window._hashSortBy, window._hashSortDir);
-    document.getElementById('hashGridContainer').innerHTML = renderHashGrid(sorted);
-};
-function exportHashes(entries, format = 'json') {
-    let content, mime, filename;
-    if (format === 'json') {
-        content = JSON.stringify(entries, null, 2);
-        mime = 'application/json'; filename = 'hashs.json';
-    } else {
-        const headers = ['nombre','binaire','octal','hex','base36','crc32','fnv1a','md5','sha1','sha256','sha3_256','sha3_512','blake2b','blake3','ripemd160','sha384','sha512','base64'];
-        const rows = entries.map(e => headers.map(h => e[h] ?? '').join(','));
-        content = headers.join(',') + '\n' + rows.join('\n');
-        mime = 'text/csv'; filename = 'hashs.csv';
-    }
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
-    URL.revokeObjectURL(url);
-}
-async function showHashGenerator() {
-    const start = parseInt(prompt('Début (ex: 0) :', '0'), 10);
-    const end = parseInt(prompt('Fin (ex: 20) :', '20'), 10);
-    if (isNaN(start) || isNaN(end) || start > end) { showToast('⚠️ Plage invalide'); return; }
-    if (end - start > 5000) { showToast('⚠️ Maximum 5000 entrées'); return; }
-    const results = document.getElementById('results');
-    results.innerHTML = '<div style="text-align:center; padding:40px; color:#4A90E2;">⏳ Génération…</div>';
-    const entries = await generateHashesForRange(start, end);
-    const sorted = sortHashes(entries, 'nombre', 'asc');
-    window._hashData = sorted; window._hashSortBy = 'nombre'; window._hashSortDir = 'asc';
-    results.innerHTML = `
-        <div class="b10-panel">
-            <div class="title">🔐 Hashs — ${start} → ${end} (${entries.length} entrées)</div>
-            <div class="b10-toggle">
-                <button onclick="exportHashes(window._hashData, 'json')">📥 JSON</button>
-                <button onclick="exportHashes(window._hashData, 'csv')">📥 CSV</button>
-                <button onclick="copyText(JSON.stringify(window._hashData))">📋 Copier</button>
-            </div>
-            <div class="hash-note" style="margin-top:8px;">💡 Clique sur un en-tête pour trier.</div>
-            <div id="hashGridContainer" style="margin-top:12px; max-height:600px; overflow:auto;">${renderHashGrid(sorted)}</div>
-            <div class="hash-note" style="margin-top:10px;">✅ RFC 1321 (MD5) · FIPS 180-4 (SHA-1/2) · FIPS 202 (SHA-3) · RFC 7693 (BLAKE2b) · BLAKE3 · ISO RIPEMD</div>
-        </div>`;
-    results.scrollIntoView({ behavior: 'smooth' });
-}
-
-// ============================================================
-// RECHERCHE INVERSÉE
-// ============================================================
-window._reverseDict = new Map();
-async function buildReverseDictionary(start, end) {
-    const dict = window._reverseDict;
-    for (let n = start; n <= end; n++) {
-        const s = String(n);
-        dict.set(crc32hex(s), { n, algo: 'CRC-32' });
-        dict.set('0x' + hashFnv1a(s).toString(16).toUpperCase().padStart(8,'0'), { n, algo: 'FNV-1a' });
-        dict.set(md5(s), { n, algo: 'MD5' });
-        dict.set(sha1(s), { n, algo: 'SHA-1' });
-        dict.set(sha256(s), { n, algo: 'SHA-256' });
-        dict.set(sha3_256(s), { n, algo: 'SHA-3-256' });
-        dict.set(sha3_512(s), { n, algo: 'SHA-3-512' });
-        dict.set(blake2b(s, 64), { n, algo: 'BLAKE2b' });
-        dict.set(blake3(s), { n, algo: 'BLAKE3' });
-        dict.set(ripemd160(s), { n, algo: 'RIPEMD-160' });
-        if (window.crypto && window.crypto.subtle) {
-            try {
-                dict.set(await webcryptoHex('SHA-384', s), { n, algo: 'SHA-384' });
-                dict.set(await webcryptoHex('SHA-512', s), { n, algo: 'SHA-512' });
-            } catch (e) {}
-        }
-    }
-}
-async function showReverseSearch() {
-    const results = document.getElementById('results');
-    results.innerHTML = `
-        <div class="reverse-panel">
-            <div class="title">🔄 Recherche inversée — Hash → Nombre</div>
-            <input type="text" id="reverseInput" placeholder="Colle un hash (MD5, SHA-1, SHA-256, SHA-3, BLAKE2, BLAKE3, RIPEMD, CRC-32...)" />
-            <div class="b10-toggle">
-                <button onclick="doReverseSearch()">🔍 Rechercher</button>
-            </div>
-            <div class="hash-note" style="margin-top:8px;">💡 Dictionnaire interne 0 → 2000 (tous algos). Extension auto 2001 → 5000.</div>
-            <div id="reverseResult"></div>
-        </div>`;
-    document.getElementById('reverseInput').addEventListener('keydown', e => { if (e.key === 'Enter') doReverseSearch(); });
-    results.scrollIntoView({ behavior: 'smooth' });
-    setTimeout(() => document.getElementById('reverseInput').focus(), 300);
-    if (!window._reverseDict || window._reverseDict.size === 0) {
-        showToast('⏳ Chargement 0 → 2000…');
-        await buildReverseDictionary(0, 2000);
-        showToast('✅ Dictionnaire prêt');
-    }
-}
-async function doReverseSearch() {
-    const input = document.getElementById('reverseInput').value.trim();
-    const box = document.getElementById('reverseResult');
-    if (!input) { box.innerHTML = ''; return; }
-    box.innerHTML = '<div style="color:#4A90E2; padding:10px;">⏳ Recherche…</div>';
-    const found = window._reverseDict.get(input) ||
-                  window._reverseDict.get(input.toUpperCase()) ||
-                  window._reverseDict.get(input.toLowerCase());
-    if (found) {
-        box.innerHTML = `<div class="reverse-result">
-            <div class="match">✅ Nombre : ${found.n}</div>
-            <div class="algo">Algorithme : ${found.algo}</div>
-            <div class="hash">Hash : ${input}</div>
-            <div style="margin-top:10px;"><button class="copy-btn" onclick="quickSearch('${found.n}')">🔍 Analyser ${found.n}</button></div>
-        </div>`;
-        return;
-    }
-    if (window._reverseDict.size < 35000) {
-        box.innerHTML = `<div class="reverse-result"><div class="nope">⏳ Pas dans 0 → 2000. Extension…</div></div>`;
-        await buildReverseDictionary(2001, 5000);
-        const f2 = window._reverseDict.get(input) || window._reverseDict.get(input.toUpperCase());
-        if (f2) {
-            box.innerHTML = `<div class="reverse-result">
-                <div class="match">✅ Nombre : ${f2.n}</div>
-                <div class="algo">Algorithme : ${f2.algo}</div>
-                <div class="hash">Hash : ${input}</div>
-                <div style="margin-top:10px;"><button class="copy-btn" onclick="quickSearch('${f2.n}')">🔍 Analyser ${f2.n}</button></div>
-            </div>`;
-            return;
-        }
-    }
-    box.innerHTML = `<div class="reverse-result"><div class="nope">❌ Aucun nombre trouvé dans 0 → 5000.</div></div>`;
-}
-
-// ============================================================
-// VÉRIFICATION CROISÉE AUTOMATIQUE
-// ============================================================
-async function showCrossCheck() {
-    const results = document.getElementById('results');
-    results.innerHTML = '<div style="text-align:center; padding:40px; color:#4A90E2;">⏳ Vérification croisée…</div>';
-
-    const tests = [
-        // MD5 (RFC 1321)
-        { algo: 'MD5',      input: 'abc',  got: md5('abc'),  expected: '900150983cd24fb0d6963f7d28e17f72' },
-        { algo: 'MD5',      input: '',     got: md5(''),     expected: 'd41d8cd98f00b204e9800998ecf8427e' },
-        // SHA-1 (FIPS 180-4)
-        { algo: 'SHA-1',    input: 'abc',  got: sha1('abc'), expected: 'a9993e364706816aba3e25717850c26c9cd0d89d' },
-        { algo: 'SHA-1',    input: '',     got: sha1(''),    expected: 'da39a3ee5e6b4b0d3255bfef95601890afd80709' },
-        // SHA-256 (FIPS 180-4)
-        { algo: 'SHA-256',  input: 'abc',  got: sha256('abc'), expected: 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad' },
-        { algo: 'SHA-256',  input: '',     got: sha256(''),    expected: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' },
-        // SHA-3-256 (FIPS 202)
-        { algo: 'SHA-3-256', input: '',    got: sha3_256(''),   expected: 'a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a' },
-        { algo: 'SHA-3-256', input: 'abc', got: sha3_256('abc'), expected: '3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532' },
-        // SHA-3-512 (FIPS 202)
-        { algo: 'SHA-3-512', input: '',    got: sha3_512(''),   expected: 'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26' },
-        // BLAKE2b-512 (RFC 7693)
-        { algo: 'BLAKE2b',  input: '',     got: blake2b('', 64), expected: '786a02f742015903c6c6fd852552d272912f4740e15847618a86e217f71f5419d25e1031afee585313896444934eb04b903a685b1448b755d56f701afe9be2ce' },
-        { algo: 'BLAKE2b',  input: 'abc',  got: blake2b('abc', 64), expected: 'ba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d17d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923' },
-        // BLAKE3
-        { algo: 'BLAKE3',   input: '',     got: blake3(''),    expected: 'af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262' },
-        { algo: 'BLAKE3',   input: 'abc',  got: blake3('abc'), expected: '6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85' },
-        // CRC-32 (IEEE 802.3)
-        { algo: 'CRC-32',   input: '123456789', got: crc32hex('123456789'), expected: 'CBF43926' }
-    ];
-
-    let html = `
-        <div class="b10-panel">
-            <div class="title">✓ Vérification croisée — Vecteurs officiels RFC/NIST/ISO</div>
-            <table class="hash-table" style="font-size:0.7rem;">
-                <thead><tr><th>Algo</th><th>Entrée</th><th>Calculé</th><th>Attendu</th><th>Résultat</th></tr></thead>
-                <tbody>
-    `;
-    let okCount = 0;
-    for (const t of tests) {
-        const ok = t.got === t.expected;
-        if (ok) okCount++;
-        const inputDisplay = t.input === '' ? '""' : `"${t.input}"`;
-        html += `<tr>
-            <td style="color:#4A90E2;">${t.algo}</td>
-            <td>${inputDisplay}</td>
-            <td style="color:${ok ? '#88DD88' : '#FF8A80'}; font-size:0.55rem;">${t.got.slice(0,24)}…</td>
-            <td style="color:#888; font-size:0.55rem;">${t.expected.slice(0,24)}…</td>
-            <td style="color:${ok ? '#88DD88' : '#FF5252'}; font-weight:700;">${ok ? '✅' : '❌'}</td>
-        </tr>`;
-    }
-    html += `
-                </tbody>
-            </table>
-            <div class="hash-note" style="margin-top:10px;">
-                ${okCount} / ${tests.length} tests réussis —
-                ${okCount === tests.length ? '✅ Tous les algos sont conformes aux vecteurs officiels.' : '⚠️ Certains algos diffèrent.'}
-                <br><br>
-                📚 Sources : RFC 1321 (MD5) · FIPS 180-4 (SHA-1/2) · FIPS 202 (SHA-3) · RFC 7693 (BLAKE2b) · BLAKE3 official test vectors · IEEE 802.3 (CRC-32).
-            </div>
-        </div>
-    `;
-    results.innerHTML = html;
-    results.scrollIntoView({ behavior: 'smooth' });
-}
-
-// ============================================================
-// INTERACTIONS
-// ============================================================
-window.copyText = function(text) {
-    navigator.clipboard.writeText(text).then(() => showToast('✅ Copié')).catch(() => {
-        const t = document.createElement('textarea');
-        t.value = text; document.body.appendChild(t); t.select();
-        document.execCommand('copy'); document.body.removeChild(t);
-        showToast('✅ Copié');
-    });
-};
-window.quickSearch = function(v) { document.getElementById('searchInput').value = v; analyze(); };
-window.randomInput = function() {
-    const arr = ['Paris','capitale','16118919','Bonjour','42','2.1.19.5','67','23.44','1.18.14','3.20.24','17.4'];
-    document.getElementById('searchInput').value = arr[Math.floor(Math.random() * arr.length)];
-    analyze();
-};
-window.clearResults = function() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('results').innerHTML = `
-        <div style="text-align:center; color:#555; padding:60px 20px;">
-            <div style="font-size:4rem; margin-bottom:16px;">🔍</div>
-            <div style="font-size:1.2rem;">Entrez un mot, un nombre ou un hash</div>
-        </div>`;
-};
-
-async function analyze() {
-    const input = document.getElementById('searchInput').value.trim();
-    if (!input) { showToast('⚠️ Entrez une valeur'); return; }
-    const results = document.getElementById('results');
-    try {
-        let html;
-
-        // Hash détecté ?
-        if (/^[a-fA-F0-9]{8,128}$/.test(input) || input.startsWith('0x')) {
-            results.innerHTML = `
-                <div class="reverse-panel">
-                    <div class="title">🔄 Hash détecté — Recherche inversée automatique</div>
-                    <div id="reverseResult"></div>
-                </div>`;
-            const box = document.getElementById('reverseResult');
-            if (window._reverseDict.size === 0) {
-                box.innerHTML = '<div style="color:#4A90E2;">⏳ Chargement…</div>';
-                await buildReverseDictionary(0, 2000);
-            }
-            const found = window._reverseDict.get(input) ||
-                          window._reverseDict.get(input.toUpperCase()) ||
-                          window._reverseDict.get(input.toLowerCase());
-            if (found) {
-                box.innerHTML = `<div class="reverse-result">
-                    <div class="match">✅ Nombre : ${found.n}</div>
-                    <div class="algo">Algorithme : ${found.algo}</div>
-                    <div class="hash">Hash : ${input}</div>
-                </div>` + await analyzeNumber(found.n, String(found.n));
-            } else {
-                box.innerHTML = `<div class="reverse-result"><div class="nope">❌ Aucun nombre trouvé dans 0 → 2000.</div></div>`;
-            }
-            results.scrollIntoView({ behavior: 'smooth' });
-            return;
-        }
-
-        // Séquence Base 10 ?
-        const b10 = await analyzeBase10Input(input);
-        if (b10) {
-            results.innerHTML = b10;
-            results.scrollIntoView({ behavior: 'smooth' });
-            return;
-        }
-
-        const type = detectType(input);
-        if (type === 'integer') {
-            const num = parseInt(input);
-            let foundWord = null;
-            for (const [w, nb] of Object.entries(WORD_TO_NUMBER)) if (nb === num) { foundWord = w; break; }
-            if (foundWord) {
-                html = await analyzeWord(foundWord);
-                html += `<div style="margin-top:20px; border-top:2px solid #333; padding-top:20px;">
-                    <div style="text-align:center; color:#666; font-size:0.8rem;">📌 Analyse du nombre associé</div>
-                </div>` + await analyzeNumber(num, input);
-            } else {
-                html = await analyzeNumber(num, input);
-            }
-        } else if (type === 'decimal') {
-            html = await analyzeNumber(parseInt(input.replace('.', '')), input);
-        } else {
-            html = await analyzeWord(input);
-        }
-        results.innerHTML = html;
-        results.scrollIntoView({ behavior: 'smooth' });
-    } catch (err) {
-        console.error(err);
-        showToast("❌ Erreur lors de l'analyse");
-    }
-}
-
-function showToast(m) {
-    const t = document.getElementById('toast');
-    t.textContent = m; t.classList.add('show');
-    clearTimeout(t._timeout);
-    t._timeout = setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-// ============================================================
-// INITIALISATION
-// ============================================================
-document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.activeElement === document.getElementById('searchInput')) analyze();
+/* ============ ÉVÉNEMENTS ============ */
+$('searchBtn')?.addEventListener('click', () => state.all.length ? applyFilters(1) : $('fileInput').click());
+$('queryInput')?.addEventListener('input', () => {
+  clearTimeout(window._deb);
+  window._deb = setTimeout(() => { if (state.all.length) applyFilters(1); }, 250);
 });
-document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+$('sortSelect')?.addEventListener('change', () => { if (state.all.length) applyFilters(1); });
+$('financeurSelect')?.addEventListener('change', e => { state.selectedFinanceur = e.target.value || null; applyFilters(1); });
+$('statutSelect')?.addEventListener('change', e => { state.selectedStatut = e.target.value || null; applyFilters(1); });
+$('filtersClear')?.addEventListener('click', () => {
+  state.selectedLabs.clear();
+  state.selectedYears.clear();
+  state.selectedFinanceur = null;
+  state.selectedStatut = null;
+  $('queryInput').value = '';
+  $('financeurSelect').value = '';
+  $('statutSelect').value = '';
+  populateLabs();
+  populateYearTags();
+  applyFilters(1);
+});
+document.querySelectorAll('.mode-tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.mode-tab').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  renderResults();
+}));
+$('themeToggle')?.addEventListener('click', toggleTheme);
+$('burgerMenu')?.addEventListener('click', () => {
+  $('sidebar')?.classList.toggle('open');
+  $('mobileOverlay')?.classList.toggle('visible');
+});
+$('mobileOverlay')?.addEventListener('click', () => {
+  $('sidebar')?.classList.remove('open');
+  $('mobileOverlay')?.classList.remove('visible');
+});
+$('clearBtn')?.addEventListener('click', () => {
+  state.all = []; state.filtered = [];
+  state.selectedLabs.clear(); state.selectedYears.clear();
+  state.selectedFinanceur = null; state.selectedStatut = null;
+  $('queryInput').value = '';
+  $('fileInput').value = '';
+  safeSet('tbCount', '—'); safeSet('tbLabs', '—'); safeSet('tbDomaines', '—'); safeSet('tbFinanceurs', '—'); safeSet('tbSource', '—');
+  safeSet('ivTotal', '—'); safeSet('ivLabs', '—'); safeSet('ivDomaines', '—'); safeSet('ivFinanceurs', '—'); safeSet('ivYears', '—'); safeSet('ivChercheurs', '—'); safeSet('ivBudget', '—');
+  safeSet('sbCount', 'Chargez un fichier JSON');
+  $('sbList').innerHTML = '<div class="loading" style="padding:20px;font-size:11px">Aucun laboratoire détecté.</div>';
+  $('topLabs').innerHTML = '<div style="text-align:center;color:var(--grey-500);font-size:11px;padding:8px">Chargez des données</div>';
+  $('topFinanceurs').innerHTML = '<div style="text-align:center;color:var(--grey-500);font-size:11px;padding:8px">Chargez des données</div>';
+  $('resultsArea').innerHTML = `<div class="empty"><div style="font-size:48px;margin-bottom:16px">🔬</div><div style="font-weight:700;margin-bottom:8px">Aucun projet chargé</div><div>Glissez <strong>recherche.json</strong>.</div></div>`;
+  toast('🗑️ Données effacées', 'info');
+});
+$('exportCsv')?.addEventListener('click', () => {
+  const cols = ['acronyme', 'titre', 'laboratoire', 'discipline', 'financeur', 'annee', 'anneeFin', 'porteur', 'statut', 'budget', 'lien'];
+  const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = [cols.join(',')];
+  for (const p of state.filtered) rows.push(cols.map(c => esc(p[c])).join(','));
+  const blob = new Blob(['\ufeff' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'projets-recherche-mesr.csv';
+  a.click();
+  toast('📥 CSV exporté', 'success');
+});
+$('exportJson')?.addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state.filtered, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'projets-recherche-mesr.json';
+  a.click();
+  toast('📥 JSON exporté', 'success');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)){
+    e.preventDefault(); $('queryInput')?.focus();
+  }
+});
 
-console.log('📚 Encyclopédie intelligente — Bleu · Blanc · Rouge 🇫🇷');
-console.log('© gunout — Tous droits réservés');
-
-// Pré-chargement du dictionnaire inversé en arrière-plan
-setTimeout(() => {
-    if (window._reverseDict.size === 0) {
-        console.log('⏳ Pré-chargement du dictionnaire inversé (0 → 500)…');
-        buildReverseDictionary(0, 500).then(() => console.log('✅ Dictionnaire partiel prêt (0 → 500)'));
-    }
-}, 1500);
-
-const params = new URLSearchParams(window.location.search);
-const query = params.get('q');
-if (query) { document.getElementById('searchInput').value = query; analyze(); }
-else { document.getElementById('searchInput').value = 'Paris'; analyze(); }
+/* ============ INIT ============ */
+(async () => {
+  applyTheme();
+  setupDropZone();
+  const dot = $('statusDot'); if (dot) dot.classList.add('offline');
+  safeSet('ivStatus', '● EN ATTENTE', 'v amber');
+  safeSet('tbSource', 'AUCUNE', 'val amber');
+})();
 </script>
 </body>
 </html>
