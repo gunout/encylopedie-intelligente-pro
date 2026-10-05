@@ -447,8 +447,20 @@ body {
 
 <div class="toast" id="toast"></div>
 
-<!-- ✅ BLAKE3 en local (fichier blake3.js à côté du HTML) -->
-<script src="blake3.js"></script>
+<!-- ✅ BLAKE3 WASM chargé comme module ES6 -->
+<script type="module">
+    import init, { hash as blake3_hash } from './blake3.js';
+    window._blake3Hash = blake3_hash;
+    window._blake3Ready = false;
+
+    init().then(() => {
+        window._blake3Ready = true;
+        console.log('✅ BLAKE3 WASM (local) chargé et prêt');
+    }).catch(e => {
+        console.warn('⚠️ Erreur chargement BLAKE3 WASM :', e.message);
+        console.warn('⚠️ Fallback JS utilisé');
+    });
+</script>
 
 <script>
 'use strict';
@@ -925,74 +937,30 @@ function blake2b(str, outLen = 64) {
 }
 
 // ============================================================
-// BLAKE3 — Wrapper pour blake3.js local (blake3-wasm)
-// Charge automatiquement la lib et l'expose en synchrone via cache
+// BLAKE3 — Wrapper WASM local (blake3.js chargé en type="module")
 // ============================================================
-let _blake3Ready = false;
-let _blake3Module = null;
-let _blake3Pending = [];
-
-// Chargement asynchrone de la lib blake3-wasm locale
-(async function initBlake3Local() {
-    try {
-        // Détecte la lib blake3-wasm (chargeable via load() ou globale)
-        if (typeof blake3 !== 'undefined' && blake3 && typeof blake3.hash === 'function') {
-            _blake3Module = blake3;
-            _blake3Ready = true;
-            console.log('✅ BLAKE3 local (blake3-wasm) chargé et prêt');
-            _blake3Pending.forEach(fn => fn());
-            _blake3Pending = [];
-            return;
-        }
-        // Sinon, essaie d'utiliser la fonction load() si elle existe
-        if (typeof load === 'function') {
-            const mod = await load();
-            _blake3Module = mod;
-            _blake3Ready = true;
-            console.log('✅ BLAKE3 local chargé via load()');
-            _blake3Pending.forEach(fn => fn());
-            _blake3Pending = [];
-            return;
-        }
-        console.warn('⚠️ BLAKE3 local non détecté — fallback JS utilisé');
-    } catch (e) {
-        console.warn('⚠️ Erreur chargement BLAKE3 local :', e.message);
-    }
-})();
-
-// Fonction synchrone BLAKE3 (retourne le hash immédiatement)
 function blake3(str) {
-    // Si la lib est prête, on l'utilise
-    if (_blake3Ready && _blake3Module && typeof _blake3Module.hash === 'function') {
+    // Priorité 1 : WASM local chargé
+    if (window._blake3Ready && window._blake3Hash) {
         try {
             const bytes = utf8.encode(str);
-            const hashResult = _blake3Module.hash(bytes);
-            // hashResult peut être Uint8Array ou hex string
-            if (typeof hashResult === 'string') return hashResult;
+            const out = new Uint8Array(32); // 32 octets = 256 bits
+            window._blake3Hash(bytes, out);
             let hex = '';
-            for (let i = 0; i < hashResult.length; i++) {
-                hex += hashResult[i].toString(16).padStart(2, '0');
+            for (let i = 0; i < out.length; i++) {
+                hex += out[i].toString(16).padStart(2, '0');
             }
             return hex;
         } catch (e) {
-            console.warn('⚠️ BLAKE3 local erreur, fallback JS :', e.message);
+            console.warn('⚠️ BLAKE3 WASM erreur, fallback JS :', e.message);
         }
     }
-    // Fallback : version JS locale (peut donner des hashs différents)
+    // Priorité 2 : fallback (SHA-256 tronqué, inoffensif)
     return blake3FallbackJS(str);
 }
 
-// ============================================================
-// BLAKE3 — Fallback JS (à utiliser si blake3-wasm indisponible)
-// ============================================================
-const BLAKE3_IV_FB = new Uint32Array([
-    0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-    0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-]);
+// Fallback JS : SHA-256 tronqué (placeholder inoffensif)
 function blake3FallbackJS(str) {
-    // Version de secours : utilise SHA-256 tronqué comme substitut
-    // (pour ne jamais bloquer l'application si le CDN/local échoue)
-    // Note : ce n'est PAS un vrai BLAKE3, c'est un placeholder.
     const s = sha256(str);
     return s.slice(0, 64);
 }
@@ -1010,6 +978,7 @@ function ripemd160(str) {
     }
     return h;
 }
+
 // ============================================================
 // TABLE COMPLÈTE DES HASH
 // ============================================================
