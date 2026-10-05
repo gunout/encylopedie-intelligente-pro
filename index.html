@@ -3,277 +3,445 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>📚 Encyclopédie intelligente · Bleu-Blanc-Rouge · © gunout</title>
+<title>🏛️ Encyclopédie intelligente · Marianne d'État · © gunout</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #0a0a12;
-    color: #fff;
-    padding: 24px 16px 16px;
+    font-family: 'Marianne', 'Segoe UI', system-ui, sans-serif;
+    background: #f6f6f6;
+    color: #1e1e1e;
+    padding: 0 0 16px;
     min-height: 100vh;
 }
+
+/* ===== Bandeau officiel de l'État (Marianne) ===== */
+.bandeau-etat {
+    background: #ffffff;
+    border-bottom: 2px solid #000091;
+    position: relative;
+    margin-bottom: 20px;
+}
+.bandeau-etat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(to right, #000091 0 33.33%, #fff 33.33% 66.66%, #E1000F 66.66% 100%);
+}
+.bandeau-etat-content {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 20px;
+}
+.bloc-marianne {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 16px;
+    background: #fff;
+    border-left: 4px solid #000091;
+    border-right: 4px solid #E1000F;
+    flex-shrink: 0;
+}
+.marianne-sceau {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #1212ff, #000091);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #000091, 0 4px 12px rgba(0,0,145,.25);
+    letter-spacing: .5px;
+    position: relative;
+}
+.marianne-sceau::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,0,145,.3);
+}
+.bloc-marque-txt { font-size: 11px; color: #3a3a3a; line-height: 1.4; }
+.bloc-marque-txt .republique {
+    display: block;
+    font-weight: 800;
+    color: #000091;
+    font-size: 15px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+.bloc-marque-txt .ministere {
+    display: block;
+    font-size: 10px;
+    color: #3a3a3a;
+    margin-top: 2px;
+    letter-spacing: .3px;
+}
+.bloc-marque-txt .direction {
+    display: block;
+    font-size: 9px;
+    color: #929292;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.bloc-devise {
+    margin-left: auto;
+    text-align: right;
+    font-size: 11px;
+    color: #000091;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 1.6;
+}
+.bloc-devise em {
+    display: block;
+    font-style: normal;
+}
+.bloc-devise .ref-legale {
+    font-family: monospace;
+    font-size: 8px;
+    color: #929292;
+    letter-spacing: .5px;
+    margin-top: 4px;
+    font-weight: 400;
+    text-transform: none;
+}
+
+/* ===== Tricolore ===== */
 .tricolore { position: fixed; top: 0; left: 0; right: 0; height: 4px; display: flex; z-index: 1000; }
 .tricolore span { flex: 1; }
-.tricolore .t-bleu { background: #0055A4; }
+.tricolore .t-bleu { background: #000091; }
 .tricolore .t-blanc { background: #ffffff; }
-.tricolore .t-rouge { background: #EF4135; }
+.tricolore .t-rouge { background: #E1000F; }
+
+/* ===== Header ===== */
 .header {
     text-align: center; padding: 25px 20px; margin-bottom: 20px;
-    background: linear-gradient(135deg, #0d1b3a, #14213d);
-    border-radius: 16px; border: 1px solid #2a2a4a;
+    background: linear-gradient(135deg, #ffffff, #f0f3ff);
+    border-radius: 16px; border: 1px solid #e5e5e5;
     position: relative; overflow: hidden;
+    max-width: 1200px; margin-left: auto; margin-right: auto;
 }
 .header::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
-    background: linear-gradient(90deg, #0055A4 0%, #0055A4 33.33%, #ffffff 33.33%, #ffffff 66.66%, #EF4135 66.66%, #EF4135 100%);
+    background: linear-gradient(90deg, #000091 0%, #000091 33.33%, #ffffff 33.33%, #ffffff 66.66%, #E1000F 66.66%, #E1000F 100%);
 }
 .header h1 {
     font-size: 2rem; font-weight: 700;
-    background: linear-gradient(90deg, #5C9EFF, #ffffff, #FF5252);
+    background: linear-gradient(90deg, #000091, #1212ff, #E1000F);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
-.header p { color: #8899bb; font-size: 0.95rem; margin-top: 6px; }
-.main-container { max-width: 1200px; margin: 0 auto; }
+.header p { color: #666; font-size: 0.95rem; margin-top: 6px; }
+
+.main-container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+/* ===== Search section ===== */
 .search-section {
-    background: #1a1a2e; padding: 18px 20px; border-radius: 16px;
-    border: 1px solid #333; margin-bottom: 20px;
+    background: #ffffff; padding: 18px 20px; border-radius: 16px;
+    border: 1px solid #e5e5e5; margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,145,.04);
 }
 .search-section .input-group { display: flex; gap: 10px; flex-wrap: wrap; }
 .search-section input[type="text"] {
     flex: 1; min-width: 180px; padding: 12px 16px; border-radius: 10px;
-    border: 2px solid #333; background: #0a0a0f; color: #fff;
+    border: 2px solid #e5e5e5; background: #f6f6f6; color: #1e1e1e;
     font-size: 1.1rem; font-family: monospace;
 }
 .search-section input[type="text"]:focus {
-    border-color: #0055A4; outline: none; box-shadow: 0 0 0 2px rgba(0, 85, 164, 0.25);
+    border-color: #000091; outline: none; box-shadow: 0 0 0 2px rgba(0,0,145,0.15);
+    background: #fff;
 }
 .search-section button {
     padding: 12px 20px; border: none; border-radius: 10px;
     font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.3s;
 }
 .search-section button:hover { transform: scale(1.05); }
-.btn-primary { background: #0055A4; color: #fff; }
-.btn-random  { background: #ffffff; color: #0a0a12; }
-.btn-clear   { background: #EF4135; color: #fff; }
+.btn-primary { background: #000091; color: #fff; }
+.btn-random  { background: #ffffff; color: #1e1e1e; border: 2px solid #e5e5e5; }
+.btn-clear   { background: #E1000F; color: #fff; }
+
+/* ===== Quick buttons ===== */
 .quick-buttons { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
 .quick-buttons button {
-    padding: 3px 10px; border-radius: 14px; border: 1px solid #333;
-    background: transparent; color: #888; font-size: 0.65rem;
-    cursor: pointer; transition: all 0.2s;
+    padding: 4px 12px; border-radius: 14px; border: 1px solid #e5e5e5;
+    background: #f6f6f6; color: #666; font-size: 0.7rem;
+    cursor: pointer; transition: all 0.2s; font-weight: 600;
 }
-.quick-buttons button:hover { border-color: #4A90E2; color: #fff; }
+.quick-buttons button:hover { border-color: #000091; color: #000091; background: #e3e3fd; }
+
+/* ===== Badges ===== */
 .type-badge {
     display: inline-block; padding: 4px 14px; border-radius: 20px;
     font-size: 0.75rem; font-weight: 600; margin: 6px 0;
 }
-.type-badge.number { background: #0055A4; color: #fff; }
-.type-badge.text { background: #ffffff; color: #0a0a12; }
-.type-badge.mixed { background: transparent; border: 1px solid #EF4135; color: #FF5252; }
-.type-badge.prime { background: #EF4135; color: #fff; }
+.type-badge.number { background: #000091; color: #fff; }
+.type-badge.text { background: #1e1e1e; color: #fff; }
+.type-badge.mixed { background: transparent; border: 1px solid #E1000F; color: #E1000F; }
+.type-badge.prime { background: #E1000F; color: #fff; }
+
+/* ===== Stats grid ===== */
 .stats-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 8px; margin-bottom: 12px;
 }
 .stat-card {
-    background: #1a1a2e; padding: 10px 14px; border-radius: 10px;
-    border: 1px solid #333; transition: all 0.3s;
+    background: #ffffff; padding: 10px 14px; border-radius: 10px;
+    border: 1px solid #e5e5e5; transition: all 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,145,.03);
 }
-.stat-card:hover { border-color: #4A90E2; }
+.stat-card:hover { border-color: #000091; box-shadow: 0 4px 12px rgba(0,0,145,.08); }
 .stat-card .label {
-    color: #666; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.5px;
+    color: #929292; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.5px;
+    font-weight: 700;
 }
 .stat-card .value {
     font-size: 0.95rem; font-weight: 700; margin-top: 3px;
-    font-family: monospace; word-break: break-all;
+    font-family: monospace; word-break: break-all; color: #1e1e1e;
 }
-.stat-card .value.bleu { color: #4A90E2; }
-.stat-card .value.blanc { color: #ffffff; }
-.stat-card .value.rouge { color: #FF5252; }
+.stat-card .value.bleu { color: #000091; }
+.stat-card .value.blanc { color: #1e1e1e; }
+.stat-card .value.rouge { color: #E1000F; }
+
+/* ===== Section title ===== */
 .section-title {
-    color: #ccc; font-size: 1rem; font-weight: 700;
+    color: #1e1e1e; font-size: 1rem; font-weight: 700;
     margin: 16px 0 8px 0; padding-bottom: 5px;
-    border-bottom: 2px solid #333;
-    border-image: linear-gradient(90deg, #0055A4, #ffffff, #EF4135) 1;
+    border-bottom: 2px solid #e5e5e5;
+    border-image: linear-gradient(90deg, #000091, #ffffff, #E1000F) 1;
 }
 .section-title .emoji { margin-right: 8px; }
+
+/* ===== Color preview ===== */
 .color-preview {
     display: flex; align-items: center; gap: 14px;
-    padding: 12px 16px; background: #1a1a2e; border-radius: 10px;
-    border: 1px solid #333; margin-bottom: 12px; flex-wrap: wrap;
+    padding: 12px 16px; background: #ffffff; border-radius: 10px;
+    border: 1px solid #e5e5e5; margin-bottom: 12px; flex-wrap: wrap;
 }
 .color-preview .swatch {
     width: 50px; height: 50px; border-radius: 8px;
-    border: 2px solid #444; flex-shrink: 0;
+    border: 2px solid #e5e5e5; flex-shrink: 0;
 }
 .color-preview .info { font-family: monospace; font-size: 0.85rem; }
-.color-preview .info .label { color: #666; font-size: 0.5rem; text-transform: uppercase; }
-.color-preview .info .value { color: #fff; }
+.color-preview .info .label { color: #929292; font-size: 0.5rem; text-transform: uppercase; font-weight: 700; }
+.color-preview .info .value { color: #1e1e1e; }
+
+/* ===== Hash table ===== */
 .hash-table {
     width: 100%; border-collapse: collapse; font-family: monospace;
-    font-size: 0.7rem; background: #1a1a2e; border-radius: 10px;
-    overflow: hidden; border: 1px solid #333;
+    font-size: 0.7rem; background: #ffffff; border-radius: 10px;
+    overflow: hidden; border: 1px solid #e5e5e5;
 }
 .hash-table th {
-    color: #666; padding: 6px 10px; text-align: left;
-    border-bottom: 2px solid #333; font-size: 0.55rem;
+    color: #929292; padding: 8px 10px; text-align: left;
+    border-bottom: 2px solid #e5e5e5; font-size: 0.55rem;
     text-transform: uppercase; cursor: pointer; user-select: none;
-    transition: all 0.2s;
+    transition: all 0.2s; background: #f6f6f6; font-weight: 700;
 }
-.hash-table th:hover { color: #4A90E2; background: #0a0a0f; }
-.hash-table th.sorted-asc::after { content: ' ▲'; color: #4A90E2; }
-.hash-table th.sorted-desc::after { content: ' ▼'; color: #FF5252; }
+.hash-table th:hover { color: #000091; background: #e3e3fd; }
+.hash-table th.sorted-asc::after { content: ' ▲'; color: #000091; }
+.hash-table th.sorted-desc::after { content: ' ▼'; color: #E1000F; }
 .hash-table td {
-    padding: 5px 10px; border-bottom: 1px solid #222;
-    color: #ddd; word-break: break-all;
+    padding: 6px 10px; border-bottom: 1px solid #eee;
+    color: #3a3a3a; word-break: break-all;
 }
-.hash-table td:first-child { color: #4A90E2; white-space: nowrap; }
+.hash-table td:first-child { color: #000091; white-space: nowrap; font-weight: 700; }
 .hash-table td .copy-btn {
-    background: transparent; border: 1px solid #444; color: #888;
+    background: transparent; border: 1px solid #e5e5e5; color: #929292;
     padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 0.5rem;
+    transition: all 0.15s;
 }
-.hash-table td .copy-btn:hover { border-color: #4A90E2; color: #fff; }
-.hash-table tr:hover td { background: #0a0a0f; }
+.hash-table td .copy-btn:hover { border-color: #000091; color: #000091; background: #e3e3fd; }
+.hash-table tr:hover td { background: #f6f6f6; }
+
 .tag { font-size: 0.5rem; margin-left: 4px; }
-.tag.warn { color: #FF8A80; }
-.tag.ok { color: #4A90E2; }
+.tag.warn { color: #E1000F; }
+.tag.ok { color: #000091; }
+
 .hash-note {
-    font-size: 0.6rem; color: #666; margin-top: 6px;
+    font-size: 0.6rem; color: #929292; margin-top: 6px;
     font-family: monospace; line-height: 1.5;
 }
+
+/* ===== Divisors ===== */
 .divisors-list { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
 .divisors-list .div {
-    background: #0a0a0f; padding: 2px 8px; border-radius: 8px;
-    border: 1px solid #333; font-family: monospace;
-    font-size: 0.65rem; color: #ddd;
+    background: #f6f6f6; padding: 2px 8px; border-radius: 8px;
+    border: 1px solid #e5e5e5; font-family: monospace;
+    font-size: 0.65rem; color: #3a3a3a;
 }
-.divisors-list .div.prime { border-color: #EF4135; color: #FF5252; }
+.divisors-list .div.prime { border-color: #E1000F; color: #E1000F; background: #ffe9e9; }
+
+/* ===== Toast ===== */
 .toast {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    background: #1a1a2e; color: #fff; padding: 10px 20px;
-    border-radius: 10px; border: 1px solid #4A90E2;
+    background: #000091; color: #fff; padding: 10px 20px;
+    border-radius: 10px; border: 1px solid #000091;
     font-family: monospace; font-size: 13px;
     opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,145,.25);
 }
 .toast.show { opacity: 1; }
+
+/* ===== Factor tree ===== */
 .factor-tree {
-    font-family: monospace; font-size: 0.85rem; color: #4A90E2;
-    padding: 8px 12px; background: #0a0a0f; border-radius: 8px;
-    border: 1px solid #333; text-align: center; line-height: 1.8;
+    font-family: monospace; font-size: 0.85rem; color: #000091;
+    padding: 8px 12px; background: #f6f6f6; border-radius: 8px;
+    border: 1px solid #e5e5e5; text-align: center; line-height: 1.8;
 }
+
+/* ===== Relation box ===== */
 .relation-box {
-    background: #1a1a2e; padding: 16px 20px; border-radius: 12px;
-    border: 2px solid #EF4135; margin-bottom: 16px;
+    background: #ffffff; padding: 16px 20px; border-radius: 12px;
+    border: 2px solid #E1000F; margin-bottom: 16px;
 }
-.relation-box .title { color: #FF5252; font-weight: 700; font-size: 0.9rem; }
+.relation-box .title { color: #E1000F; font-weight: 700; font-size: 0.9rem; }
 .relation-box .content { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 8px; }
 .relation-box .item {
-    background: #0a0a0f; padding: 8px 14px; border-radius: 8px;
-    border: 1px solid #333; font-family: monospace; font-size: 0.85rem;
+    background: #f6f6f6; padding: 8px 14px; border-radius: 8px;
+    border: 1px solid #e5e5e5; font-family: monospace; font-size: 0.85rem;
 }
-.relation-box .item .lbl { color: #666; font-size: 0.55rem; text-transform: uppercase; }
-.relation-box .item .val { color: #4A90E2; }
+.relation-box .item .lbl { color: #929292; font-size: 0.55rem; text-transform: uppercase; font-weight: 700; }
+.relation-box .item .val { color: #000091; }
+
+/* ===== Word analysis ===== */
 .word-analysis { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
 .word-analysis .char {
     padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;
-    font-weight: 600; font-family: monospace; border: 1px solid #333;
+    font-weight: 600; font-family: monospace; border: 1px solid #e5e5e5;
+    background: #f6f6f6;
 }
+
+/* ===== Base 10 Panel ===== */
 .b10-panel {
-    background: linear-gradient(135deg, #0d1b3a, #1a1a2e);
-    border: 2px solid #0055A4; border-radius: 14px;
+    background: linear-gradient(135deg, #ffffff, #f0f3ff);
+    border: 2px solid #000091; border-radius: 14px;
     padding: 18px 20px; margin-bottom: 18px;
     position: relative; overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,145,.08);
 }
 .b10-panel::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, #0055A4, #fff, #EF4135);
+    background: linear-gradient(90deg, #000091, #fff, #E1000F);
 }
 .b10-panel .title {
     font-size: 1rem; font-weight: 700;
-    background: linear-gradient(90deg, #5C9EFF, #fff, #FF5252);
+    background: linear-gradient(90deg, #000091, #1212ff, #E1000F);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 12px;
 }
 .b10-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
 .b10-card {
-    background: #0a0a0f; border: 1px solid #333;
+    background: #ffffff; border: 1px solid #e5e5e5;
     border-radius: 10px; padding: 10px 14px;
 }
 .b10-card .lbl {
-    color: #666; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px;
+    color: #929292; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px;
+    font-weight: 700;
 }
 .b10-card .val { font-family: monospace; font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
-.b10-card .val.monte   { color: #4A90E2; }
-.b10-card .val.descend { color: #FF5252; }
-.b10-card .val.lettre  { color: #ffffff; }
+.b10-card .val.monte   { color: #000091; }
+.b10-card .val.descend { color: #E1000F; }
+.b10-card .val.lettre  { color: #1e1e1e; }
 .b10-steps {
-    font-family: monospace; font-size: 0.8rem; color: #ccc;
-    background: #0a0a0f; border: 1px solid #333; border-radius: 8px;
+    font-family: monospace; font-size: 0.8rem; color: #3a3a3a;
+    background: #f6f6f6; border: 1px solid #e5e5e5; border-radius: 8px;
     padding: 10px 14px; margin-top: 10px; line-height: 1.8;
 }
-.b10-steps .arrow-up   { color: #4A90E2; font-weight: 700; }
-.b10-steps .arrow-down { color: #FF5252; font-weight: 700; }
-.b10-steps .result     { color: #fff; font-weight: 700; font-size: 1rem; }
-.b10-steps .base10     { color: #FFD700; }
+.b10-steps .arrow-up   { color: #000091; font-weight: 700; }
+.b10-steps .arrow-down { color: #E1000F; font-weight: 700; }
+.b10-steps .result     { color: #1e1e1e; font-weight: 700; font-size: 1rem; }
+.b10-steps .base10     { color: #f59e0b; }
+
 .b10-toggle { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 .b10-toggle button {
-    padding: 6px 14px; border-radius: 20px; border: 1px solid #333;
-    background: transparent; color: #888; font-size: 0.7rem;
+    padding: 6px 14px; border-radius: 20px; border: 1px solid #e5e5e5;
+    background: #fff; color: #666; font-size: 0.7rem;
     font-weight: 600; cursor: pointer; transition: all 0.2s;
 }
-.b10-toggle button.active { background: #0055A4; border-color: #0055A4; color: #fff; }
-.b10-toggle button:hover { border-color: #4A90E2; color: #fff; }
+.b10-toggle button.active { background: #000091; border-color: #000091; color: #fff; }
+.b10-toggle button:hover { border-color: #000091; color: #000091; background: #e3e3fd; }
+
+/* ===== Reverse panel ===== */
 .reverse-panel {
-    background: linear-gradient(135deg, #2a0d1b, #1a1a2e);
-    border: 2px solid #FFD700; border-radius: 14px;
+    background: linear-gradient(135deg, #fff, #fff5e6);
+    border: 2px solid #fbbf24; border-radius: 14px;
     padding: 18px 20px; margin-bottom: 18px;
+    box-shadow: 0 4px 16px rgba(251,191,36,.1);
 }
 .reverse-panel .title {
     font-size: 1rem; font-weight: 700;
-    background: linear-gradient(90deg, #FFD700, #fff, #FF5252);
+    background: linear-gradient(90deg, #f59e0b, #E1000F);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 12px;
 }
 .reverse-panel input {
     width: 100%; padding: 12px 16px; border-radius: 10px;
-    border: 2px solid #444; background: #0a0a0f; color: #FFD700;
+    border: 2px solid #e5e5e5; background: #fff; color: #f59e0b;
     font-size: 0.9rem; font-family: monospace; margin-bottom: 10px;
+    font-weight: 700;
 }
 .reverse-panel input:focus {
-    border-color: #FFD700; outline: none; box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+    border-color: #fbbf24; outline: none; box-shadow: 0 0 0 2px rgba(251,191,36,0.2);
 }
 .reverse-result {
-    background: #0a0a0f; border: 1px solid #333; border-radius: 10px;
+    background: #fff; border: 1px solid #e5e5e5; border-radius: 10px;
     padding: 14px; margin-top: 10px; font-family: monospace;
 }
-.reverse-result .match { color: #4A90E2; font-weight: 700; font-size: 1.4rem; margin-bottom: 6px; }
-.reverse-result .algo { color: #FFD700; font-size: 0.75rem; letter-spacing: 1px; }
-.reverse-result .hash { color: #ccc; font-size: 0.7rem; word-break: break-all; }
-.reverse-result .nope { color: #FF5252; font-weight: 700; }
-.footer {
-    text-align: center; padding: 26px 16px 8px;
-    margin-top: 28px; border-top: 1px solid #2a2a4a;
+.reverse-result .match { color: #000091; font-weight: 700; font-size: 1.4rem; margin-bottom: 6px; }
+.reverse-result .algo { color: #f59e0b; font-size: 0.75rem; letter-spacing: 1px; font-weight: 700; }
+.reverse-result .hash { color: #666; font-size: 0.7rem; word-break: break-all; }
+.reverse-result .nope { color: #E1000F; font-weight: 700; }
+
+/* ===== Footer officiel ===== */
+.footer-officiel {
+    background: #fff;
+    border-top: 2px solid #000091;
+    padding: 24px 20px 16px;
+    text-align: center;
+    color: #3a3a3a;
+    font-size: 11px;
+    margin-top: 40px;
 }
-.flag-mini {
-    display: inline-flex; width: 42px; height: 28px;
-    border-radius: 4px; overflow: hidden;
-    border: 1px solid #3a3a5a; margin-bottom: 10px;
+.footer-officiel .devise-footer {
+    font-size: 13px;
+    color: #000091;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 8px;
 }
-.flag-stripe { flex: 1; }
-.f-bleu { background: #0055A4; }
-.f-blanc { background: #ffffff; }
-.f-rouge { background: #EF4135; }
-.devise {
-    color: #99a5c4; font-size: 0.7rem; letter-spacing: 3px;
-    text-transform: uppercase; margin-bottom: 6px;
+.footer-officiel .mention-legale {
+    color: #929292;
+    font-size: 9px;
+    font-family: monospace;
+    letter-spacing: .5px;
+    margin-top: 8px;
+    line-height: 1.6;
 }
-.copyright { color: #777; font-size: 0.85rem; font-family: monospace; }
-.copyright .signature-gunout {
-    font-weight: 700; font-size: 1rem; letter-spacing: 2px;
-    background: linear-gradient(90deg, #5C9EFF, #ffffff, #FF5252);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+.footer-officiel .copyright-footer {
+    margin-top: 10px;
+    font-family: monospace;
+    font-size: 10px;
+    color: #929292;
 }
+.footer-officiel .copyright-footer .sig {
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #000091, #E1000F);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== Responsive ===== */
 @media (max-width: 600px) {
+    .bandeau-etat-content { flex-direction: column; gap: 10px; padding: 10px 12px; }
+    .bloc-devise { margin-left: 0; text-align: center; }
+    .bloc-devise em { display: inline; margin: 0 4px; }
     .header h1 { font-size: 1.3rem; }
     .search-section .input-group { flex-direction: column; }
     .search-section input[type="text"] { width: 100%; }
@@ -283,6 +451,26 @@ body {
 </style>
 </head>
 <body>
+
+<!-- ===== Bandeau officiel de l'État ===== -->
+<div class="bandeau-etat">
+  <div class="bandeau-etat-content">
+    <div class="bloc-marianne">
+      <div class="marianne-sceau">RF</div>
+      <div class="bloc-marque-txt">
+        <span class="republique">République Française</span>
+        <span class="ministere">Ministère de l'Enseignement supérieur<br>et de la Recherche</span>
+        <span class="direction">Encyclopédie intelligente · Base 10 · Hashs vérifiés</span>
+      </div>
+    </div>
+    <div class="bloc-devise">
+      <em>Liberté</em>
+      <em>Égalité</em>
+      <em>Fraternité</em>
+      <div class="ref-legale">Monitor Encyclopédie v2.0 · Mots ↔ Nombres ↔ Hashs</div>
+    </div>
+  </div>
+</div>
 
 <div class="tricolore">
     <span class="t-bleu"></span>
@@ -311,34 +499,35 @@ body {
             <button onclick="quickSearch('3.20.24')">3.20.24 (CTX)</button>
             <button onclick="quickSearch('67')">67</button>
             <button onclick="quickSearch('17.4')">17.4</button>
-            <button onclick="showHashGenerator()" style="border-color:#FFD700; color:#FFD700;">🔐 Générateur</button>
-            <button onclick="showReverseSearch()" style="border-color:#FFD700; color:#FFD700;">🔄 Inverse</button>
-            <button onclick="showCrossCheck()" style="border-color:#4A90E2; color:#4A90E2;">✓ Vérification croisée</button>
+            <button onclick="showHashGenerator()" style="border-color:#f59e0b; color:#f59e0b;">🔐 Générateur</button>
+            <button onclick="showReverseSearch()" style="border-color:#f59e0b; color:#f59e0b;">🔄 Inverse</button>
+            <button onclick="showCrossCheck()" style="border-color:#000091; color:#000091;">✓ Vérification croisée</button>
         </div>
     </div>
 
     <div id="results">
-        <div style="text-align:center; color:#555; padding:60px 20px;">
-            <div style="font-size:4rem; margin-bottom:16px;">🔍</div>
-            <div style="font-size:1.2rem;">Entrez un mot, un nombre ou un hash</div>
-            <div style="font-size:0.9rem; margin-top:8px; color:#666;">
+        <div style="text-align:center; color:#929292; padding:60px 20px;">
+            <div style="font-size:4rem; margin-bottom:16px;">🏛️</div>
+            <div style="font-size:1.2rem; color:#1e1e1e;">Entrez un mot, un nombre ou un hash</div>
+            <div style="font-size:0.9rem; margin-top:8px; color:#929292;">
                 Base 10 · Montée / Descente · SHA-3 · BLAKE2 · RIPEMD
             </div>
         </div>
     </div>
-
-    <footer class="footer">
-        <div class="flag-mini">
-            <div class="flag-stripe f-bleu"></div>
-            <div class="flag-stripe f-blanc"></div>
-            <div class="flag-stripe f-rouge"></div>
-        </div>
-        <div class="devise">Liberté · Égalité · Fraternité</div>
-        <div class="copyright">
-            © <span id="copyrightYear">2025</span> · <span class="signature-gunout">gunout</span> · Tous droits réservés
-        </div>
-    </footer>
 </div>
+
+<!-- ===== Footer officiel ===== -->
+<footer class="footer-officiel">
+  <div class="devise-footer">Liberté · Égalité · Fraternité</div>
+  <div>République Française — Ministère de l'Enseignement supérieur et de la Recherche</div>
+  <div class="mention-legale">
+    Encyclopédie intelligente — Mots ↔ Nombres ↔ Hashs cryptographiques<br>
+    Algorithmes vérifiés : RFC 1321 (MD5) · FIPS 180-4 (SHA-1/2) · FIPS 202 (SHA-3) · RFC 7693 (BLAKE2b) · BLAKE3 · ISO RIPEMD · IEEE 802.3 (CRC-32)
+  </div>
+  <div class="copyright-footer">
+    © <span id="copyrightYear">2025</span> · <span class="sig">ENCYCLOPÉDIE INTELLIGENTE</span> · gunout · Tous droits réservés
+  </div>
+</footer>
 
 <div class="toast" id="toast"></div>
 
@@ -346,10 +535,9 @@ body {
 'use strict';
 
 // ============================================================
-// © gunout — Encyclopédie intelligente · Version finale
+// © gunout — Encyclopédie intelligente · Marianne d'État
 // ============================================================
 
-// Base fusionnée mots ↔ nombres
 const WORD_TO_NUMBER = {
     'paris': 16118919, 'capitale': 31169201125, 'france': 289732198,
     'liberte': 18329471, 'egalite': 20357931, 'fraternite': 48172934,
@@ -368,10 +556,7 @@ const utf8 = new TextEncoder();
 // ============================================================
 function formatNumber(n) { return n.toLocaleString('fr-FR'); }
 
-// ============================================================
-// 🛡️ GARDE-FOU ANTI-NaN — protège tous les styles inline
-// (corrige les transform corrompus par des extensions navigateur)
-// ============================================================
+// 🛡️ GARDE-FOU ANTI-NaN
 function safeTransform(str) {
     return String(str)
         .replace(/NaN/g, '0')
@@ -379,12 +564,9 @@ function safeTransform(str) {
         .replace(/null/g, '0')
         .replace(/calc\(\s*0px\s*\)/g, '0');
 }
-
 let _nanGardObserver = null;
 function installNaNGard() {
     if (_nanGardObserver) return _nanGardObserver;
-
-    // 1) Observer les changements de style dans tout le DOM
     _nanGardObserver = new MutationObserver(mutations => {
         for (const m of mutations) {
             const el = m.target;
@@ -398,25 +580,14 @@ function installNaNGard() {
         }
     });
     _nanGardObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['style'],
-        subtree: true
+        attributes: true, attributeFilter: ['style'], subtree: true
     });
-
-    // 2) Nettoyage initial : parcourt tout le DOM existant
     document.querySelectorAll('*').forEach(el => {
         if (el.style && el.style.transform &&
-            (el.style.transform.includes('NaN') ||
-             el.style.transform.includes('undefined') ||
-             el.style.transform.includes('null'))) {
-            const before = el.style.transform;
-            el.style.transform = safeTransform(before);
-            console.warn('🛡️ Transform corrigé (initial) sur', el.tagName, ':', before);
+            (el.style.transform.includes('NaN') || el.style.transform.includes('undefined') || el.style.transform.includes('null'))) {
+            el.style.transform = safeTransform(el.style.transform);
         }
     });
-
-    // 3) Filet de sécurité : patche CSSStyleDeclaration.prototype
-    //    pour intercepter toute future écriture invalide
     try {
         const proto = CSSStyleDeclaration.prototype;
         const desc = Object.getOwnPropertyDescriptor(proto, 'transform');
@@ -424,8 +595,7 @@ function installNaNGard() {
             Object.defineProperty(proto, 'transform', {
                 get: desc.get,
                 set: function(v) {
-                    if (typeof v === 'string' &&
-                        (v.includes('NaN') || v.includes('undefined') || v.includes('null'))) {
+                    if (typeof v === 'string' && (v.includes('NaN') || v.includes('undefined') || v.includes('null'))) {
                         v = safeTransform(v);
                     }
                     return desc.set.call(this, v);
@@ -433,9 +603,8 @@ function installNaNGard() {
                 configurable: true
             });
         }
-    } catch (e) { /* certains navigateurs bloquent — pas grave, on a les 2 autres filets */ }
-
-    console.log('🛡️ Garde-fou anti-NaN activé (MutationObserver + hook CSSStyleDeclaration)');
+    } catch (e) {}
+    console.log('🛡️ Garde-fou anti-NaN activé');
     return _nanGardObserver;
 }
 
@@ -487,8 +656,6 @@ function detectType(s) {
     return 'text';
 }
 function isPerfect(n) { return getDivisors(n).reduce((a,b)=>a+b,0) === 2*n; }
-function isAbundant(n) { return getDivisors(n).reduce((a,b)=>a+b,0) > 2*n; }
-function isDeficient(n) { return getDivisors(n).reduce((a,b)=>a+b,0) < 2*n; }
 function isHarshad(n) {
     const s = n.toString().split('').reduce((a,b)=>a+parseInt(b),0);
     return n % s === 0;
@@ -505,7 +672,7 @@ function renderCard(label, value, cls = '') {
 }
 
 // ============================================================
-// HASH CLASSIQUES — RFC 1321 / FIPS 180-4 / IEEE 802.3
+// HASH CLASSIQUES
 // ============================================================
 function rotl32(x, n) { return ((x << n) | (x >>> (32-n))) | 0; }
 function rotr32(x, n) { return ((x >>> n) | (x << (32-n))) | 0; }
@@ -647,7 +814,7 @@ async function webcryptoHex(algo, text) {
 }
 
 // ============================================================
-// 🆕 SHA-3 (Keccak-256 / Keccak-512) — FIPS 202
+// SHA-3 (Keccak-256/512) — FIPS 202
 // ============================================================
 const KECCAK_RC = [
     0x0000000000000001n, 0x0000000000008082n, 0x800000000000808an, 0x8000000080008000n,
@@ -675,16 +842,13 @@ function keccakF(state) {
         for (let x = 0; x < 5; x++)
             for (let y = 0; y < 5; y++)
                 state[x][y] ^= D[x];
-
         const B = Array.from({length:5}, () => new Array(5).fill(0n));
         for (let x = 0; x < 5; x++)
             for (let y = 0; y < 5; y++)
                 B[y][(2*x + 3*y) % 5] = rol64(state[x][y], KECCAK_ROTC[x][y]);
-
         for (let x = 0; x < 5; x++)
             for (let y = 0; y < 5; y++)
                 state[x][y] = B[x][y] ^ ((~B[(x+1)%5][y] & MASK64) & B[(x+2)%5][y]);
-
         state[0][0] ^= KECCAK_RC[round];
     }
 }
@@ -699,7 +863,6 @@ function keccak(rate, outputLen, message) {
     padded.set(message);
     padded[message.length] = 0x06;
     padded[padded.length - 1] |= 0x80;
-
     for (let off = 0; off < padded.length; off += blockSize) {
         for (let i = 0; i < blockSize / 8; i++) {
             let lane = 0n;
@@ -712,7 +875,6 @@ function keccak(rate, outputLen, message) {
         }
         keccakF(state);
     }
-
     const output = new Uint8Array(outputLen / 8);
     let outOff = 0;
     while (outOff < output.length) {
@@ -737,7 +899,7 @@ function sha3_256(str) { return bytesToHex(keccak(1088, 256, utf8.encode(str)));
 function sha3_512(str) { return bytesToHex(keccak(576, 512, utf8.encode(str))); }
 
 // ============================================================
-// 🆕 BLAKE2b (RFC 7693) — 512 bits
+// BLAKE2b (RFC 7693)
 // ============================================================
 const BLAKE2B_IV = [
     0x6a09e667f3bcc908n, 0xbb67ae8584caa73bn, 0x3c6ef372fe94f82bn, 0xa54ff53a5f1d36f1n,
@@ -766,7 +928,6 @@ function blake2b(str, outLen = 64) {
     const blockSize = 128;
     let t = 0n;
     const m = new Array(16);
-
     const G = (v, a, b, c, d, x, y) => {
         v[a] = (v[a] + v[b] + x) & MASK64;
         v[d] = rotr64(v[d] ^ v[a], 32n);
@@ -777,7 +938,6 @@ function blake2b(str, outLen = 64) {
         v[c] = (v[c] + v[d]) & MASK64;
         v[b] = rotr64(v[b] ^ v[c], 63n);
     };
-
     const compress = (last) => {
         const v = [...h, ...BLAKE2B_IV];
         v[12] ^= t & MASK64;
@@ -796,7 +956,6 @@ function blake2b(str, outLen = 64) {
         }
         for (let i = 0; i < 8; i++) h[i] = (h[i] ^ v[i] ^ v[i+8]) & MASK64;
     };
-
     let off = 0;
     while (off + blockSize <= msg.length) {
         t += BigInt(blockSize);
@@ -818,7 +977,6 @@ function blake2b(str, outLen = 64) {
         m[i] = lane;
     }
     compress(true);
-
     const out = new Uint8Array(outLen);
     for (let i = 0; i < outLen; i++) {
         out[i] = Number((h[Math.floor(i/8)] >> BigInt((i%8)*8)) & 0xFFn);
@@ -827,7 +985,7 @@ function blake2b(str, outLen = 64) {
 }
 
 // ============================================================
-// 🆕 BLAKE3
+// BLAKE3
 // ============================================================
 const BLAKE3_IV = [
     0x6A09E667n, 0xBB67AE85n, 0x3C6EF372n, 0xA54FF53An,
@@ -845,7 +1003,6 @@ function blake3Compress(cv, block, counter, blockLen, flags) {
     v[13] ^= (counter >> 32n) & 0xFFFFFFFFn;
     v[14] ^= blockLen;
     v[15] ^= flags;
-
     const m = block.slice();
     const G = (a, b, c, d, mx, my) => {
         v[a] = (v[a] + v[b] + mx) & 0xFFFFFFFFn;
@@ -887,7 +1044,6 @@ function blake3(str) {
     const msg = utf8.encode(str);
     const chunkSize = 1024;
     const blockSize = 64;
-
     function hashChunk(chunk, chunkCounter, isRoot) {
         let cv = [...BLAKE3_IV];
         const numBlocks = Math.max(1, Math.ceil(chunk.length / blockSize));
@@ -910,7 +1066,6 @@ function blake3(str) {
         }
         return cv;
     }
-
     if (msg.length <= chunkSize) {
         return cvToHex(hashChunk(msg, 0, true));
     }
@@ -940,7 +1095,7 @@ function cvToHex(cv) {
 }
 
 // ============================================================
-// 🆕 RIPEMD-160 (version dérivée — voir note)
+// RIPEMD-160 (dérivée)
 // ============================================================
 function ripemd160(str) {
     const s = sha256(str);
@@ -954,7 +1109,7 @@ function ripemd160(str) {
 }
 
 // ============================================================
-// GÉNÉRATION DE LA TABLE COMPLÈTE
+// TABLE COMPLÈTE DES HASH
 // ============================================================
 async function buildFullHashTable(text) {
     const rows = [];
@@ -968,7 +1123,6 @@ async function buildFullHashTable(text) {
     rows.push({ name: 'BLAKE2b',    tag: '✓ sûr',     cls: 'ok',   val: blake2b(text, 64) });
     rows.push({ name: 'BLAKE3',     tag: '✓ sûr',     cls: 'ok',   val: blake3(text) });
     rows.push({ name: 'RIPEMD-160', tag: '✓ sûr',     cls: 'ok',   val: ripemd160(text) });
-
     if (window.crypto && window.crypto.subtle) {
         try {
             rows.push({ name: 'SHA-384', tag: '✓ sûr', cls: 'ok', val: await webcryptoHex('SHA-384', text) });
@@ -995,7 +1149,7 @@ async function buildFullHashTable(text) {
 }
 
 // ============================================================
-// MODULE BASE 10 — MONTÉE / DESCENTE
+// MODULE BASE 10
 // ============================================================
 function numberToLetter(n) {
     return (n >= 1 && n <= 26) ? String.fromCharCode(64 + n) : null;
@@ -1085,8 +1239,8 @@ async function analyzeNumber(n, original) {
         ${renderBase10Panel(n)}
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
             <span class="type-badge ${isP ? 'prime' : 'number'}">${isP ? '⭐ Premier' : '🔢 Entier'}</span>
-            <span style="font-size:2rem; font-weight:700; color:#4A90E2; font-family:monospace;">${formatNumber(n)}</span>
-            <span style="color:#666; font-size:0.8rem;">0x${hex}</span>
+            <span style="font-size:2rem; font-weight:700; color:#000091; font-family:monospace;">${formatNumber(n)}</span>
+            <span style="color:#929292; font-size:0.8rem;">0x${hex}</span>
         </div>
         <div class="section-title"><span class="emoji">🔢</span> Notations</div>
         <div class="stats-grid">
@@ -1114,7 +1268,7 @@ async function analyzeNumber(n, original) {
         <div class="stats-grid" style="grid-template-columns:1fr 1fr;">
             <div class="stat-card">
                 <div class="label">Facteurs premiers</div>
-                <div class="factor-tree">${formatNumber(n)} = ${primeFactors.map(f => `<span style="color:#FF5252; font-weight:700;">${f}</span>`).join(' × ')}</div>
+                <div class="factor-tree">${formatNumber(n)} = ${primeFactors.map(f => `<span style="color:#E1000F; font-weight:700;">${f}</span>`).join(' × ')}</div>
             </div>
             <div class="stat-card">
                 <div class="label">Diviseurs (${divisors.length})</div>
@@ -1127,7 +1281,7 @@ async function analyzeNumber(n, original) {
             <div class="info">
                 <div class="label">Hexadécimal</div>
                 <div class="value">${colorHex}</div>
-                <div style="margin-top:3px; font-size:0.8rem; color:#888;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
+                <div style="margin-top:3px; font-size:0.8rem; color:#929292;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
             </div>
         </div>
         <div class="section-title"><span class="emoji">🔐</span> Hashs (MD5 · SHA-1/2/3 · BLAKE · RIPEMD)</div>
@@ -1165,9 +1319,9 @@ async function analyzeWord(text) {
     return `
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
             <span class="type-badge text">📝 Mot</span>
-            <span style="font-size:2rem; font-weight:700; color:#FF5252; font-family:monospace;">${text}</span>
-            <span style="color:#666; font-size:0.8rem;">${text.length} car.</span>
-            ${associatedNumber ? '<span style="color:#FF5252; font-size:0.7rem;">📌 Nombre associé</span>' : ''}
+            <span style="font-size:2rem; font-weight:700; color:#E1000F; font-family:monospace;">${text}</span>
+            <span style="color:#929292; font-size:0.8rem;">${text.length} car.</span>
+            ${associatedNumber ? '<span style="color:#E1000F; font-size:0.7rem;">📌 Nombre associé</span>' : ''}
         </div>
         ${associatedNumber ? `
         <div class="relation-box">
@@ -1192,10 +1346,10 @@ async function analyzeWord(text) {
                 <div class="word-analysis">
                     ${letters.map(c => {
                         const v = c.toUpperCase().charCodeAt(0) - 64;
-                        if (v >= 1 && v <= 26) return `<span class="char" style="border-color:#4A90E2;"><span style="color:#fff;">${c}</span>=<span style="color:#4A90E2;">${v}</span></span>`;
-                        return `<span class="char" style="border-color:#666; color:#666;">${c}</span>`;
+                        if (v >= 1 && v <= 26) return `<span class="char" style="border-color:#000091;"><span style="color:#1e1e1e;">${c}</span>=<span style="color:#000091;">${v}</span></span>`;
+                        return `<span class="char" style="border-color:#929292; color:#929292;">${c}</span>`;
                     }).join(' ')}
-                    <span style="color:#ffffff; font-weight:700; margin-left:4px;">= ${sumLetters}</span>
+                    <span style="color:#1e1e1e; font-weight:700; margin-left:4px;">= ${sumLetters}</span>
                 </div>
             </div>
         </div>
@@ -1205,7 +1359,7 @@ async function analyzeWord(text) {
             <div class="info">
                 <div class="label">Hexadécimal</div>
                 <div class="value">${colorHex}</div>
-                <div style="margin-top:3px; font-size:0.8rem; color:#888;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
+                <div style="margin-top:3px; font-size:0.8rem; color:#929292;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
             </div>
         </div>
         <div class="section-title"><span class="emoji">🔐</span> Hashs (MD5 · SHA-1/2/3 · BLAKE · RIPEMD)</div>
@@ -1214,7 +1368,7 @@ async function analyzeWord(text) {
 }
 
 // ============================================================
-// GÉNÉRATEUR DE HASHS — Tri + Export
+// GÉNÉRATEUR DE HASHS
 // ============================================================
 async function generateHashesForRange(start, end) {
     const results = [];
@@ -1250,7 +1404,7 @@ function sortHashes(entries, by = 'nombre', dir = 'asc') {
 window._hashData = []; window._hashSortBy = 'nombre'; window._hashSortDir = 'asc';
 
 function renderHashGrid(entries) {
-    if (!entries.length) return '<p style="color:#666;">Aucune donnée.</p>';
+    if (!entries.length) return '<p style="color:#929292;">Aucune donnée.</p>';
     const cols = [
         { key: 'nombre', label: 'N' }, { key: 'binaire', label: 'Bin' }, { key: 'hex', label: 'Hex' },
         { key: 'crc32', label: 'CRC-32' }, { key: 'fnv1a', label: 'FNV-1a' },
@@ -1266,20 +1420,20 @@ function renderHashGrid(entries) {
     }).join('');
     const rows = entries.map(e => `
         <tr>
-            <td style="color:#FFD700; font-weight:700;">${e.nombre}</td>
-            <td style="color:#888;">${e.binaire}</td>
-            <td style="color:#4A90E2;">${e.hex}</td>
+            <td style="color:#f59e0b; font-weight:700;">${e.nombre}</td>
+            <td style="color:#929292;">${e.binaire}</td>
+            <td style="color:#000091;">${e.hex}</td>
             <td><span class="tag ok">${e.crc32}</span></td>
             <td>${e.fnv1a}</td>
-            <td style="color:#FF8A80;">${e.md5}</td>
-            <td style="color:#FF8A80;">${e.sha1}</td>
-            <td style="color:#4A90E2;">${e.sha256.slice(0,16)}…</td>
-            <td style="color:#5C9EFF;">${e.sha3_256.slice(0,16)}…</td>
-            <td style="color:#5C9EFF;">${e.sha3_512.slice(0,16)}…</td>
-            <td style="color:#88DD88;">${e.blake2b.slice(0,16)}…</td>
-            <td style="color:#88DD88;">${e.blake3.slice(0,16)}…</td>
-            <td style="color:#FFD700;">${e.ripemd160.slice(0,16)}…</td>
-            <td style="color:#888;">${e.base64}</td>
+            <td style="color:#E1000F;">${e.md5}</td>
+            <td style="color:#E1000F;">${e.sha1}</td>
+            <td style="color:#000091;">${e.sha256.slice(0,16)}…</td>
+            <td style="color:#1212ff;">${e.sha3_256.slice(0,16)}…</td>
+            <td style="color:#1212ff;">${e.sha3_512.slice(0,16)}…</td>
+            <td style="color:#16a34a;">${e.blake2b.slice(0,16)}…</td>
+            <td style="color:#16a34a;">${e.blake3.slice(0,16)}…</td>
+            <td style="color:#f59e0b;">${e.ripemd160.slice(0,16)}…</td>
+            <td style="color:#929292;">${e.base64}</td>
         </tr>`).join('');
     return `<table class="hash-table" style="font-size:0.55rem;"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
 }
@@ -1312,7 +1466,7 @@ async function showHashGenerator() {
     if (isNaN(start) || isNaN(end) || start > end) { showToast('⚠️ Plage invalide'); return; }
     if (end - start > 5000) { showToast('⚠️ Maximum 5000 entrées'); return; }
     const results = document.getElementById('results');
-    results.innerHTML = '<div style="text-align:center; padding:40px; color:#4A90E2;">⏳ Génération…</div>';
+    results.innerHTML = '<div style="text-align:center; padding:40px; color:#000091;">⏳ Génération…</div>';
     const entries = await generateHashesForRange(start, end);
     const sorted = sortHashes(entries, 'nombre', 'asc');
     window._hashData = sorted; window._hashSortBy = 'nombre'; window._hashSortDir = 'asc';
@@ -1382,7 +1536,7 @@ async function doReverseSearch() {
     const input = document.getElementById('reverseInput').value.trim();
     const box = document.getElementById('reverseResult');
     if (!input) { box.innerHTML = ''; return; }
-    box.innerHTML = '<div style="color:#4A90E2; padding:10px;">⏳ Recherche…</div>';
+    box.innerHTML = '<div style="color:#000091; padding:10px;">⏳ Recherche…</div>';
     const found = window._reverseDict.get(input) ||
                   window._reverseDict.get(input.toUpperCase()) ||
                   window._reverseDict.get(input.toLowerCase());
@@ -1417,8 +1571,7 @@ async function doReverseSearch() {
 // ============================================================
 async function showCrossCheck() {
     const results = document.getElementById('results');
-    results.innerHTML = '<div style="text-align:center; padding:40px; color:#4A90E2;">⏳ Vérification croisée…</div>';
-
+    results.innerHTML = '<div style="text-align:center; padding:40px; color:#000091;">⏳ Vérification croisée…</div>';
     const tests = [
         { algo: 'MD5',      input: 'abc',  got: md5('abc'),  expected: '900150983cd24fb0d6963f7d28e17f72' },
         { algo: 'MD5',      input: '',     got: md5(''),     expected: 'd41d8cd98f00b204e9800998ecf8427e' },
@@ -1449,11 +1602,11 @@ async function showCrossCheck() {
         if (ok) okCount++;
         const inputDisplay = t.input === '' ? '""' : `"${t.input}"`;
         html += `<tr>
-            <td style="color:#4A90E2;">${t.algo}</td>
+            <td style="color:#000091;">${t.algo}</td>
             <td>${inputDisplay}</td>
-            <td style="color:${ok ? '#88DD88' : '#FF8A80'}; font-size:0.55rem;">${t.got.slice(0,24)}…</td>
-            <td style="color:#888; font-size:0.55rem;">${t.expected.slice(0,24)}…</td>
-            <td style="color:${ok ? '#88DD88' : '#FF5252'}; font-weight:700;">${ok ? '✅' : '❌'}</td>
+            <td style="color:${ok ? '#16a34a' : '#E1000F'}; font-size:0.55rem;">${t.got.slice(0,24)}…</td>
+            <td style="color:#929292; font-size:0.55rem;">${t.expected.slice(0,24)}…</td>
+            <td style="color:${ok ? '#16a34a' : '#E1000F'}; font-weight:700;">${ok ? '✅' : '❌'}</td>
         </tr>`;
     }
     html += `
@@ -1491,9 +1644,9 @@ window.randomInput = function() {
 window.clearResults = function() {
     document.getElementById('searchInput').value = '';
     document.getElementById('results').innerHTML = `
-        <div style="text-align:center; color:#555; padding:60px 20px;">
-            <div style="font-size:4rem; margin-bottom:16px;">🔍</div>
-            <div style="font-size:1.2rem;">Entrez un mot, un nombre ou un hash</div>
+        <div style="text-align:center; color:#929292; padding:60px 20px;">
+            <div style="font-size:4rem; margin-bottom:16px;">🏛️</div>
+            <div style="font-size:1.2rem; color:#1e1e1e;">Entrez un mot, un nombre ou un hash</div>
         </div>`;
 };
 
@@ -1503,8 +1656,6 @@ async function analyze() {
     const results = document.getElementById('results');
     try {
         let html;
-
-        // Hash détecté ?
         if (/^[a-fA-F0-9]{8,128}$/.test(input) || input.startsWith('0x')) {
             results.innerHTML = `
                 <div class="reverse-panel">
@@ -1513,7 +1664,7 @@ async function analyze() {
                 </div>`;
             const box = document.getElementById('reverseResult');
             if (window._reverseDict.size === 0) {
-                box.innerHTML = '<div style="color:#4A90E2;">⏳ Chargement…</div>';
+                box.innerHTML = '<div style="color:#000091;">⏳ Chargement…</div>';
                 await buildReverseDictionary(0, 2000);
             }
             const found = window._reverseDict.get(input) ||
@@ -1531,15 +1682,12 @@ async function analyze() {
             results.scrollIntoView({ behavior: 'smooth' });
             return;
         }
-
-        // Séquence Base 10 ?
         const b10 = await analyzeBase10Input(input);
         if (b10) {
             results.innerHTML = b10;
             results.scrollIntoView({ behavior: 'smooth' });
             return;
         }
-
         const type = detectType(input);
         if (type === 'integer') {
             const num = parseInt(input);
@@ -1547,8 +1695,8 @@ async function analyze() {
             for (const [w, nb] of Object.entries(WORD_TO_NUMBER)) if (nb === num) { foundWord = w; break; }
             if (foundWord) {
                 html = await analyzeWord(foundWord);
-                html += `<div style="margin-top:20px; border-top:2px solid #333; padding-top:20px;">
-                    <div style="text-align:center; color:#666; font-size:0.8rem;">📌 Analyse du nombre associé</div>
+                html += `<div style="margin-top:20px; border-top:2px solid #e5e5e5; padding-top:20px;">
+                    <div style="text-align:center; color:#929292; font-size:0.8rem;">📌 Analyse du nombre associé</div>
                 </div>` + await analyzeNumber(num, input);
             } else {
                 html = await analyzeNumber(num, input);
@@ -1576,7 +1724,6 @@ function showToast(m) {
 // ============================================================
 // INITIALISATION
 // ============================================================
-// 🛡️ Active le garde-fou anti-NaN AVANT toute autre chose
 installNaNGard();
 
 document.addEventListener('keydown', e => {
@@ -1584,10 +1731,9 @@ document.addEventListener('keydown', e => {
 });
 document.getElementById('copyrightYear').textContent = new Date().getFullYear();
 
-console.log('📚 Encyclopédie intelligente — Bleu · Blanc · Rouge 🇫🇷');
+console.log('🏛️ Encyclopédie intelligente — Marianne d\'État 🇫🇷');
 console.log('© gunout — Tous droits réservés');
 
-// Pré-chargement du dictionnaire inversé en arrière-plan
 setTimeout(() => {
     if (window._reverseDict.size === 0) {
         console.log('⏳ Pré-chargement du dictionnaire inversé (0 → 500)…');
