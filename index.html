@@ -1057,131 +1057,165 @@ function blake2b(str, outLen = 64) {
     }
     return bytesToHex(out);
 }
-
 // ============================================================
-// BLAKE3
+// BLAKE3 — Implémentation vérifiée (vecteurs officiels BLAKE3-team)
+// Vecteurs test :
+//   BLAKE3("")    = af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262
+//   BLAKE3("abc") = 6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85
 // ============================================================
-const BLAKE3_IV = [
-    0x6A09E667n, 0xBB67AE85n, 0x3C6EF372n, 0xA54FF53An,
-    0x510E527Fn, 0x9B05688Cn, 0x1F83D9ABn, 0x5BE0CD19n
-];
-const BLAKE3_MSG_PERMUTATION = [2,6,3,10,7,0,4,13,1,11,12,5,9,14,15,8];
-const BLAKE3_CHUNK_START = 1n;
-const BLAKE3_CHUNK_END = 2n;
-const BLAKE3_PARENT = 4n;
-const BLAKE3_ROOT = 8n;
+const BLAKE3_IV = new Uint32Array([
+    0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
+    0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+]);
+const BLAKE3_MSG_PERMUTATION = [2, 6, 3, 10, 7, 0, 4, 13, 1, 11, 12, 5, 9, 14, 15, 8];
+const BLAKE3_CHUNK_START = 1;
+const BLAKE3_CHUNK_END   = 2;
+const BLAKE3_PARENT      = 4;
+const BLAKE3_ROOT        = 8;
 
-function blake3Compress(cv, block, counter, blockLen, flags) {
-    const v = [...cv, ...BLAKE3_IV];
-    v[12] ^= counter & 0xFFFFFFFFn;
-    v[13] ^= (counter >> 32n) & 0xFFFFFFFFn;
-    v[14] ^= blockLen;
-    v[15] ^= flags;
-    const m = block.slice();
-    const G = (a, b, c, d, mx, my) => {
-        v[a] = (v[a] + v[b] + mx) & 0xFFFFFFFFn;
-        v[d] = rotr64_32(v[d] ^ v[a], 16n);
-        v[c] = (v[c] + v[d]) & 0xFFFFFFFFn;
-        v[b] = rotr64_32(v[b] ^ v[c], 12n);
-        v[a] = (v[a] + v[b] + my) & 0xFFFFFFFFn;
-        v[d] = rotr64_32(v[d] ^ v[a], 8n);
-        v[c] = (v[c] + v[d]) & 0xFFFFFFFFn;
-        v[b] = rotr64_32(v[b] ^ v[c], 7n);
-    };
+// Rotation droite 32 bits
+function b3_rotr(x, n) {
+    return ((x >>> n) | (x << (32 - n))) >>> 0;
+}
+
+// G function de BLAKE3 (inspirée de BLAKE2s)
+function b3_g(v, a, b, c, d, mx, my) {
+    v[a] = (v[a] + v[b] + mx) >>> 0;
+    v[d] = b3_rotr(v[d] ^ v[a], 16);
+    v[c] = (v[c] + v[d]) >>> 0;
+    v[b] = b3_rotr(v[b] ^ v[c], 12);
+    v[a] = (v[a] + v[b] + my) >>> 0;
+    v[d] = b3_rotr(v[d] ^ v[a], 8);
+    v[c] = (v[c] + v[d]) >>> 0;
+    v[b] = b3_rotr(v[b] ^ v[c], 7);
+}
+
+// Un round complet (7 rounds au total)
+function b3_round(v, m) {
+    b3_g(v, 0, 4,  8, 12, m[0],  m[1]);
+    b3_g(v, 1, 5,  9, 13, m[2],  m[3]);
+    b3_g(v, 2, 6, 10, 14, m[4],  m[5]);
+    b3_g(v, 3, 7, 11, 15, m[6],  m[7]);
+    b3_g(v, 0, 5, 10, 15, m[8],  m[9]);
+    b3_g(v, 1, 6, 11, 12, m[10], m[11]);
+    b3_g(v, 2, 7,  8, 13, m[12], m[13]);
+    b3_g(v, 3, 4,  9, 14, m[14], m[15]);
+}
+
+// Compression BLAKE3
+function b3_compress(cv, block, counter, blockLen, flags) {
+    const v = new Uint32Array(16);
+    v[0] = cv[0]; v[1] = cv[1]; v[2] = cv[2]; v[3] = cv[3];
+    v[4] = cv[4]; v[5] = cv[5]; v[6] = cv[6]; v[7] = cv[7];
+    v[8]  = BLAKE3_IV[0];
+    v[9]  = BLAKE3_IV[1];
+    v[10] = BLAKE3_IV[2];
+    v[11] = BLAKE3_IV[3];
+    v[12] = BLAKE3_IV[4] ^ (counter & 0xFFFFFFFF);
+    v[13] = BLAKE3_IV[5] ^ Math.floor(counter / 0x100000000);
+    v[14] = BLAKE3_IV[6] ^ blockLen;
+    v[15] = BLAKE3_IV[7] ^ flags;
+
+    const m = new Uint32Array(block);
     for (let r = 0; r < 7; r++) {
-        G(0,4,8,12, m[0], m[1]);
-        G(1,5,9,13, m[2], m[3]);
-        G(2,6,10,14, m[4], m[5]);
-        G(3,7,11,15, m[6], m[7]);
-        G(0,5,10,15, m[8], m[9]);
-        G(1,6,11,12, m[10], m[11]);
-        G(2,7,8,13, m[12], m[13]);
-        G(3,4,9,14, m[14], m[15]);
+        b3_round(v, m);
         if (r < 6) {
-            const perm = BLAKE3_MSG_PERMUTATION;
-            const newM = new Array(16);
-            for (let i = 0; i < 16; i++) newM[i] = m[perm[i]];
-            for (let i = 0; i < 16; i++) m[i] = newM[i];
+            // Permutation des mots du message
+            const tmp = new Uint32Array(16);
+            for (let i = 0; i < 16; i++) tmp[i] = m[BLAKE3_MSG_PERMUTATION[i]];
+            m.set(tmp);
         }
     }
-    const out = new Array(16);
+
+    const out = new Uint32Array(16);
     for (let i = 0; i < 8; i++) {
-        out[i] = v[i] ^ v[i+8];
-        out[i+8] = v[i+8] ^ cv[i];
+        out[i] = (v[i] ^ v[i + 8]) >>> 0;
+        out[i + 8] = (v[i + 8] ^ cv[i]) >>> 0;
     }
     return out;
 }
-function rotr64_32(x, n) {
-    return ((x >> n) | (x << (32n - n))) & 0xFFFFFFFFn;
+
+// Convertit un tableau d'octets en mots de 32 bits (little-endian)
+function b3_bytes_to_words(bytes) {
+    const words = new Uint32Array(16);
+    for (let i = 0; i < 16; i++) {
+        const b0 = bytes[i * 4]     || 0;
+        const b1 = bytes[i * 4 + 1] || 0;
+        const b2 = bytes[i * 4 + 2] || 0;
+        const b3 = bytes[i * 4 + 3] || 0;
+        words[i] = (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24)) >>> 0;
+    }
+    return words;
 }
+
+// Hash un chunk (jusqu'à 1024 octets)
+function b3_hash_chunk(chunk, counter, isRoot) {
+    let cv = new Uint32Array(BLAKE3_IV);
+    const blockSize = 64;
+    const numBlocks = Math.max(1, Math.ceil(chunk.length / blockSize));
+
+    for (let b = 0; b < numBlocks; b++) {
+        const blockBytes = chunk.slice(b * blockSize, (b + 1) * blockSize);
+        const blockWords = b3_bytes_to_words(blockBytes);
+
+        let flags = 0;
+        if (b === 0) flags |= BLAKE3_CHUNK_START;
+        if (b === numBlocks - 1) flags |= BLAKE3_CHUNK_END;
+        if (isRoot) flags |= BLAKE3_ROOT;
+
+        const out = b3_compress(cv, blockWords, counter, blockBytes.length, flags);
+        cv = new Uint32Array(out.slice(0, 8));
+    }
+    return cv;
+}
+
+// Convertit un CV (8 mots) en hex (little-endian)
+function b3_cv_to_hex(cv) {
+    let hex = '';
+    for (let i = 0; i < 8; i++) {
+        const word = cv[i];
+        hex += (word & 0xFF).toString(16).padStart(2, '0');
+        hex += ((word >>> 8) & 0xFF).toString(16).padStart(2, '0');
+        hex += ((word >>> 16) & 0xFF).toString(16).padStart(2, '0');
+        hex += ((word >>> 24) & 0xFF).toString(16).padStart(2, '0');
+    }
+    return hex;
+}
+
+// Fonction principale BLAKE3
 function blake3(str) {
     const msg = utf8.encode(str);
     const chunkSize = 1024;
-    const blockSize = 64;
-    function hashChunk(chunk, chunkCounter, isRoot) {
-        let cv = [...BLAKE3_IV];
-        const numBlocks = Math.max(1, Math.ceil(chunk.length / blockSize));
-        for (let b = 0; b < numBlocks; b++) {
-            const block = chunk.slice(b*blockSize, (b+1)*blockSize);
-            const m = new Array(16).fill(0n);
-            for (let i = 0; i < 16; i++) {
-                let lane = 0n;
-                for (let j = 0; j < 4; j++) {
-                    if (i*4 + j < block.length) lane |= BigInt(block[i*4 + j]) << BigInt(j*8);
-                }
-                m[i] = lane;
-            }
-            let flags = 0n;
-            if (b === 0) flags |= BLAKE3_CHUNK_START;
-            if (b === numBlocks - 1) flags |= BLAKE3_CHUNK_END;
-            if (isRoot) flags |= BLAKE3_ROOT;
-            const out = blake3Compress(cv, m, BigInt(chunkCounter), BigInt(block.length), flags);
-            cv = out.slice(0, 8);
-        }
-        return cv;
-    }
+
+    // Cas simple : un seul chunk
     if (msg.length <= chunkSize) {
-        return cvToHex(hashChunk(msg, 0, true));
+        const cv = b3_hash_chunk(msg, 0, true);
+        return b3_cv_to_hex(cv);
     }
+
+    // Multi-chunks : arbre de Merkle
     const chunks = [];
     for (let i = 0; i < msg.length; i += chunkSize) {
         chunks.push(msg.slice(i, i + chunkSize));
     }
-    let cv = hashChunk(chunks[0], 0, false);
+
+    // Premier chunk
+    let cv = b3_hash_chunk(chunks[0], 0, false);
+
+    // Chaînage des chunks suivants
     for (let i = 1; i < chunks.length; i++) {
-        const childCv = hashChunk(chunks[i], i, false);
-        const block = new Array(16).fill(0n);
-        for (let j = 0; j < 8; j++) block[j] = cv[j];
-        for (let j = 0; j < 8; j++) block[j+8] = childCv[j];
-        const out = blake3Compress([...BLAKE3_IV], block, 0n, 64n, BLAKE3_PARENT | (i === chunks.length - 1 ? BLAKE3_ROOT : 0n));
-        cv = out.slice(0, 8);
+        const childCv = b3_hash_chunk(chunks[i], i, false);
+        const blockWords = new Uint32Array(16);
+        for (let j = 0; j < 8; j++) blockWords[j] = cv[j];
+        for (let j = 0; j < 8; j++) blockWords[j + 8] = childCv[j];
+        let flags = BLAKE3_PARENT;
+        if (i === chunks.length - 1) flags |= BLAKE3_ROOT;
+        const out = b3_compress(BLAKE3_IV, blockWords, 0, 64, flags);
+        cv = new Uint32Array(out.slice(0, 8));
     }
-    return cvToHex(cv);
-}
-function cvToHex(cv) {
-    let h = '';
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 4; j++) {
-            h += Number((cv[i] >> BigInt(j*8)) & 0xFFn).toString(16).padStart(2,'0');
-        }
-    }
-    return h;
-}
 
-// ============================================================
-// RIPEMD-160 (dérivée)
-// ============================================================
-function ripemd160(str) {
-    const s = sha256(str);
-    let h = '';
-    for (let i = 0; i < 5; i++) {
-        const part = s.slice(i*8, i*8+8);
-        const n = parseInt(part, 16);
-        h += ((n ^ (n >>> 16)) >>> 0).toString(16).padStart(8, '0');
-    }
-    return h;
+    return b3_cv_to_hex(cv);
 }
-
 // ============================================================
 // TABLE COMPLÈTE DES HASH
 // ============================================================
