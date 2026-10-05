@@ -675,9 +675,7 @@ function renderCard(label, value, cls = '') {
 // HASH CLASSIQUES
 // ============================================================
 function rotl32(x, n) { return ((x << n) | (x >>> (32-n))) | 0; }
-function rotl32(x, n) {
-    return ((x << n) | (x >>> (32 - n))) | 0;
-}
+function rotr32(x, n) { return ((x >>> n) | (x << (32-n))) | 0; }
 const CRC32_TABLE = (() => {
     const t = new Uint32Array(256);
     for (let n = 0; n < 256; n++) {
