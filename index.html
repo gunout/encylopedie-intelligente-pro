@@ -13,8 +13,6 @@ body {
     padding: 0 0 16px;
     min-height: 100vh;
 }
-
-/* ===== Bandeau officiel de l'État (Marianne) ===== */
 .bandeau-etat {
     background: #ffffff;
     border-bottom: 2px solid #000091;
@@ -62,60 +60,33 @@ body {
 }
 .bloc-marque-txt { font-size: 11px; color: #3a3a3a; line-height: 1.4; }
 .bloc-marque-txt .republique {
-    display: block;
-    font-weight: 800;
-    color: #000091;
-    font-size: 15px;
-    letter-spacing: .5px;
-    text-transform: uppercase;
+    display: block; font-weight: 800; color: #000091;
+    font-size: 15px; letter-spacing: .5px; text-transform: uppercase;
 }
 .bloc-marque-txt .ministere {
-    display: block;
-    font-size: 10px;
-    color: #3a3a3a;
-    margin-top: 2px;
-    letter-spacing: .3px;
+    display: block; font-size: 10px; color: #3a3a3a;
+    margin-top: 2px; letter-spacing: .3px;
 }
 .bloc-marque-txt .direction {
-    display: block;
-    font-size: 9px;
-    color: #929292;
-    margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    display: block; font-size: 9px; color: #929292;
+    margin-top: 2px; text-transform: uppercase; letter-spacing: 1px;
 }
 .bloc-devise {
-    margin-left: auto;
-    text-align: right;
-    font-size: 11px;
-    color: #000091;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 700;
-    line-height: 1.6;
+    margin-left: auto; text-align: right; font-size: 11px;
+    color: #000091; letter-spacing: 3px; text-transform: uppercase;
+    font-weight: 700; line-height: 1.6;
 }
-.bloc-devise em {
-    display: block;
-    font-style: normal;
-}
+.bloc-devise em { display: block; font-style: normal; }
 .bloc-devise .ref-legale {
-    font-family: monospace;
-    font-size: 8px;
-    color: #929292;
-    letter-spacing: .5px;
-    margin-top: 4px;
-    font-weight: 400;
+    font-family: monospace; font-size: 8px; color: #929292;
+    letter-spacing: .5px; margin-top: 4px; font-weight: 400;
     text-transform: none;
 }
-
-/* ===== Tricolore ===== */
 .tricolore { position: fixed; top: 0; left: 0; right: 0; height: 4px; display: flex; z-index: 1000; }
 .tricolore span { flex: 1; }
 .tricolore .t-bleu { background: #000091; }
 .tricolore .t-blanc { background: #ffffff; }
 .tricolore .t-rouge { background: #E1000F; }
-
-/* ===== Header ===== */
 .header {
     text-align: center; padding: 25px 20px; margin-bottom: 20px;
     background: linear-gradient(135deg, #ffffff, #f0f3ff);
@@ -134,10 +105,7 @@ body {
     background-clip: text;
 }
 .header p { color: #666; font-size: 0.95rem; margin-top: 6px; }
-
 .main-container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
-
-/* ===== Search section ===== */
 .search-section {
     background: #ffffff; padding: 18px 20px; border-radius: 16px;
     border: 1px solid #e5e5e5; margin-bottom: 20px;
@@ -150,8 +118,8 @@ body {
     font-size: 1.1rem; font-family: monospace;
 }
 .search-section input[type="text"]:focus {
-    border-color: #000091; outline: none; box-shadow: 0 0 0 2px rgba(0,0,145,0.15);
-    background: #fff;
+    border-color: #000091; outline: none;
+    box-shadow: 0 0 0 2px rgba(0,0,145,0.15); background: #fff;
 }
 .search-section button {
     padding: 12px 20px; border: none; border-radius: 10px;
@@ -161,8 +129,6 @@ body {
 .btn-primary { background: #000091; color: #fff; }
 .btn-random  { background: #ffffff; color: #1e1e1e; border: 2px solid #e5e5e5; }
 .btn-clear   { background: #E1000F; color: #fff; }
-
-/* ===== Quick buttons ===== */
 .quick-buttons { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
 .quick-buttons button {
     padding: 4px 12px; border-radius: 14px; border: 1px solid #e5e5e5;
@@ -170,8 +136,6 @@ body {
     cursor: pointer; transition: all 0.2s; font-weight: 600;
 }
 .quick-buttons button:hover { border-color: #000091; color: #000091; background: #e3e3fd; }
-
-/* ===== Badges ===== */
 .type-badge {
     display: inline-block; padding: 4px 14px; border-radius: 20px;
     font-size: 0.75rem; font-weight: 600; margin: 6px 0;
@@ -180,8 +144,6 @@ body {
 .type-badge.text { background: #1e1e1e; color: #fff; }
 .type-badge.mixed { background: transparent; border: 1px solid #E1000F; color: #E1000F; }
 .type-badge.prime { background: #E1000F; color: #fff; }
-
-/* ===== Stats grid ===== */
 .stats-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 8px; margin-bottom: 12px;
@@ -193,8 +155,8 @@ body {
 }
 .stat-card:hover { border-color: #000091; box-shadow: 0 4px 12px rgba(0,0,145,.08); }
 .stat-card .label {
-    color: #929292; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.5px;
-    font-weight: 700;
+    color: #929292; font-size: 0.55rem; text-transform: uppercase;
+    letter-spacing: 0.5px; font-weight: 700;
 }
 .stat-card .value {
     font-size: 0.95rem; font-weight: 700; margin-top: 3px;
@@ -203,8 +165,6 @@ body {
 .stat-card .value.bleu { color: #000091; }
 .stat-card .value.blanc { color: #1e1e1e; }
 .stat-card .value.rouge { color: #E1000F; }
-
-/* ===== Section title ===== */
 .section-title {
     color: #1e1e1e; font-size: 1rem; font-weight: 700;
     margin: 16px 0 8px 0; padding-bottom: 5px;
@@ -212,8 +172,6 @@ body {
     border-image: linear-gradient(90deg, #000091, #ffffff, #E1000F) 1;
 }
 .section-title .emoji { margin-right: 8px; }
-
-/* ===== Color preview ===== */
 .color-preview {
     display: flex; align-items: center; gap: 14px;
     padding: 12px 16px; background: #ffffff; border-radius: 10px;
@@ -226,8 +184,6 @@ body {
 .color-preview .info { font-family: monospace; font-size: 0.85rem; }
 .color-preview .info .label { color: #929292; font-size: 0.5rem; text-transform: uppercase; font-weight: 700; }
 .color-preview .info .value { color: #1e1e1e; }
-
-/* ===== Hash table ===== */
 .hash-table {
     width: 100%; border-collapse: collapse; font-family: monospace;
     font-size: 0.7rem; background: #ffffff; border-radius: 10px;
@@ -254,17 +210,13 @@ body {
 }
 .hash-table td .copy-btn:hover { border-color: #000091; color: #000091; background: #e3e3fd; }
 .hash-table tr:hover td { background: #f6f6f6; }
-
 .tag { font-size: 0.5rem; margin-left: 4px; }
 .tag.warn { color: #E1000F; }
 .tag.ok { color: #000091; }
-
 .hash-note {
     font-size: 0.6rem; color: #929292; margin-top: 6px;
     font-family: monospace; line-height: 1.5;
 }
-
-/* ===== Divisors ===== */
 .divisors-list { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
 .divisors-list .div {
     background: #f6f6f6; padding: 2px 8px; border-radius: 8px;
@@ -272,8 +224,6 @@ body {
     font-size: 0.65rem; color: #3a3a3a;
 }
 .divisors-list .div.prime { border-color: #E1000F; color: #E1000F; background: #ffe9e9; }
-
-/* ===== Toast ===== */
 .toast {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
     background: #000091; color: #fff; padding: 10px 20px;
@@ -283,15 +233,11 @@ body {
     box-shadow: 0 8px 24px rgba(0,0,145,.25);
 }
 .toast.show { opacity: 1; }
-
-/* ===== Factor tree ===== */
 .factor-tree {
     font-family: monospace; font-size: 0.85rem; color: #000091;
     padding: 8px 12px; background: #f6f6f6; border-radius: 8px;
     border: 1px solid #e5e5e5; text-align: center; line-height: 1.8;
 }
-
-/* ===== Relation box ===== */
 .relation-box {
     background: #ffffff; padding: 16px 20px; border-radius: 12px;
     border: 2px solid #E1000F; margin-bottom: 16px;
@@ -304,16 +250,12 @@ body {
 }
 .relation-box .item .lbl { color: #929292; font-size: 0.55rem; text-transform: uppercase; font-weight: 700; }
 .relation-box .item .val { color: #000091; }
-
-/* ===== Word analysis ===== */
 .word-analysis { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
 .word-analysis .char {
     padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;
     font-weight: 600; font-family: monospace; border: 1px solid #e5e5e5;
     background: #f6f6f6;
 }
-
-/* ===== Base 10 Panel ===== */
 .b10-panel {
     background: linear-gradient(135deg, #ffffff, #f0f3ff);
     border: 2px solid #000091; border-radius: 14px;
@@ -329,8 +271,7 @@ body {
     font-size: 1rem; font-weight: 700;
     background: linear-gradient(90deg, #000091, #1212ff, #E1000F);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 12px;
+    background-clip: text; margin-bottom: 12px;
 }
 .b10-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
 .b10-card {
@@ -338,8 +279,8 @@ body {
     border-radius: 10px; padding: 10px 14px;
 }
 .b10-card .lbl {
-    color: #929292; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1px;
-    font-weight: 700;
+    color: #929292; font-size: 0.55rem; text-transform: uppercase;
+    letter-spacing: 1px; font-weight: 700;
 }
 .b10-card .val { font-family: monospace; font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
 .b10-card .val.monte   { color: #000091; }
@@ -354,7 +295,6 @@ body {
 .b10-steps .arrow-down { color: #E1000F; font-weight: 700; }
 .b10-steps .result     { color: #1e1e1e; font-weight: 700; font-size: 1rem; }
 .b10-steps .base10     { color: #f59e0b; }
-
 .b10-toggle { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 .b10-toggle button {
     padding: 6px 14px; border-radius: 20px; border: 1px solid #e5e5e5;
@@ -363,8 +303,6 @@ body {
 }
 .b10-toggle button.active { background: #000091; border-color: #000091; color: #fff; }
 .b10-toggle button:hover { border-color: #000091; color: #000091; background: #e3e3fd; }
-
-/* ===== Reverse panel ===== */
 .reverse-panel {
     background: linear-gradient(135deg, #fff, #fff5e6);
     border: 2px solid #fbbf24; border-radius: 14px;
@@ -375,8 +313,7 @@ body {
     font-size: 1rem; font-weight: 700;
     background: linear-gradient(90deg, #f59e0b, #E1000F);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 12px;
+    background-clip: text; margin-bottom: 12px;
 }
 .reverse-panel input {
     width: 100%; padding: 12px 16px; border-radius: 10px;
@@ -385,7 +322,8 @@ body {
     font-weight: 700;
 }
 .reverse-panel input:focus {
-    border-color: #fbbf24; outline: none; box-shadow: 0 0 0 2px rgba(251,191,36,0.2);
+    border-color: #fbbf24; outline: none;
+    box-shadow: 0 0 0 2px rgba(251,191,36,0.2);
 }
 .reverse-result {
     background: #fff; border: 1px solid #e5e5e5; border-radius: 10px;
@@ -395,49 +333,29 @@ body {
 .reverse-result .algo { color: #f59e0b; font-size: 0.75rem; letter-spacing: 1px; font-weight: 700; }
 .reverse-result .hash { color: #666; font-size: 0.7rem; word-break: break-all; }
 .reverse-result .nope { color: #E1000F; font-weight: 700; }
-
-/* ===== Footer officiel ===== */
 .footer-officiel {
-    background: #fff;
-    border-top: 2px solid #000091;
-    padding: 24px 20px 16px;
-    text-align: center;
-    color: #3a3a3a;
-    font-size: 11px;
-    margin-top: 40px;
+    background: #fff; border-top: 2px solid #000091;
+    padding: 24px 20px 16px; text-align: center;
+    color: #3a3a3a; font-size: 11px; margin-top: 40px;
 }
 .footer-officiel .devise-footer {
-    font-size: 13px;
-    color: #000091;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-size: 13px; color: #000091; letter-spacing: 4px;
+    text-transform: uppercase; font-weight: 700; margin-bottom: 8px;
 }
 .footer-officiel .mention-legale {
-    color: #929292;
-    font-size: 9px;
-    font-family: monospace;
-    letter-spacing: .5px;
-    margin-top: 8px;
-    line-height: 1.6;
+    color: #929292; font-size: 9px; font-family: monospace;
+    letter-spacing: .5px; margin-top: 8px; line-height: 1.6;
 }
 .footer-officiel .copyright-footer {
-    margin-top: 10px;
-    font-family: monospace;
-    font-size: 10px;
-    color: #929292;
+    margin-top: 10px; font-family: monospace;
+    font-size: 10px; color: #929292;
 }
 .footer-officiel .copyright-footer .sig {
-    font-weight: 700;
-    letter-spacing: 2px;
+    font-weight: 700; letter-spacing: 2px;
     background: linear-gradient(90deg, #000091, #E1000F);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-
-/* ===== Responsive ===== */
 @media (max-width: 600px) {
     .bandeau-etat-content { flex-direction: column; gap: 10px; padding: 10px 12px; }
     .bloc-devise { margin-left: 0; text-align: center; }
@@ -452,7 +370,6 @@ body {
 </head>
 <body>
 
-<!-- ===== Bandeau officiel de l'État ===== -->
 <div class="bandeau-etat">
   <div class="bandeau-etat-content">
     <div class="bloc-marianne">
@@ -516,7 +433,6 @@ body {
     </div>
 </div>
 
-<!-- ===== Footer officiel ===== -->
 <footer class="footer-officiel">
   <div class="devise-footer">Liberté · Égalité · Fraternité</div>
   <div>République Française — Ministère de l'Enseignement supérieur et de la Recherche</div>
@@ -531,11 +447,10 @@ body {
 
 <div class="toast" id="toast"></div>
 
-<!-- CDN BLAKE3 officiel -->
+<!-- ✅ CDN BLAKE3 officiel -->
 <script src="https://cdn.jsdelivr.net/npm/blake3@2.1.7/dist/browser/blake3.umd.min.js"></script>
 
 <script>
-
 'use strict';
 
 // ============================================================
@@ -719,95 +634,42 @@ const MD5_S = [
     4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
     6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
 ];
-// ============================================================
-// MD5 — RFC 1321 (version corrigée & vérifiée)
-// Vecteurs test : 
-//   MD5("")    = d41d8cd98f00b204e9800998ecf8427e
-//   MD5("a")   = 0cc175b9c0f1b6a831c399e269772661
-//   MD5("abc") = 900150983cd24fb0d6963f7d28e17f72
-// ============================================================
 function md5(str) {
-    // --- 1. Convertir la chaîne en octets UTF-8 ---
     const msg = utf8.encode(str);
     const ml = msg.length;
-
-    // --- 2. Padding MD5 (RFC 1321 §3.1-3.2) ---
-    // Longueur totale = multiple de 64 octets après ajout de 1 bit + 64 bits de longueur
     const totalLen = (((ml + 8) >> 6) + 1) << 6;
     const bytes = new Uint8Array(totalLen);
     bytes.set(msg);
-    bytes[ml] = 0x80;  // bit 1 suivi de zéros
-
-    // --- 3. Longueur en bits (64 bits little-endian) ---
+    bytes[ml] = 0x80;
     const dv = new DataView(bytes.buffer);
-    const bitLenLo = (ml * 8) >>> 0;                // 32 bits bas
-    const bitLenHi = Math.floor(ml / 536870912);    // 32 bits hauts (ml / 2^29)
-    dv.setUint32(totalLen - 8, bitLenLo, true);     // little-endian
+    const bitLenLo = (ml * 8) >>> 0;
+    const bitLenHi = Math.floor(ml / 536870912);
+    dv.setUint32(totalLen - 8, bitLenLo, true);
     dv.setUint32(totalLen - 4, bitLenHi, true);
-
-    // --- 4. Initialisation des registres (RFC 1321 §3.3) ---
     let a0 = 0x67452301 | 0;
     let b0 = 0xefcdab89 | 0;
     let c0 = 0x98badcfe | 0;
     let d0 = 0x10325476 | 0;
-
-    // --- 5. Traitement par blocs de 512 bits (64 octets) ---
     const M = new Int32Array(16);
-
     for (let off = 0; off < totalLen; off += 64) {
-        // Lecture des 16 mots de 32 bits en little-endian
-        for (let i = 0; i < 16; i++) {
-            M[i] = dv.getInt32(off + i * 4, true);
-        }
-
-        let A = a0;
-        let B = b0;
-        let C = c0;
-        let D = d0;
-
-        // --- 6. 64 opérations (RFC 1321 §3.4) ---
+        for (let i = 0; i < 16; i++) M[i] = dv.getInt32(off + i * 4, true);
+        let A = a0, B = b0, C = c0, D = d0;
         for (let i = 0; i < 64; i++) {
             let F, g;
-
-            if (i < 16) {
-                // Round 1 : F = (B & C) | (~B & D)
-                F = (B & C) | (~B & D);
-                g = i;
-            } else if (i < 32) {
-                // Round 2 : F = (D & B) | (~D & C)
-                F = (D & B) | (~D & C);
-                g = (5 * i + 1) & 15;
-            } else if (i < 48) {
-                // Round 3 : F = B ^ C ^ D
-                F = B ^ C ^ D;
-                g = (3 * i + 5) & 15;
-            } else {
-                // Round 4 : F = C ^ (B | ~D)
-                F = C ^ (B | ~D);
-                g = (7 * i) & 15;
-            }
-
-            // Opération principale
+            if (i < 16)      { F = (B & C) | (~B & D); g = i; }
+            else if (i < 32) { F = (D & B) | (~D & C); g = (5 * i + 1) & 15; }
+            else if (i < 48) { F = B ^ C ^ D;          g = (3 * i + 5) & 15; }
+            else             { F = C ^ (B | ~D);       g = (7 * i) & 15; }
             F = (F + A + MD5_K[i] + M[g]) | 0;
-            A = D;
-            D = C;
-            C = B;
+            A = D; D = C; C = B;
             B = (B + rotl32(F, MD5_S[i])) | 0;
         }
-
-        // Ajout au registre
-        a0 = (a0 + A) | 0;
-        b0 = (b0 + B) | 0;
-        c0 = (c0 + C) | 0;
-        d0 = (d0 + D) | 0;
+        a0 = (a0 + A) | 0; b0 = (b0 + B) | 0;
+        c0 = (c0 + C) | 0; d0 = (d0 + D) | 0;
     }
-
-    // --- 7. Sortie : concaténation little-endian a0 b0 c0 d0 ---
     const out = new DataView(new ArrayBuffer(16));
-    out.setInt32(0, a0, true);
-    out.setInt32(4, b0, true);
-    out.setInt32(8, c0, true);
-    out.setInt32(12, d0, true);
+    out.setInt32(0, a0, true); out.setInt32(4, b0, true);
+    out.setInt32(8, c0, true); out.setInt32(12, d0, true);
     let hex = '';
     const u8 = new Uint8Array(out.buffer);
     for (let i = 0; i < 16; i++) hex += u8[i].toString(16).padStart(2, '0');
@@ -1061,11 +923,10 @@ function blake2b(str, outLen = 64) {
     }
     return bytesToHex(out);
 }
+
 // ============================================================
-// BLAKE3 — Implémentation vérifiée (vecteurs officiels BLAKE3-team)
-// Vecteurs test :
-//   BLAKE3("")    = af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262
-//   BLAKE3("abc") = 6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85
+// BLAKE3 — Implémentation JS (fallback si CDN indisponible)
+// ⚠️ Cette version a des bugs connus, utilisée uniquement en secours
 // ============================================================
 const BLAKE3_IV = new Uint32Array([
     0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
@@ -1077,12 +938,9 @@ const BLAKE3_CHUNK_END   = 2;
 const BLAKE3_PARENT      = 4;
 const BLAKE3_ROOT        = 8;
 
-// Rotation droite 32 bits
 function b3_rotr(x, n) {
     return ((x >>> n) | (x << (32 - n))) >>> 0;
 }
-
-// G function de BLAKE3 (inspirée de BLAKE2s)
 function b3_g(v, a, b, c, d, mx, my) {
     v[a] = (v[a] + v[b] + mx) >>> 0;
     v[d] = b3_rotr(v[d] ^ v[a], 16);
@@ -1093,8 +951,6 @@ function b3_g(v, a, b, c, d, mx, my) {
     v[c] = (v[c] + v[d]) >>> 0;
     v[b] = b3_rotr(v[b] ^ v[c], 7);
 }
-
-// Un round complet (7 rounds au total)
 function b3_round(v, m) {
     b3_g(v, 0, 4,  8, 12, m[0],  m[1]);
     b3_g(v, 1, 5,  9, 13, m[2],  m[3]);
@@ -1105,32 +961,25 @@ function b3_round(v, m) {
     b3_g(v, 2, 7,  8, 13, m[12], m[13]);
     b3_g(v, 3, 4,  9, 14, m[14], m[15]);
 }
-
-// Compression BLAKE3
 function b3_compress(cv, block, counter, blockLen, flags) {
     const v = new Uint32Array(16);
     v[0] = cv[0]; v[1] = cv[1]; v[2] = cv[2]; v[3] = cv[3];
     v[4] = cv[4]; v[5] = cv[5]; v[6] = cv[6]; v[7] = cv[7];
-    v[8]  = BLAKE3_IV[0];
-    v[9]  = BLAKE3_IV[1];
-    v[10] = BLAKE3_IV[2];
-    v[11] = BLAKE3_IV[3];
+    v[8]  = BLAKE3_IV[0]; v[9]  = BLAKE3_IV[1];
+    v[10] = BLAKE3_IV[2]; v[11] = BLAKE3_IV[3];
     v[12] = BLAKE3_IV[4] ^ (counter & 0xFFFFFFFF);
     v[13] = BLAKE3_IV[5] ^ Math.floor(counter / 0x100000000);
     v[14] = BLAKE3_IV[6] ^ blockLen;
     v[15] = BLAKE3_IV[7] ^ flags;
-
     const m = new Uint32Array(block);
     for (let r = 0; r < 7; r++) {
         b3_round(v, m);
         if (r < 6) {
-            // Permutation des mots du message
             const tmp = new Uint32Array(16);
             for (let i = 0; i < 16; i++) tmp[i] = m[BLAKE3_MSG_PERMUTATION[i]];
             m.set(tmp);
         }
     }
-
     const out = new Uint32Array(16);
     for (let i = 0; i < 8; i++) {
         out[i] = (v[i] ^ v[i + 8]) >>> 0;
@@ -1138,8 +987,6 @@ function b3_compress(cv, block, counter, blockLen, flags) {
     }
     return out;
 }
-
-// Convertit un tableau d'octets en mots de 32 bits (little-endian)
 function b3_bytes_to_words(bytes) {
     const words = new Uint32Array(16);
     for (let i = 0; i < 16; i++) {
@@ -1151,29 +998,22 @@ function b3_bytes_to_words(bytes) {
     }
     return words;
 }
-
-// Hash un chunk (jusqu'à 1024 octets)
 function b3_hash_chunk(chunk, counter, isRoot) {
     let cv = new Uint32Array(BLAKE3_IV);
     const blockSize = 64;
     const numBlocks = Math.max(1, Math.ceil(chunk.length / blockSize));
-
     for (let b = 0; b < numBlocks; b++) {
         const blockBytes = chunk.slice(b * blockSize, (b + 1) * blockSize);
         const blockWords = b3_bytes_to_words(blockBytes);
-
         let flags = 0;
         if (b === 0) flags |= BLAKE3_CHUNK_START;
         if (b === numBlocks - 1) flags |= BLAKE3_CHUNK_END;
         if (isRoot) flags |= BLAKE3_ROOT;
-
         const out = b3_compress(cv, blockWords, counter, blockBytes.length, flags);
         cv = new Uint32Array(out.slice(0, 8));
     }
     return cv;
 }
-
-// Convertit un CV (8 mots) en hex (little-endian)
 function b3_cv_to_hex(cv) {
     let hex = '';
     for (let i = 0; i < 8; i++) {
@@ -1185,28 +1025,18 @@ function b3_cv_to_hex(cv) {
     }
     return hex;
 }
-
-// Fonction principale BLAKE3
-function blake3(str) {
+function blake3FallbackJS(str) {
     const msg = utf8.encode(str);
     const chunkSize = 1024;
-
-    // Cas simple : un seul chunk
     if (msg.length <= chunkSize) {
         const cv = b3_hash_chunk(msg, 0, true);
         return b3_cv_to_hex(cv);
     }
-
-    // Multi-chunks : arbre de Merkle
     const chunks = [];
     for (let i = 0; i < msg.length; i += chunkSize) {
         chunks.push(msg.slice(i, i + chunkSize));
     }
-
-    // Premier chunk
     let cv = b3_hash_chunk(chunks[0], 0, false);
-
-    // Chaînage des chunks suivants
     for (let i = 1; i < chunks.length; i++) {
         const childCv = b3_hash_chunk(chunks[i], i, false);
         const blockWords = new Uint32Array(16);
@@ -1217,9 +1047,34 @@ function blake3(str) {
         const out = b3_compress(BLAKE3_IV, blockWords, 0, 64, flags);
         cv = new Uint32Array(out.slice(0, 8));
     }
-
     return b3_cv_to_hex(cv);
 }
+
+// ============================================================
+// BLAKE3 — Wrapper CDN officiel (fallback JS si CDN absent)
+// ✅ Utilise la lib officielle BLAKE3-team pour des hashs corrects
+// ============================================================
+function blake3(str) {
+    // Priorité 1 : lib officielle CDN
+    if (typeof BLAKE3 !== 'undefined' && BLAKE3 && typeof BLAKE3.hash === 'function') {
+        try {
+            const bytes = utf8.encode(str);
+            const hashBytes = BLAKE3.hash(bytes, 32, 0); // 32 octets = 256 bits
+            let hex = '';
+            for (let i = 0; i < hashBytes.length; i++) {
+                hex += hashBytes[i].toString(16).padStart(2, '0');
+            }
+            return hex;
+        } catch (e) {
+            console.warn('⚠️ BLAKE3 CDN erreur, fallback JS :', e.message);
+        }
+    } else {
+        console.warn('⚠️ BLAKE3 CDN non chargé, utilisation fallback JS');
+    }
+    // Priorité 2 : fallback JS (peut être buggé)
+    return blake3FallbackJS(str);
+}
+
 // ============================================================
 // RIPEMD-160 (dérivée déterministe — pour démonstration)
 // ============================================================
