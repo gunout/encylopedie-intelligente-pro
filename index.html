@@ -510,7 +510,7 @@ details.neutral-details summary {
       <em>Liberté</em>
       <em>Égalité</em>
       <em>Fraternité</em>
-      <div class="ref-legale">Monitor Encyclopédie v2.4 · Mots ↔ Nombres ↔ Hashs ↔ Magie ↔ Fuites</div>
+      <div class="ref-legale">Monitor Encyclopédie v2.5 · Mots ↔ Nombres ↔ Hashs ↔ Magie ↔ Fuites</div>
     </div>
   </div>
 </div>
@@ -576,7 +576,6 @@ details.neutral-details summary {
 
 <div class="toast" id="toast"></div>
 
-<!-- ✅ BLAKE3 WASM chargé comme module ES6 -->
 <script type="module">
     import init, { hash as blake3_hash } from './blake3.js';
     window._blake3Hash = blake3_hash;
@@ -595,7 +594,7 @@ details.neutral-details summary {
 
 // ============================================================
 // © gunout — Encyclopédie intelligente · Marianne d'État
-// v2.4 — Diversité relative + tags rares + 3 sections
+// v2.5 — Tags rares, 11 combinaisons, 3 sections
 // ============================================================
 
 const WORD_TO_NUMBER = {
@@ -1326,7 +1325,7 @@ async function analyzeWord(text) {
 }
 
 // ============================================================
-// ✨ ANALYSE MAGIQUE v2.4 — Diversité relative + tags rares
+// ✨ ANALYSE MAGIQUE v2.5 — Tags rares uniquement
 // ============================================================
 const MAGIC_FRENCH_WORDS = [
     'ace','aide','aile','bac','bide','cafe','cede','dada','decade',
@@ -1358,7 +1357,7 @@ function analyzeMagicHash(h) {
     const uniqueChars = new Set(lower).size;
     const sumHex = lower.split('').reduce((a, c) => a + parseInt(c, 16), 0);
 
-    // ─── TAGS RARES (vraies découvertes) ───
+    // ─── TAGS RARES UNIQUEMENT ───
     if (lower === lower.split('').reverse().join(''))
         tags.push({ label: 'PALINDROME', cls: 'gold', rare: true });
     if (/^[a-f]+$/i.test(h))
@@ -1369,22 +1368,11 @@ function analyzeMagicHash(h) {
     const fr = containsFrenchWord(lower);
     if (fr) tags.push({ label: `MOT FR: ${fr.toUpperCase()}`, cls: 'green', rare: true });
 
-    // ─── TAGS COMMUNS (indicatifs, pas rares) ───
-    const ratio = hexLetters / h.length;
-    if (ratio > 0.85) tags.push({ label: 'Quasi-lettres', cls: 'purple' });
-    if (ratio < 0.15) tags.push({ label: 'Quasi-chiffres', cls: 'blue' });
-
-    // ✅ Diversité RELATIVE : nouveau calcul
-    const isStandardLongHash = h.length >= 40;
-    const DIVERSITY_RATIO = uniqueChars / Math.min(h.length, 16);
-    if (!isStandardLongHash && DIVERSITY_RATIO >= 0.75 && uniqueChars >= 10) {
-        tags.push({ label: 'Diversifié', cls: 'purple' });
-    }
-    // "Très diversifié" réservé aux hashs COURTS exceptionnellement diversifiés
+    // "Très diversifié" réservé aux hashs COURTS (8-20 chars) exceptionnellement diversifiés
+    // Un SHA-256 (64 chars) ne peut PAS matcher → plus de tag automatique
     if (h.length >= 8 && h.length <= 20 && uniqueChars >= Math.min(h.length, 14)) {
         tags.push({ label: 'Très diversifié', cls: 'gold', rare: true });
     }
-
     if (uniqueChars <= 4) tags.push({ label: 'Très répétitif', cls: 'gold', rare: true });
 
     return {
@@ -1642,6 +1630,7 @@ function checkLeakedHash(hash) {
 
 // ============================================================
 // 🔑 GÉNÉRATION DE HASH MAGIQUES POUR CREDENTIALS
+// v2.5 : 11 combinaisons (md5(user:pass) retiré car récursif)
 // ============================================================
 const CREDENTIAL_COMBINERS = [
     { name: 'user',           fn: (u, p) => u },
@@ -1654,8 +1643,7 @@ const CREDENTIAL_COMBINERS = [
     { name: 'pass:user',      fn: (u, p) => `${p}:${u}` },
     { name: 'user+pass',      fn: (u, p) => `${u}+${p}` },
     { name: 'userPass (camel)', fn: (u, p) => `${u}${p.charAt(0).toUpperCase()}${p.slice(1)}` },
-    { name: 'passUser (camel)', fn: (u, p) => `${p}${u.charAt(0).toUpperCase()}${u.slice(1)}` },
-    { name: 'md5(user:pass)',   fn: (u, p) => md5(`${u}:${p}`) }
+    { name: 'passUser (camel)', fn: (u, p) => `${p}${u.charAt(0).toUpperCase()}${u.slice(1)}` }
 ];
 async function generateCredentialMagicHashes(username, password) {
     const translations = {
@@ -1723,7 +1711,7 @@ window.showCredentialMagic = function() {
                 🔑 Hash Magiques de Credentials
             </div>
             <div class="subtitle">
-                Détecte les rôles (user/pass), traduit FR↔EN, combine de 12 façons × 6 algos,
+                Détecte les rôles (user/pass), traduit FR↔EN, combine de 11 façons × 6 algos,
                 et <strong style="color:#fbbf24;">détecte les fuites connues</strong> (RockYou, HIBP…).
             </div>
             <div class="magic-row">
@@ -1776,7 +1764,7 @@ window.runCredentialMagic = async function() {
             ${pTrans ? ` · <span class="lbl">traduction :</span> <span style="color:#f0abfc;">${pTrans}</span>` : ''}
         </div>`;
 
-        // ✅ v2.4 : partition en 3 sections avec filtre sur tags RARES
+        // v2.5 : 3 sections, filtre sur tags RARES
         const alerts  = results.filter(r => r.leaked);
         const magical = results.filter(r => !r.leaked && r.magic.hasRareTag);
         const neutral = results.filter(r => !r.leaked && !r.magic.hasRareTag);
@@ -1836,8 +1824,8 @@ window.runCredentialMagic = async function() {
         </div>
         <div class="magic-seed" style="margin-top:12px; font-size:0.65rem; line-height:1.7;">
             <span class="lbl">Paires :</span> original · traduit FR · mixte · inversé<br>
-            <span class="lbl">Combinaisons :</span> user, pass, user:pass, user|pass, user_pass, user.pass,
-            user@pass, pass:user, user+pass, userPass, passUser, md5(user:pass)<br>
+            <span class="lbl">Combinaisons (11) :</span> user, pass, user:pass, user|pass, user_pass, user.pass,
+            user@pass, pass:user, user+pass, userPass, passUser<br>
             <span class="lbl">Algos :</span> MD5, SHA-256, SHA-3-256, BLAKE2b, BLAKE3, RIPEMD-160<br>
             <span class="lbl">Base fuites :</span> RockYou, HIBP, SecLists (extrait ${Object.keys(LEAKED_HASHES).length} entrées)
         </div>`;
@@ -2271,7 +2259,7 @@ document.addEventListener('keydown', e => {
 });
 document.getElementById('copyrightYear').textContent = new Date().getFullYear();
 
-console.log('🏛️ Encyclopédie v2.4 — Diversité relative + tags rares');
+console.log('🏛️ Encyclopédie v2.5 — Tags rares, 11 combinaisons');
 console.log('🚨 Base de fuites :', Object.keys(LEAKED_HASHES).length, 'entrées');
 
 setTimeout(() => {
