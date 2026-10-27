@@ -510,7 +510,7 @@ details.neutral-details summary {
       <em>Liberté</em>
       <em>Égalité</em>
       <em>Fraternité</em>
-      <div class="ref-legale">Monitor Encyclopédie v2.3 · Mots ↔ Nombres ↔ Hashs ↔ Magie ↔ Fuites</div>
+      <div class="ref-legale">Monitor Encyclopédie v2.4 · Mots ↔ Nombres ↔ Hashs ↔ Magie ↔ Fuites</div>
     </div>
   </div>
 </div>
@@ -595,7 +595,7 @@ details.neutral-details summary {
 
 // ============================================================
 // © gunout — Encyclopédie intelligente · Marianne d'État
-// v2.3 — Credentials Magiques + Détection fuites + 5 correctifs
+// v2.4 — Diversité relative + tags rares + 3 sections
 // ============================================================
 
 const WORD_TO_NUMBER = {
@@ -1036,7 +1036,7 @@ function blake2b(str, outLen = 64) {
 }
 
 // ============================================================
-// BLAKE3 — WASM avec fallback DISTINCT (correctif #1)
+// BLAKE3 — WASM avec fallback DISTINCT
 // ============================================================
 function blake3(str) {
     if (window._blake3Ready && window._blake3Hash) {
@@ -1049,7 +1049,6 @@ function blake3(str) {
             return hex;
         } catch (e) {}
     }
-    // ⚠️ Fallback DISTINCT : préfixe "fb3-" pour signaler clairement la simulation
     return 'fb3-' + sha256('blake3-fallback:' + str).slice(0, 60);
 }
 function isBlake3Simulated(h) { return typeof h === 'string' && h.startsWith('fb3-'); }
@@ -1327,9 +1326,8 @@ async function analyzeWord(text) {
 }
 
 // ============================================================
-// ✨ GÉNÉRATEUR DE HASH MAGIQUES — v3 avec correctifs
+// ✨ ANALYSE MAGIQUE v2.4 — Diversité relative + tags rares
 // ============================================================
-// Correctif #2 : mots FR stricts (fee, bec retirés)
 const MAGIC_FRENCH_WORDS = [
     'ace','aide','aile','bac','bide','cafe','cede','dada','decade',
     'facade','face','fade','fiche','fide','idee','aube','baffe',
@@ -1350,6 +1348,7 @@ function containsFrenchWord(hexLower) {
     }
     return null;
 }
+
 function analyzeMagicHash(h) {
     const lower = h.toLowerCase();
     const tags = [];
@@ -1359,35 +1358,46 @@ function analyzeMagicHash(h) {
     const uniqueChars = new Set(lower).size;
     const sumHex = lower.split('').reduce((a, c) => a + parseInt(c, 16), 0);
 
+    // ─── TAGS RARES (vraies découvertes) ───
     if (lower === lower.split('').reverse().join(''))
-        tags.push({ label: 'PALINDROME', cls: 'gold' });
+        tags.push({ label: 'PALINDROME', cls: 'gold', rare: true });
     if (/^[a-f]+$/i.test(h))
-        tags.push({ label: 'LETTRES SEULES', cls: 'purple' });
+        tags.push({ label: 'LETTRES SEULES', cls: 'purple', rare: true });
     if (/^[0-9]+$/.test(h))
-        tags.push({ label: 'CHIFFRES SEULS', cls: 'blue' });
+        tags.push({ label: 'CHIFFRES SEULS', cls: 'blue', rare: true });
 
     const fr = containsFrenchWord(lower);
-    if (fr) tags.push({ label: `MOT FR: ${fr.toUpperCase()}`, cls: 'green' });
+    if (fr) tags.push({ label: `MOT FR: ${fr.toUpperCase()}`, cls: 'green', rare: true });
 
+    // ─── TAGS COMMUNS (indicatifs, pas rares) ───
     const ratio = hexLetters / h.length;
-    if (ratio > 0.7) tags.push({ label: 'Riche en lettres', cls: 'purple' });
-    if (ratio < 0.2) tags.push({ label: 'Riche en chiffres', cls: 'blue' });
+    if (ratio > 0.85) tags.push({ label: 'Quasi-lettres', cls: 'purple' });
+    if (ratio < 0.15) tags.push({ label: 'Quasi-chiffres', cls: 'blue' });
 
-    // Correctif #4 : "Très diversifié" devient rare
-    if (uniqueChars >= 15 && h.length >= 32) tags.push({ label: 'Très diversifié', cls: 'purple' });
-    if (uniqueChars <= 4)  tags.push({ label: 'Très répétitif', cls: 'gold' });
+    // ✅ Diversité RELATIVE : nouveau calcul
+    const isStandardLongHash = h.length >= 40;
+    const DIVERSITY_RATIO = uniqueChars / Math.min(h.length, 16);
+    if (!isStandardLongHash && DIVERSITY_RATIO >= 0.75 && uniqueChars >= 10) {
+        tags.push({ label: 'Diversifié', cls: 'purple' });
+    }
+    // "Très diversifié" réservé aux hashs COURTS exceptionnellement diversifiés
+    if (h.length >= 8 && h.length <= 20 && uniqueChars >= Math.min(h.length, 14)) {
+        tags.push({ label: 'Très diversifié', cls: 'gold', rare: true });
+    }
+
+    if (uniqueChars <= 4) tags.push({ label: 'Très répétitif', cls: 'gold', rare: true });
 
     return {
         tags, hexLetters, hexDigits, vowelCount, uniqueChars, sumHex,
         isPalindrome: tags.some(t => t.label === 'PALINDROME'),
         isLettersOnly: tags.some(t => t.label === 'LETTRES SEULES'),
         isDigitsOnly: tags.some(t => t.label === 'CHIFFRES SEULS'),
+        hasRareTag: tags.some(t => t.rare === true),
         length: h.length
     };
 }
-function isTrulyMagical(m) {
-    return m.isPalindrome || m.isLettersOnly || m.isDigitsOnly || m.uniqueChars >= 15;
-}
+
+function isTrulyMagical(m) { return m.hasRareTag; }
 function findMagicNonce(baseStr, hashFn, predicate, maxTries = 20000) {
     for (let i = 0; i <= maxTries; i++) {
         const candidate = baseStr + (i === 0 ? '' : '·' + i);
@@ -1412,8 +1422,8 @@ async function generateMagicHashes(seed, count = 5) {
         { name: 'Palindrome',       fn: m => m.isPalindrome },
         { name: 'Lettres seules',   fn: m => m.isLettersOnly },
         { name: 'Chiffres seuls',   fn: m => m.isDigitsOnly },
-        { name: 'Riche en lettres', fn: m => m.hexLetters / m.length > 0.75 },
-        { name: 'Très diversifié',  fn: m => m.uniqueChars >= 13 }
+        { name: 'Mot FR caché',     fn: m => m.tags.some(t => t.cls === 'green') },
+        { name: 'Très diversifié',  fn: m => m.tags.some(t => t.label === 'Très diversifié') }
     ];
     const results = [];
     const algos = Object.entries(fnMap);
@@ -1621,7 +1631,7 @@ const LEAKED_HASHES = {
     '6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85': { pass: 'abc',      algo: 'BLAKE3', source: 'test vector', severity: 'none' }
 };
 function checkLeakedHash(hash) {
-    if (isBlake3Simulated(hash)) return null; // les hashs simulés ne peuvent pas être "fuités"
+    if (isBlake3Simulated(hash)) return null;
     const h = hash.toLowerCase().trim();
     if (LEAKED_HASHES[h]) return { ...LEAKED_HASHES[h], hash: h, exact: true };
     for (const [k, v] of Object.entries(LEAKED_HASHES)) {
@@ -1694,13 +1704,11 @@ async function generateCredentialMagicHashes(username, password) {
             return true;
         })
         .sort((a, b) => {
-            // Correctif #5 : tri pondéré par pertinence
             const leakScore = r => r.leaked
                 ? (r.leaked.severity === 'critical' ? 3000 : r.leaked.severity === 'high' ? 2000 : 1000)
                 : 0;
             const magicScore = r => r.leaked ? 0
-                : (r.magic.isPalindrome ? 100 : 0)
-                + (r.magic.isLettersOnly ? 80 : 0)
+                : (r.magic.tags.filter(t => t.rare).length * 100)
                 + (r.magic.tags.filter(t => t.cls === 'green').length * 30)
                 + r.magic.tags.length;
             return (leakScore(b) + magicScore(b)) - (leakScore(a) + magicScore(a));
@@ -1768,10 +1776,10 @@ window.runCredentialMagic = async function() {
             ${pTrans ? ` · <span class="lbl">traduction :</span> <span style="color:#f0abfc;">${pTrans}</span>` : ''}
         </div>`;
 
-        // Correctif #3 : partition en 3 sections
+        // ✅ v2.4 : partition en 3 sections avec filtre sur tags RARES
         const alerts  = results.filter(r => r.leaked);
-        const magical = results.filter(r => !r.leaked && r.magic.tags.length > 0);
-        const neutral = results.filter(r => !r.leaked && r.magic.tags.length === 0);
+        const magical = results.filter(r => !r.leaked && r.magic.hasRareTag);
+        const neutral = results.filter(r => !r.leaked && !r.magic.hasRareTag);
 
         const renderRow = (r) => {
             const tags = r.magic.tags.map(t => `<span class="magic-tag ${t.cls}">${t.label}</span>`).join(' ');
@@ -2263,7 +2271,7 @@ document.addEventListener('keydown', e => {
 });
 document.getElementById('copyrightYear').textContent = new Date().getFullYear();
 
-console.log('🏛️ Encyclopédie v2.3 — Credentials + Détection fuites + 5 correctifs');
+console.log('🏛️ Encyclopédie v2.4 — Diversité relative + tags rares');
 console.log('🚨 Base de fuites :', Object.keys(LEAKED_HASHES).length, 'entrées');
 
 setTimeout(() => {
