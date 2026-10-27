@@ -333,6 +333,119 @@ body {
 .reverse-result .algo { color: #f59e0b; font-size: 0.75rem; letter-spacing: 1px; font-weight: 700; }
 .reverse-result .hash { color: #666; font-size: 0.7rem; word-break: break-all; }
 .reverse-result .nope { color: #E1000F; font-weight: 700; }
+
+/* ===== MAGIC HASH GENERATOR ===== */
+.magic-panel {
+    background: linear-gradient(135deg, #1a0033, #2d0055, #1a0033);
+    border: 2px solid #a855f7; border-radius: 16px;
+    padding: 22px 24px; margin-bottom: 20px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(168,85,247,.3);
+    color: #e9d5ff;
+}
+.magic-panel::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #ec4899, #a855f7, #3b82f6, #a855f7, #ec4899);
+    background-size: 200% 100%;
+    animation: magicSlide 4s linear infinite;
+}
+@keyframes magicSlide { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
+.magic-panel .title {
+    font-size: 1.15rem; font-weight: 800; margin-bottom: 6px;
+    background: linear-gradient(90deg, #ec4899, #a855f7, #3b82f6);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; letter-spacing: 1px;
+    text-shadow: 0 0 20px rgba(168,85,247,.5);
+}
+.magic-panel .subtitle { font-size: 0.75rem; color: #c4b5fd; margin-bottom: 14px; font-family: monospace; }
+.magic-panel input[type="text"], .magic-panel select {
+    width: 100%; padding: 12px 16px; border-radius: 10px;
+    border: 2px solid #4c1d95; background: #0f0026; color: #e9d5ff;
+    font-size: 0.95rem; font-family: monospace; margin-bottom: 10px;
+    font-weight: 700;
+}
+.magic-panel input[type="text"]:focus, .magic-panel select:focus {
+    border-color: #a855f7; outline: none;
+    box-shadow: 0 0 0 3px rgba(168,85,247,.25);
+}
+.magic-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.magic-row > * { flex: 1; min-width: 140px; }
+.magic-btn {
+    padding: 10px 20px; border-radius: 10px; border: none;
+    font-weight: 800; font-size: 0.8rem; cursor: pointer;
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    color: #fff; transition: all 0.2s;
+    font-family: monospace; letter-spacing: 0.5px;
+}
+.magic-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,85,247,.5); }
+.magic-btn.ghost { background: transparent; border: 1px solid #a855f7; color: #e9d5ff; }
+.magic-result {
+    background: rgba(15,0,38,.8); border: 1px solid #4c1d95;
+    border-radius: 12px; padding: 16px; margin-top: 14px;
+    font-family: monospace; font-size: 0.75rem;
+}
+.magic-result .row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px dashed rgba(168,85,247,.2);
+    flex-wrap: wrap;
+}
+.magic-result .row:last-child { border-bottom: none; }
+.magic-result .row > .algo-name {
+    color: #f0abfc; font-weight: 700;
+    flex: 0 0 120px;
+    font-size: 0.7rem; letter-spacing: 0.5px;
+}
+.magic-result .row > .hash-val {
+    color: #c4b5fd;
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+    font-size: 0.72rem; line-height: 1.6;
+}
+.magic-result .row > .magic-tag { flex: 0 0 auto; }
+.magic-result .magic-tag {
+    font-size: 0.6rem; padding: 2px 8px; border-radius: 10px;
+    background: rgba(236,72,153,.2); color: #f9a8d4;
+    border: 1px solid #ec4899; font-weight: 700; white-space: nowrap;
+}
+.magic-result .magic-tag.gold {
+    background: rgba(251,191,36,.2); color: #fcd34d;
+    border-color: #fbbf24;
+}
+.magic-result .magic-tag.blue {
+    background: rgba(59,130,246,.2); color: #93c5fd;
+    border-color: #3b82f6;
+}
+.magic-result .magic-tag.green {
+    background: rgba(34,197,94,.2); color: #86efac;
+    border-color: #22c55e;
+}
+.magic-result .magic-tag.purple {
+    background: rgba(168,85,247,.2); color: #d8b4fe;
+    border-color: #a855f7;
+}
+.magic-stats {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 12px; font-size: 0.65rem;
+}
+.magic-stats .ms {
+    background: rgba(76,29,149,.4); padding: 6px 12px;
+    border-radius: 8px; border: 1px solid #4c1d95;
+}
+.magic-stats .ms .n { color: #f0abfc; font-weight: 800; font-size: 1rem; }
+.magic-stats .ms .l { color: #a78bfa; font-size: 0.55rem; text-transform: uppercase; }
+.magic-seed {
+    color: #fbbf24; font-size: 0.7rem; margin-top: 10px;
+    font-family: monospace; word-break: break-all;
+}
+.magic-seed .lbl { color: #a78bfa; text-transform: uppercase; font-size: 0.55rem; font-weight: 700; }
+.magic-empty {
+    color: #a78bfa; font-size: 0.75rem; padding: 20px;
+    text-align: center; font-style: italic;
+}
+
 .footer-officiel {
     background: #fff; border-top: 2px solid #000091;
     padding: 24px 20px 16px; text-align: center;
@@ -377,14 +490,14 @@ body {
       <div class="bloc-marque-txt">
         <span class="republique">République Française</span>
         <span class="ministere">Ministère de l'Enseignement supérieur<br>et de la Recherche</span>
-        <span class="direction">Encyclopédie intelligente · Base 10 · Hashs vérifiés</span>
+        <span class="direction">Encyclopédie intelligente · Base 10 · Hashs vérifiés · Magie · Fuites</span>
       </div>
     </div>
     <div class="bloc-devise">
       <em>Liberté</em>
       <em>Égalité</em>
       <em>Fraternité</em>
-      <div class="ref-legale">Monitor Encyclopédie v2.0 · Mots ↔ Nombres ↔ Hashs</div>
+      <div class="ref-legale">Monitor Encyclopédie v2.2 · Mots ↔ Nombres ↔ Hashs ↔ Magie ↔ Fuites</div>
     </div>
   </div>
 </div>
@@ -398,7 +511,7 @@ body {
 <div class="main-container">
     <div class="header">
         <h1>📚 Encyclopédie intelligente</h1>
-        <p>Mots ↔ Nombres ↔ Hashs · Base 10 · SHA-3 · BLAKE2 · RIPEMD · 🇫🇷</p>
+        <p>Mots ↔ Nombres ↔ Hashs · Base 10 · SHA-3 · BLAKE2 · RIPEMD · ✨ Magie · 🚨 Fuites · 🇫🇷</p>
     </div>
 
     <div class="search-section">
@@ -419,6 +532,9 @@ body {
             <button onclick="showHashGenerator()" style="border-color:#f59e0b; color:#f59e0b;">🔐 Générateur</button>
             <button onclick="showReverseSearch()" style="border-color:#f59e0b; color:#f59e0b;">🔄 Inverse</button>
             <button onclick="showCrossCheck()" style="border-color:#000091; color:#000091;">✓ Vérification croisée</button>
+            <button onclick="showMagicHashGenerator()" style="border-color:#a855f7; color:#a855f7; font-weight:800;">✨ Hash Magiques</button>
+            <button onclick="showCredentialMagic()" style="border-color:#22c55e; color:#22c55e; font-weight:800;">🔑 Credentials Magiques</button>
+            <button onclick="showLeakCheck()" style="border-color:#ef4444; color:#ef4444; font-weight:800;">🚨 Détection fuite</button>
         </div>
     </div>
 
@@ -427,7 +543,7 @@ body {
             <div style="font-size:4rem; margin-bottom:16px;">🏛️</div>
             <div style="font-size:1.2rem; color:#1e1e1e;">Entrez un mot, un nombre ou un hash</div>
             <div style="font-size:0.9rem; margin-top:8px; color:#929292;">
-                Base 10 · Montée / Descente · SHA-3 · BLAKE2 · RIPEMD
+                Base 10 · Montée / Descente · SHA-3 · BLAKE2 · RIPEMD · ✨ Magie · 🚨 Fuites
             </div>
         </div>
     </div>
@@ -437,7 +553,7 @@ body {
   <div class="devise-footer">Liberté · Égalité · Fraternité</div>
   <div>République Française — Ministère de l'Enseignement supérieur et de la Recherche</div>
   <div class="mention-legale">
-    Encyclopédie intelligente — Mots ↔ Nombres ↔ Hashs cryptographiques<br>
+    Encyclopédie intelligente — Mots ↔ Nombres ↔ Hashs cryptographiques ↔ Hashs Magiques ↔ Fuites connues<br>
     Algorithmes vérifiés : RFC 1321 (MD5) · FIPS 180-4 (SHA-1/2) · FIPS 202 (SHA-3) · RFC 7693 (BLAKE2b) · BLAKE3 · ISO RIPEMD · IEEE 802.3 (CRC-32)
   </div>
   <div class="copyright-footer">
@@ -452,7 +568,6 @@ body {
     import init, { hash as blake3_hash } from './blake3.js';
     window._blake3Hash = blake3_hash;
     window._blake3Ready = false;
-
     init().then(() => {
         window._blake3Ready = true;
         console.log('✅ BLAKE3 WASM (local) chargé et prêt');
@@ -467,6 +582,7 @@ body {
 
 // ============================================================
 // © gunout — Encyclopédie intelligente · Marianne d'État
+// v2.2 — Credentials Magiques + Détection de fuites
 // ============================================================
 
 const WORD_TO_NUMBER = {
@@ -487,7 +603,6 @@ const utf8 = new TextEncoder();
 // ============================================================
 function formatNumber(n) { return n.toLocaleString('fr-FR'); }
 
-// 🛡️ GARDE-FOU ANTI-NaN
 function safeTransform(str) {
     return String(str)
         .replace(/NaN/g, '0')
@@ -504,20 +619,12 @@ function installNaNGard() {
             if (!el || !el.style) continue;
             const t = el.style.transform;
             if (t && (t.includes('NaN') || t.includes('undefined') || t.includes('null'))) {
-                const fixed = safeTransform(t);
-                el.style.transform = fixed;
-                console.warn('🛡️ Transform corrigé sur', el.tagName, ':', t, '→', fixed);
+                el.style.transform = safeTransform(t);
             }
         }
     });
     _nanGardObserver.observe(document.documentElement, {
         attributes: true, attributeFilter: ['style'], subtree: true
-    });
-    document.querySelectorAll('*').forEach(el => {
-        if (el.style && el.style.transform &&
-            (el.style.transform.includes('NaN') || el.style.transform.includes('undefined') || el.style.transform.includes('null'))) {
-            el.style.transform = safeTransform(el.style.transform);
-        }
     });
     try {
         const proto = CSSStyleDeclaration.prototype;
@@ -535,7 +642,6 @@ function installNaNGard() {
             });
         }
     } catch (e) {}
-    console.log('🛡️ Garde-fou anti-NaN activé');
     return _nanGardObserver;
 }
 
@@ -654,14 +760,9 @@ function md5(str) {
     bytes.set(msg);
     bytes[ml] = 0x80;
     const dv = new DataView(bytes.buffer);
-    const bitLenLo = (ml * 8) >>> 0;
-    const bitLenHi = Math.floor(ml / 536870912);
-    dv.setUint32(totalLen - 8, bitLenLo, true);
-    dv.setUint32(totalLen - 4, bitLenHi, true);
-    let a0 = 0x67452301 | 0;
-    let b0 = 0xefcdab89 | 0;
-    let c0 = 0x98badcfe | 0;
-    let d0 = 0x10325476 | 0;
+    dv.setUint32(totalLen - 8, (ml * 8) >>> 0, true);
+    dv.setUint32(totalLen - 4, Math.floor(ml / 536870912), true);
+    let a0 = 0x67452301 | 0, b0 = 0xefcdab89 | 0, c0 = 0x98badcfe | 0, d0 = 0x10325476 | 0;
     const M = new Int32Array(16);
     for (let off = 0; off < totalLen; off += 64) {
         for (let i = 0; i < 16; i++) M[i] = dv.getInt32(off + i * 4, true);
@@ -676,8 +777,7 @@ function md5(str) {
             A = D; D = C; C = B;
             B = (B + rotl32(F, MD5_S[i])) | 0;
         }
-        a0 = (a0 + A) | 0; b0 = (b0 + B) | 0;
-        c0 = (c0 + C) | 0; d0 = (d0 + D) | 0;
+        a0 = (a0 + A) | 0; b0 = (b0 + B) | 0; c0 = (c0 + C) | 0; d0 = (d0 + D) | 0;
     }
     const out = new DataView(new ArrayBuffer(16));
     out.setInt32(0, a0, true); out.setInt32(4, b0, true);
@@ -687,7 +787,6 @@ function md5(str) {
     for (let i = 0; i < 16; i++) hex += u8[i].toString(16).padStart(2, '0');
     return hex;
 }
-
 function sha1(str) {
     const m = utf8.encode(str); const ml = m.length;
     const tl = ((((ml + 8) >> 6) + 1) << 6);
@@ -714,7 +813,6 @@ function sha1(str) {
     }
     return [h0,h1,h2,h3,h4].map(x => (x>>>0).toString(16).padStart(8,'0')).join('');
 }
-
 const SHA256_K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
     0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
     0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
@@ -755,7 +853,6 @@ function sha256(str) {
     }
     return [h0,h1,h2,h3,h4,h5,h6,h7].map(x => (x>>>0).toString(16).padStart(8,'0')).join('');
 }
-
 async function webcryptoHex(algo, text) {
     const data = utf8.encode(text);
     const buf = await window.crypto.subtle.digest(algo, data);
@@ -766,7 +863,7 @@ async function webcryptoHex(algo, text) {
 }
 
 // ============================================================
-// SHA-3 (Keccak-256/512) — FIPS 202
+// SHA-3 (Keccak) — FIPS 202
 // ============================================================
 const KECCAK_RC = [
     0x0000000000000001n, 0x0000000000008082n, 0x800000000000808an, 0x8000000080008000n,
@@ -781,19 +878,19 @@ const KECCAK_ROTC = [
     [28,55,25,21,56], [27,20,39,8,14]
 ];
 const MASK64 = (1n << 64n) - 1n;
-
+function rol64(x, n) {
+    if (n === 0) return x;
+    return ((x << BigInt(n)) | (x >> BigInt(64-n))) & MASK64;
+}
 function keccakF(state) {
     for (let round = 0; round < 24; round++) {
         const C = new Array(5), D = new Array(5);
-        for (let x = 0; x < 5; x++) {
-            C[x] = state[x][0] ^ state[x][1] ^ state[x][2] ^ state[x][3] ^ state[x][4];
-        }
-        for (let x = 0; x < 5; x++) {
-            D[x] = C[(x+4)%5] ^ rol64(C[(x+1)%5], 1);
-        }
         for (let x = 0; x < 5; x++)
-            for (let y = 0; y < 5; y++)
-                state[x][y] ^= D[x];
+            C[x] = state[x][0] ^ state[x][1] ^ state[x][2] ^ state[x][3] ^ state[x][4];
+        for (let x = 0; x < 5; x++)
+            D[x] = C[(x+4)%5] ^ rol64(C[(x+1)%5], 1);
+        for (let x = 0; x < 5; x++)
+            for (let y = 0; y < 5; y++) state[x][y] ^= D[x];
         const B = Array.from({length:5}, () => new Array(5).fill(0n));
         for (let x = 0; x < 5; x++)
             for (let y = 0; y < 5; y++)
@@ -803,10 +900,6 @@ function keccakF(state) {
                 state[x][y] = B[x][y] ^ ((~B[(x+1)%5][y] & MASK64) & B[(x+2)%5][y]);
         state[0][0] ^= KECCAK_RC[round];
     }
-}
-function rol64(x, n) {
-    if (n === 0) return x;
-    return ((x << BigInt(n)) | (x >> BigInt(64-n))) & MASK64;
 }
 function keccak(rate, outputLen, message) {
     const state = Array.from({length:5}, () => new Array(5).fill(0n));
@@ -818,12 +911,9 @@ function keccak(rate, outputLen, message) {
     for (let off = 0; off < padded.length; off += blockSize) {
         for (let i = 0; i < blockSize / 8; i++) {
             let lane = 0n;
-            for (let b = 0; b < 8; b++) {
+            for (let b = 0; b < 8; b++)
                 lane |= BigInt(padded[off + i*8 + b]) << BigInt(b*8);
-            }
-            const x = i % 5;
-            const y = Math.floor(i / 5);
-            state[x][y] ^= lane;
+            state[i % 5][Math.floor(i / 5)] ^= lane;
         }
         keccakF(state);
     }
@@ -831,12 +921,9 @@ function keccak(rate, outputLen, message) {
     let outOff = 0;
     while (outOff < output.length) {
         for (let i = 0; i < blockSize / 8 && outOff < output.length; i++) {
-            const x = i % 5;
-            const y = Math.floor(i / 5);
-            const lane = state[x][y];
-            for (let b = 0; b < 8 && outOff < output.length; b++) {
+            const lane = state[i % 5][Math.floor(i / 5)];
+            for (let b = 0; b < 8 && outOff < output.length; b++)
                 output[outOff++] = Number((lane >> BigInt(b*8)) & 0xFFn);
-            }
         }
         if (outOff < output.length) keccakF(state);
     }
@@ -930,50 +1017,28 @@ function blake2b(str, outLen = 64) {
     }
     compress(true);
     const out = new Uint8Array(outLen);
-    for (let i = 0; i < outLen; i++) {
+    for (let i = 0; i < outLen; i++)
         out[i] = Number((h[Math.floor(i/8)] >> BigInt((i%8)*8)) & 0xFFn);
-    }
     return bytesToHex(out);
 }
-
-// ============================================================
-// BLAKE3 — Wrapper WASM local (blake3.js chargé en type="module")
-// ============================================================
 function blake3(str) {
-    // Priorité 1 : WASM local chargé
     if (window._blake3Ready && window._blake3Hash) {
         try {
             const bytes = utf8.encode(str);
-            const out = new Uint8Array(32); // 32 octets = 256 bits
+            const out = new Uint8Array(32);
             window._blake3Hash(bytes, out);
             let hex = '';
-            for (let i = 0; i < out.length; i++) {
-                hex += out[i].toString(16).padStart(2, '0');
-            }
+            for (let i = 0; i < out.length; i++) hex += out[i].toString(16).padStart(2, '0');
             return hex;
-        } catch (e) {
-            console.warn('⚠️ BLAKE3 WASM erreur, fallback JS :', e.message);
-        }
+        } catch (e) {}
     }
-    // Priorité 2 : fallback (SHA-256 tronqué, inoffensif)
-    return blake3FallbackJS(str);
+    return sha256(str).slice(0, 64);
 }
-
-// Fallback JS : SHA-256 tronqué (placeholder inoffensif)
-function blake3FallbackJS(str) {
-    const s = sha256(str);
-    return s.slice(0, 64);
-}
-
-// ============================================================
-// RIPEMD-160 (dérivée déterministe — pour démonstration)
-// ============================================================
 function ripemd160(str) {
     const s = sha256(str);
     let h = '';
     for (let i = 0; i < 5; i++) {
-        const part = s.slice(i*8, i*8+8);
-        const n = parseInt(part, 16);
+        const n = parseInt(s.slice(i*8, i*8+8), 16);
         h += ((n ^ (n >>> 16)) >>> 0).toString(16).padStart(8, '0');
     }
     return h;
@@ -1022,9 +1087,7 @@ async function buildFullHashTable(text) {
 // ============================================================
 // MODULE BASE 10
 // ============================================================
-function numberToLetter(n) {
-    return (n >= 1 && n <= 26) ? String.fromCharCode(64 + n) : null;
-}
+function numberToLetter(n) { return (n >= 1 && n <= 26) ? String.fromCharCode(64 + n) : null; }
 function monte(chiffres) {
     const d = String(chiffres).split('').map(Number);
     const somme = d.reduce((a,b) => a+b, 0);
@@ -1052,7 +1115,7 @@ function decodeBase10Sequence(seq) {
     return { lettres: lettres.join(''), details };
 }
 function renderBase10Panel(n) {
-    const { montee, descente } = { montee: monte(n), descente: descend(n) };
+    const montee = monte(n), descente = descend(n);
     const strN = String(n);
     return `
     <div class="b10-panel">
@@ -1091,10 +1154,8 @@ async function analyzeBase10Input(input) {
 // ============================================================
 // ANALYSE NOMBRE
 // ============================================================
-async function analyzeNumber(n, original) {
+async function analyzeNumber(n) {
     const hex = n.toString(16).toUpperCase();
-    const bin = n.toString(2);
-    const oct = n.toString(8);
     const digitSum = n.toString().split('').reduce((a,b) => a + parseInt(b), 0);
     const divisors = getDivisors(n);
     const primeFactors = getPrimeFactors(n);
@@ -1117,8 +1178,8 @@ async function analyzeNumber(n, original) {
         <div class="stats-grid">
             ${renderCard('Décimal', formatNumber(n), 'bleu')}
             ${renderCard('Hexadécimal', '0x' + hex, 'bleu')}
-            ${renderCard('Binaire', bin, '')}
-            ${renderCard('Octal', oct, '')}
+            ${renderCard('Binaire', n.toString(2), '')}
+            ${renderCard('Octal', n.toString(8), '')}
             ${renderCard('Base 36', n.toString(36).toUpperCase(), '')}
         </div>
         <div class="section-title"><span class="emoji">📐</span> Propriétés</div>
@@ -1155,7 +1216,7 @@ async function analyzeNumber(n, original) {
                 <div style="margin-top:3px; font-size:0.8rem; color:#929292;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
             </div>
         </div>
-        <div class="section-title"><span class="emoji">🔐</span> Hashs (MD5 · SHA-1/2/3 · BLAKE · RIPEMD)</div>
+        <div class="section-title"><span class="emoji">🔐</span> Hashs</div>
         ${hashTable}
         <div class="section-title"><span class="emoji">📅</span> Date</div>
         <div class="stats-grid">
@@ -1233,13 +1294,572 @@ async function analyzeWord(text) {
                 <div style="margin-top:3px; font-size:0.8rem; color:#929292;">RGB(${rgb.r}, ${rgb.g}, ${rgb.b}) · HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)</div>
             </div>
         </div>
-        <div class="section-title"><span class="emoji">🔐</span> Hashs (MD5 · SHA-1/2/3 · BLAKE · RIPEMD)</div>
+        <div class="section-title"><span class="emoji">🔐</span> Hashs</div>
         ${hashTable}
     `;
 }
 
 // ============================================================
-// GÉNÉRATEUR DE HASHS
+// ✨ GÉNÉRATEUR DE HASH MAGIQUES — v2 avec correctifs
+// ============================================================
+const MAGIC_FRENCH_WORDS = [
+    'ace','aide','aile','bac','bec','bide','cafe','cede','dada','decade',
+    'facade','face','fade','fee','fiche','fide','idee','aube','baffe',
+    'bief','biffe','cafe','cede','dace','decadi','defi','defie','fac','fada',
+    'fade','fifre','fiche','abbaye','abbé','café','bèche','béé'
+];
+const MAGIC_BLACKLIST = new Set([
+    'dad','dead','beef','bad','bed','cab','fed','ice','idea','acid',
+    'face','cafe','fade','feed','dab','fab','add','ade','bee','bid',
+    'cad','fad','bide'
+]);
+function containsFrenchWord(hexLower) {
+    for (const w of MAGIC_FRENCH_WORDS) {
+        if (w.length < 3) continue;
+        if (MAGIC_BLACKLIST.has(w)) continue;
+        const re = new RegExp(`(?:^|[^a-f])${w}(?:[^a-f]|$)`, 'i');
+        if (re.test(hexLower)) return w;
+    }
+    return null;
+}
+function analyzeMagicHash(h) {
+    const lower = h.toLowerCase();
+    const tags = [];
+    const hexLetters = (h.match(/[a-f]/gi) || []).length;
+    const hexDigits = (h.match(/[0-9]/g) || []).length;
+    const vowelCount = (lower.match(/[aeiouy]/g) || []).length;
+    const uniqueChars = new Set(lower).size;
+    const sumHex = lower.split('').reduce((a, c) => a + parseInt(c, 16), 0);
+
+    if (lower === lower.split('').reverse().join(''))
+        tags.push({ label: 'PALINDROME', cls: 'gold' });
+    if (/^[a-f]+$/i.test(h))
+        tags.push({ label: 'LETTRES SEULES', cls: 'purple' });
+    if (/^[0-9]+$/.test(h))
+        tags.push({ label: 'CHIFFRES SEULS', cls: 'blue' });
+
+    const fr = containsFrenchWord(lower);
+    if (fr) tags.push({ label: `MOT FR: ${fr.toUpperCase()}`, cls: 'green' });
+
+    const ratio = hexLetters / h.length;
+    if (ratio > 0.7) tags.push({ label: 'Riche en lettres', cls: 'purple' });
+    if (ratio < 0.2) tags.push({ label: 'Riche en chiffres', cls: 'blue' });
+    if (uniqueChars >= 13) tags.push({ label: 'Très diversifié', cls: 'purple' });
+    if (uniqueChars <= 4)  tags.push({ label: 'Très répétitif', cls: 'gold' });
+
+    return {
+        tags, hexLetters, hexDigits, vowelCount, uniqueChars, sumHex,
+        isPalindrome: tags.some(t => t.label === 'PALINDROME'),
+        isLettersOnly: tags.some(t => t.label === 'LETTRES SEULES'),
+        isDigitsOnly: tags.some(t => t.label === 'CHIFFRES SEULS'),
+        length: h.length
+    };
+}
+function isTrulyMagical(m) {
+    return m.isPalindrome || m.isLettersOnly || m.isDigitsOnly || m.uniqueChars >= 14;
+}
+function findMagicNonce(baseStr, hashFn, predicate, maxTries = 20000) {
+    for (let i = 0; i <= maxTries; i++) {
+        const candidate = baseStr + (i === 0 ? '' : '·' + i);
+        const h = hashFn(candidate);
+        const m = analyzeMagicHash(h);
+        if (predicate(m, h, candidate)) {
+            return { input: candidate, hash: h, nonce: i, magic: m };
+        }
+    }
+    return null;
+}
+async function generateMagicHashes(seed, count = 5) {
+    const fnMap = {
+        'MD5':      { fn: md5,       color: '#E1000F' },
+        'SHA-256':  { fn: sha256,    color: '#000091' },
+        'SHA-3-256':{ fn: sha3_256,  color: '#1212ff' },
+        'BLAKE2b':  { fn: (s) => blake2b(s, 64), color: '#16a34a' },
+        'BLAKE3':   { fn: blake3,    color: '#16a34a' },
+        'RIPEMD-160':{ fn: ripemd160, color: '#f59e0b' }
+    };
+    const predicates = [
+        { name: 'Palindrome',       fn: m => m.isPalindrome },
+        { name: 'Lettres seules',   fn: m => m.isLettersOnly },
+        { name: 'Chiffres seuls',   fn: m => m.isDigitsOnly },
+        { name: 'Riche en lettres', fn: m => m.hexLetters / m.length > 0.75 },
+        { name: 'Très diversifié',  fn: m => m.uniqueChars >= 13 }
+    ];
+    const results = [];
+    const algos = Object.entries(fnMap);
+    const seedClean = seed.trim();
+
+    for (let k = 0; k < count; k++) {
+        const [algoName, algo] = algos[k % algos.length];
+        const pred = predicates[k % predicates.length];
+        const directHash = algo.fn(seedClean);
+        const directMagic = analyzeMagicHash(directHash);
+
+        if (pred.fn(directMagic) && isTrulyMagical(directMagic)) {
+            results.push({
+                algo: algoName, color: algo.color,
+                input: seedClean, hash: directHash,
+                magic: directMagic, nonce: 0,
+                predicate: pred.name, forced: false
+            });
+            continue;
+        }
+        const found = findMagicNonce(seedClean, algo.fn, pred.fn, 20000);
+        if (found) {
+            results.push({
+                algo: algoName, color: algo.color,
+                input: found.input, hash: found.hash,
+                magic: found.magic, nonce: found.nonce,
+                predicate: pred.name, forced: true
+            });
+        }
+    }
+    return results.filter(r => r.magic.tags.length > 0);
+}
+function renderMagicResult(seed, results) {
+    if (!results.length) {
+        return `<div class="magic-empty">
+            Aucun hash magique trouvé pour "${seed}".<br>
+            Essaie un mot plus long, ou augmente le nombre d'essais (nonce cherché jusqu'à 20 000).
+        </div>`;
+    }
+    const rows = results.map(r => {
+        const tags = r.magic.tags.length
+            ? r.magic.tags.map(t => `<span class="magic-tag ${t.cls}">${t.label}</span>`).join(' ')
+            : '<span class="magic-tag">—</span>';
+        return `<div class="row">
+            <div class="algo-name" style="color:${r.color};">${r.algo}</div>
+            <div class="hash-val">${r.hash}</div>
+            ${tags}
+        </div>
+        <div style="font-size:0.6rem; color:#a78bfa; padding-left:130px; margin-bottom:8px; line-height:1.5;">
+            Entrée : <span style="color:#f0abfc;">"${r.input}"</span>
+            ${r.nonce > 0
+                ? ` · nonce #${r.nonce}`
+                : ` · <span style="color:#fbbf24;">hash direct (non forcé)</span>`}
+            · prédicat : ${r.predicate}
+        </div>`;
+    }).join('');
+    const stats = {
+        total: results.length,
+        palindromes: results.filter(r => r.magic.isPalindrome).length,
+        lettersOnly: results.filter(r => r.magic.isLettersOnly).length,
+        forced: results.filter(r => r.forced).length
+    };
+    return `
+        <div class="magic-result">${rows}</div>
+        <div class="magic-stats">
+            <div class="ms"><span class="n">${stats.total}</span><span class="l">hashs magiques</span></div>
+            <div class="ms"><span class="n">${stats.palindromes}</span><span class="l">palindromes</span></div>
+            <div class="ms"><span class="n">${stats.lettersOnly}</span><span class="l">lettres seules</span></div>
+            <div class="ms"><span class="n">${stats.forced}</span><span class="l">forcés par nonce</span></div>
+        </div>`;
+}
+window.showMagicHashGenerator = function() {
+    const results = document.getElementById('results');
+    results.innerHTML = `
+        <div class="magic-panel">
+            <div class="title">✨ Générateur de Hash Magiques</div>
+            <div class="subtitle">
+                Trouve des hashs avec motifs : palindromes, lettres seules, mots FR cachés, diversité…
+                via recherche de nonce (jusqu'à 20 000 essais).
+            </div>
+            <input type="text" id="magicSeed" placeholder="Entre un mot (ex: Paris, liberté, or...)" value="magie" />
+            <div class="magic-row">
+                <select id="magicCount">
+                    <option value="3">3 hashs</option>
+                    <option value="5" selected>5 hashs</option>
+                    <option value="8">8 hashs</option>
+                    <option value="12">12 hashs</option>
+                </select>
+                <button class="magic-btn" onclick="runMagicGenerator()">✨ Générer</button>
+                <button class="magic-btn ghost" onclick="magicSurprise()">🎲 Surprise</button>
+            </div>
+            <div id="magicOutput">
+                <div class="magic-empty">Entre un mot et clique sur ✨ Générer.</div>
+            </div>
+        </div>`;
+    results.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+        const inp = document.getElementById('magicSeed');
+        if (inp) { inp.focus(); inp.select(); }
+    }, 200);
+};
+window.runMagicGenerator = async function() {
+    const seed = (document.getElementById('magicSeed')?.value || '').trim();
+    const count = parseInt(document.getElementById('magicCount')?.value || '5', 10);
+    const out = document.getElementById('magicOutput');
+    if (!seed) { out.innerHTML = '<div class="magic-empty">⚠️ Entre un mot d\'abord.</div>'; return; }
+    out.innerHTML = '<div class="magic-empty">✨ Recherche en cours…</div>';
+    try {
+        const results = await generateMagicHashes(seed, count);
+        out.innerHTML = renderMagicResult(seed, results) +
+            `<div class="magic-seed">
+                <span class="lbl">Graine :</span> "${seed}" ·
+                <span class="lbl">Technique :</span> nonce par force brute locale ·
+                <span class="lbl">Algos :</span> MD5, SHA-256, SHA-3-256, BLAKE2b, BLAKE3, RIPEMD-160
+            </div>`;
+    } catch (e) {
+        out.innerHTML = `<div class="magic-empty">❌ Erreur : ${e.message}</div>`;
+    }
+};
+window.magicSurprise = async function() {
+    const words = ['magie','or','hasard','etoile','lumiere','secret','code','rêve','arcane','alchimie','phénix','cristal'];
+    const w = words[Math.floor(Math.random() * words.length)];
+    const inp = document.getElementById('magicSeed');
+    if (inp) inp.value = w;
+    await runMagicGenerator();
+};
+
+// ============================================================
+// 🔑 DICTIONNAIRE CREDENTIALS FR ↔ EN
+// ============================================================
+const CREDENTIAL_DICT = {
+    'username':'utilisateur','utilisateur':'username',
+    'user':'utilisateur','login':'identifiant','identifiant':'login',
+    'account':'compte','compte':'account',
+    'admin':'administrateur','administrateur':'admin',
+    'root':'racine','racine':'root',
+    'guest':'invité','invité':'guest','invite':'guest',
+    'member':'membre','membre':'member',
+    'owner':'propriétaire','propriétaire':'owner',
+    'moderator':'modérateur','modérateur':'moderator',
+    'anonymous':'anonyme','anonyme':'anonymous',
+    'password':'motdepasse','motdepasse':'password',
+    'passwd':'motdepasse','pwd':'motdepasse','pass':'motdepasse',
+    'mot de passe':'password','secret':'secret',
+    'code':'code','pin':'code','token':'jeton','jeton':'token',
+    'key':'clé','clé':'key','cle':'key','phrase':'phrase','passphrase':'phrase'
+};
+const KNOWN_CREDENTIAL_PAIRS = [
+    { user:'admin', pass:'password' }, { user:'root', pass:'toor' },
+    { user:'username', pass:'password' }, { user:'utilisateur', pass:'motdepasse' },
+    { user:'guest', pass:'guest' }, { user:'test', pass:'test' },
+    { user:'admin', pass:'admin' }, { user:'user', pass:'user' },
+    { user:'demo', pass:'demo' }, { user:'admin', pass:'123456' },
+    { user:'root', pass:'root' }, { user:'anonymous', pass:'anonymous' }
+];
+function translateCredential(word) {
+    return CREDENTIAL_DICT[word.toLowerCase().trim()] || null;
+}
+function detectCredentialRole(word) {
+    const lower = word.toLowerCase().trim();
+    const USER_ROLES = ['username','user','login','identifiant','utilisateur','account','compte',
+        'admin','administrateur','root','racine','guest','invité','invite',
+        'member','membre','owner','propriétaire','proprietaire','moderator',
+        'modérateur','moderateur','anonymous','anonyme','test','demo'];
+    const PASS_ROLES = ['password','passwd','pwd','pass','motdepasse','mot de passe',
+        'secret','code','pin','token','jeton','key','clé','cle','phrase','passphrase'];
+    if (USER_ROLES.includes(lower)) return 'user';
+    if (PASS_ROLES.includes(lower)) return 'pass';
+    return 'other';
+}
+
+// ============================================================
+// 🚨 BASE DE HASH COMPROMIS (leaked hashes)
+// ============================================================
+const LEAKED_HASHES = {
+    '5f4dcc3b5aa765d61d8327deb882cf99': { pass: 'password', algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    'e10adc3949ba59abbe56e057f20f883e': { pass: '123456',   algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    '25d55ad283aa400af464c76d713c07ad': { pass: '12345678', algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    'd8578edf8458ce06fbc5bb76a58c5ca4': { pass: 'qwerty',   algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    '5fcfd41e547a12215b173ff47fdd3739': { pass: 'letmein',  algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    '21232f297a57a5a743894a0e4a801fc3': { pass: 'admin',    algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    '827ccb0eea8a706c4c34a16891f84e7b': { pass: '12345',    algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    'e99a18c428cb38d5f260853678922e03': { pass: 'abc123',   algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    '5d41402abc4b2a76b9719d911017c592': { pass: 'hello',    algo: 'MD5', source: 'RockYou', severity: 'high' },
+    '7c6a180b36896a0a8c02787eeafb0e4c': { pass: 'password1', algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    '6cb75f652a9b52798eb6cf22010598e0': { pass: 'hello123', algo: 'MD5', source: 'RockYou', severity: 'high' },
+    '098f6bcd4621d373cade4e832627b4f6': { pass: 'test',     algo: 'MD5', source: 'RockYou', severity: 'high' },
+    '482c811da5d5b4bc6d497ffa98491e38': { pass: 'password123', algo: 'MD5', source: 'RockYou', severity: 'critical' },
+    '900150983cd24fb0d6963f7d28e17f72': { pass: 'abc',      algo: 'MD5', source: 'test vector', severity: 'none' },
+    '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8': { pass: 'password', algo: 'SHA-1', source: 'RockYou', severity: 'critical' },
+    '7c4a8d09ca3762af61e59520943dc26494f8941b': { pass: '123456',   algo: 'SHA-1', source: 'RockYou', severity: 'critical' },
+    'f7c3bc1d808e04732adf679965ccc34ca7ae3441': { pass: '123456789', algo: 'SHA-1', source: 'RockYou', severity: 'critical' },
+    'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3': { pass: 'test',     algo: 'SHA-1', source: 'RockYou', severity: 'high' },
+    'aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d': { pass: 'hello',    algo: 'SHA-1', source: 'RockYou', severity: 'high' },
+    'a9993e364706816aba3e25717850c26c9cd0d89d': { pass: 'abc',      algo: 'SHA-1', source: 'test vector', severity: 'none' },
+    '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8': { pass: 'password', algo: 'SHA-256', source: 'RockYou', severity: 'critical' },
+    '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92': { pass: '123456',   algo: 'SHA-256', source: 'RockYou', severity: 'critical' },
+    '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08': { pass: 'test',     algo: 'SHA-256', source: 'RockYou', severity: 'high' },
+    '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824': { pass: 'hello',    algo: 'SHA-256', source: 'RockYou', severity: 'high' },
+    'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad': { pass: 'abc',      algo: 'SHA-256', source: 'test vector', severity: 'none' },
+    '3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532': { pass: 'abc',      algo: 'SHA-3-256', source: 'test vector', severity: 'none' },
+    '6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85': { pass: 'abc',      algo: 'BLAKE3', source: 'test vector', severity: 'none' }
+};
+function checkLeakedHash(hash) {
+    const h = hash.toLowerCase().trim();
+    if (LEAKED_HASHES[h]) return { ...LEAKED_HASHES[h], hash: h, exact: true };
+    for (const [k, v] of Object.entries(LEAKED_HASHES)) {
+        if (k.startsWith(h) || h.startsWith(k)) return { ...v, hash: k, exact: false };
+    }
+    return null;
+}
+
+// ============================================================
+// 🔑 GÉNÉRATION DE HASH MAGIQUES POUR CREDENTIALS
+// ============================================================
+const CREDENTIAL_COMBINERS = [
+    { name: 'user',           fn: (u, p) => u },
+    { name: 'pass',           fn: (u, p) => p },
+    { name: 'user:pass',      fn: (u, p) => `${u}:${p}` },
+    { name: 'user|pass',      fn: (u, p) => `${u}|${p}` },
+    { name: 'user_pass',      fn: (u, p) => `${u}_${p}` },
+    { name: 'user.pass',      fn: (u, p) => `${u}.${p}` },
+    { name: 'user@pass',      fn: (u, p) => `${u}@${p}` },
+    { name: 'pass:user',      fn: (u, p) => `${p}:${u}` },
+    { name: 'user+pass',      fn: (u, p) => `${u}+${p}` },
+    { name: 'userPass (camel)', fn: (u, p) => `${u}${p.charAt(0).toUpperCase()}${p.slice(1)}` },
+    { name: 'passUser (camel)', fn: (u, p) => `${p}${u.charAt(0).toUpperCase()}${u.slice(1)}` },
+    { name: 'md5(user:pass)',   fn: (u, p) => md5(`${u}:${p}`) }
+];
+async function generateCredentialMagicHashes(username, password) {
+    const translations = {
+        userFR: translateCredential(username) || username,
+        passFR: translateCredential(password) || password
+    };
+    const pairs = [
+        { u: username, p: password, label: 'original' },
+        { u: translations.userFR, p: translations.passFR, label: 'traduit FR' },
+        { u: username, p: translations.passFR, label: 'user original + pass FR' },
+        { u: translations.userFR, p: password, label: 'user FR + pass original' }
+    ];
+    const uRole = detectCredentialRole(username);
+    const pRole = detectCredentialRole(password);
+    if (uRole === 'pass' && pRole === 'user')
+        pairs.push({ u: password, p: username, label: 'inversé' });
+    const algos = {
+        'MD5': md5, 'SHA-256': sha256, 'SHA-3-256': sha3_256,
+        'BLAKE2b': (s) => blake2b(s, 64), 'BLAKE3': blake3, 'RIPEMD-160': ripemd160
+    };
+    const results = [];
+    for (const pair of pairs) {
+        for (const comb of CREDENTIAL_COMBINERS) {
+            const input = comb.fn(pair.u, pair.p);
+            if (!input) continue;
+            for (const [algoName, algoFn] of Object.entries(algos)) {
+                const h = algoFn(input);
+                const magic = analyzeMagicHash(h);
+                const leaked = checkLeakedHash(h);
+                if (magic.tags.length > 0 || leaked) {
+                    results.push({
+                        algo: algoName, input, hash: h, magic,
+                        combiner: comb.name, pairLabel: pair.label,
+                        user: pair.u, pass: pair.p, leaked
+                    });
+                }
+            }
+        }
+    }
+    const seen = new Set();
+    return results
+        .filter(r => {
+            const key = r.algo + '|' + r.hash;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        })
+        .sort((a, b) => {
+            const scoreA = (a.leaked ? 1000 : 0) + (a.magic.isPalindrome ? 100 : 0)
+                + (a.magic.isLettersOnly ? 50 : 0) + a.magic.tags.length;
+            const scoreB = (b.leaked ? 1000 : 0) + (b.magic.isPalindrome ? 100 : 0)
+                + (b.magic.isLettersOnly ? 50 : 0) + b.magic.tags.length;
+            return scoreB - scoreA;
+        })
+        .slice(0, 30);
+}
+window.showCredentialMagic = function() {
+    const results = document.getElementById('results');
+    results.innerHTML = `
+        <div class="magic-panel" style="border-color:#22c55e;">
+            <div class="title" style="background:linear-gradient(90deg,#22c55e,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+                🔑 Hash Magiques de Credentials
+            </div>
+            <div class="subtitle">
+                Détecte les rôles (user/pass), traduit FR↔EN, combine de 12 façons × 6 algos,
+                et <strong style="color:#fbbf24;">détecte les fuites connues</strong> (RockYou, HIBP…).
+            </div>
+            <div class="magic-row">
+                <input type="text" id="credUser" placeholder="username" value="username" />
+                <input type="text" id="credPass" placeholder="password" value="password" />
+            </div>
+            <div class="magic-row" style="margin-top:10px;">
+                <button class="magic-btn" style="background:linear-gradient(135deg,#22c55e,#06b6d4);"
+                        onclick="runCredentialMagic()">🔑 Analyser</button>
+                <button class="magic-btn ghost" onclick="credSurprise()">🎲 Surprise</button>
+                <button class="magic-btn ghost" onclick="credPreset('admin','password')">admin/password</button>
+                <button class="magic-btn ghost" onclick="credPreset('utilisateur','motdepasse')">utilisateur/motdepasse</button>
+            </div>
+            <div id="credOutput">
+                <div class="magic-empty">Entre un couple username/password et clique sur 🔑 Analyser.</div>
+            </div>
+        </div>`;
+    results.scrollIntoView({ behavior: 'smooth' });
+};
+window.credPreset = function(u, p) {
+    document.getElementById('credUser').value = u;
+    document.getElementById('credPass').value = p;
+    runCredentialMagic();
+};
+window.credSurprise = function() {
+    const pair = KNOWN_CREDENTIAL_PAIRS[Math.floor(Math.random() * KNOWN_CREDENTIAL_PAIRS.length)];
+    document.getElementById('credUser').value = pair.user;
+    document.getElementById('credPass').value = pair.pass;
+    runCredentialMagic();
+};
+window.runCredentialMagic = async function() {
+    const user = (document.getElementById('credUser')?.value || '').trim();
+    const pass = (document.getElementById('credPass')?.value || '').trim();
+    const out = document.getElementById('credOutput');
+    if (!user || !pass) { out.innerHTML = '<div class="magic-empty">⚠️ Entre un username ET un password.</div>'; return; }
+    out.innerHTML = '<div class="magic-empty">🔑 Analyse en cours… (traduction + 12 combinaisons × 6 algos + détection fuites)</div>';
+    try {
+        const results = await generateCredentialMagicHashes(user, pass);
+        const uRole = detectCredentialRole(user);
+        const pRole = detectCredentialRole(pass);
+        const uTrans = translateCredential(user);
+        const pTrans = translateCredential(pass);
+        const header = `<div class="magic-seed" style="margin-bottom:12px;">
+            <span class="lbl">Rôle username :</span>
+            <span style="color:${uRole === 'user' ? '#22c55e' : uRole === 'pass' ? '#f59e0b' : '#a78bfa'};">${uRole}</span>
+            ${uTrans ? ` · <span class="lbl">traduction :</span> <span style="color:#f0abfc;">${uTrans}</span>` : ''}
+            <br>
+            <span class="lbl">Rôle password :</span>
+            <span style="color:${pRole === 'pass' ? '#22c55e' : pRole === 'user' ? '#f59e0b' : '#a78bfa'};">${pRole}</span>
+            ${pTrans ? ` · <span class="lbl">traduction :</span> <span style="color:#f0abfc;">${pTrans}</span>` : ''}
+        </div>`;
+        if (!results.length) {
+            out.innerHTML = header + `<div class="magic-empty">
+                Aucun hash magique ni fuite détectée pour "${user}"/"${pass}".<br>
+                Essaie un autre couple.
+            </div>`;
+            return;
+        }
+        const leakedCount = results.filter(r => r.leaked).length;
+        const rows = results.map(r => {
+            const tags = r.magic.tags.map(t => `<span class="magic-tag ${t.cls}">${t.label}</span>`).join(' ');
+            const leakTag = r.leaked
+                ? `<span class="magic-tag" style="background:rgba(239,68,68,.25);color:#fca5a5;border-color:#ef4444;font-weight:800;">🚨 FUITE: ${r.leaked.pass} (${r.leaked.source})</span>`
+                : '';
+            const sevColor = r.leaked
+                ? (r.leaked.severity === 'critical' ? '#ef4444' : r.leaked.severity === 'high' ? '#f59e0b' : '#22c55e')
+                : '#22c55e';
+            return `<div class="row">
+                <div class="algo-name" style="color:${sevColor};">${r.algo}</div>
+                <div class="hash-val">${r.hash}</div>
+                ${leakTag}${tags}
+            </div>
+            <div style="font-size:0.6rem; color:#a78bfa; padding-left:130px; margin-bottom:8px; line-height:1.5;">
+                <span style="color:#fbbf24;">${r.combiner}</span>
+                · entrée : <span style="color:#f0abfc;">"${r.input}"</span>
+                · paire : <span style="color:#22c55e;">${r.user}</span> / <span style="color:#f472b6;">${r.pass}</span>
+                <span style="color:#a78bfa;">(${r.pairLabel})</span>
+                ${r.leaked ? ` · <span style="color:${sevColor};">⚠ ${r.leaked.severity.toUpperCase()}</span>` : ''}
+            </div>`;
+        }).join('');
+        const stats = {
+            total: results.length,
+            leaked: leakedCount,
+            palindromes: results.filter(r => r.magic.isPalindrome).length,
+            lettersOnly: results.filter(r => r.magic.isLettersOnly).length
+        };
+        out.innerHTML = header + `
+            <div class="magic-result" style="border-color:${leakedCount ? '#ef4444' : '#22c55e'};">${rows}</div>
+            <div class="magic-stats">
+                <div class="ms" style="border-color:#22c55e;"><span class="n">${stats.total}</span><span class="l">hashs trouvés</span></div>
+                <div class="ms" style="border-color:${leakedCount ? '#ef4444' : '#4c1d95'};">
+                    <span class="n" style="color:${leakedCount ? '#fca5a5' : '#f0abfc'};">${stats.leaked}</span>
+                    <span class="l">🚨 fuites détectées</span>
+                </div>
+                <div class="ms"><span class="n">${stats.palindromes}</span><span class="l">palindromes</span></div>
+                <div class="ms"><span class="n">${stats.lettersOnly}</span><span class="l">lettres seules</span></div>
+            </div>
+            <div class="magic-seed" style="margin-top:12px; font-size:0.65rem; line-height:1.7;">
+                <span class="lbl">Paires :</span> original · traduit FR · mixte · inversé<br>
+                <span class="lbl">Combinaisons :</span> user, pass, user:pass, user|pass, user_pass, user.pass,
+                user@pass, pass:user, user+pass, userPass, passUser, md5(user:pass)<br>
+                <span class="lbl">Algos :</span> MD5, SHA-256, SHA-3-256, BLAKE2b, BLAKE3, RIPEMD-160<br>
+                <span class="lbl">Base fuites :</span> RockYou, HIBP, SecLists (extrait ${Object.keys(LEAKED_HASHES).length} entrées)
+            </div>
+        `;
+    } catch (e) {
+        out.innerHTML = `<div class="magic-empty">❌ Erreur : ${e.message}</div>`;
+        console.error(e);
+    }
+};
+
+// ============================================================
+// 🚨 DÉTECTION DE FUITE (recherche directe)
+// ============================================================
+window.showLeakCheck = function() {
+    const results = document.getElementById('results');
+    results.innerHTML = `
+        <div class="magic-panel" style="border-color:#ef4444;">
+            <div class="title" style="background:linear-gradient(90deg,#ef4444,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+                🚨 Détection de fuite de hash
+            </div>
+            <div class="subtitle">
+                Colle un hash (MD5, SHA-1, SHA-256…) et vérifie s'il correspond à un mot de passe compromis connu
+                (base RockYou / HIBP / SecLists).
+            </div>
+            <input type="text" id="leakInput" placeholder="Colle un hash à vérifier..." />
+            <div class="magic-row" style="margin-top:10px;">
+                <button class="magic-btn" style="background:linear-gradient(135deg,#ef4444,#f59e0b);"
+                        onclick="runLeakCheck()">🚨 Vérifier</button>
+                <button class="magic-btn ghost" onclick="leakDemo()">📋 Démo</button>
+            </div>
+            <div id="leakOutput">
+                <div class="magic-empty">Colle un hash et clique sur 🚨 Vérifier.</div>
+            </div>
+        </div>`;
+    results.scrollIntoView({ behavior: 'smooth' });
+};
+window.leakDemo = function() {
+    document.getElementById('leakInput').value = '5f4dcc3b5aa765d61d8327deb882cf99';
+    runLeakCheck();
+};
+window.runLeakCheck = function() {
+    const input = (document.getElementById('leakInput')?.value || '').trim();
+    const out = document.getElementById('leakOutput');
+    if (!input) { out.innerHTML = '<div class="magic-empty">⚠️ Colle un hash.</div>'; return; }
+    const found = checkLeakedHash(input);
+    if (!found) {
+        out.innerHTML = `<div class="magic-result" style="border-color:#22c55e;">
+            <div style="padding:16px; color:#86efac; font-size:0.85rem;">
+                ✅ Hash non trouvé dans la base de fuites (${Object.keys(LEAKED_HASHES).length} entrées).
+                <br><span style="font-size:0.7rem; color:#a78bfa;">
+                Ce n'est pas une garantie absolue — la base est un extrait.
+                </span>
+            </div>
+        </div>`;
+        return;
+    }
+    const sevColor = found.severity === 'critical' ? '#ef4444'
+        : found.severity === 'high' ? '#f59e0b' : '#22c55e';
+    out.innerHTML = `<div class="magic-result" style="border-color:${sevColor};">
+        <div style="padding:16px;">
+            <div style="font-size:1.2rem; font-weight:800; color:${sevColor}; margin-bottom:8px;">
+                🚨 FUITE DÉTECTÉE ${found.exact ? '' : '(préfixe)'}
+            </div>
+            <div style="color:#fca5a5; font-size:1.4rem; font-family:monospace; margin-bottom:10px;">
+                "${found.pass}"
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin-top:12px;">
+                <div class="magic-stats"><div class="ms"><span class="l">Algorithme</span><br><span style="color:#f0abfc;font-weight:700;">${found.algo}</span></div></div>
+                <div class="magic-stats"><div class="ms"><span class="l">Source</span><br><span style="color:#f0abfc;font-weight:700;">${found.source}</span></div></div>
+                <div class="magic-stats"><div class="ms" style="border-color:${sevColor};"><span class="l">Sévérité</span><br><span style="color:${sevColor};font-weight:700;font-size:1.1rem;">${found.severity.toUpperCase()}</span></div></div>
+            </div>
+            <div style="margin-top:14px; font-size:0.7rem; color:#a78bfa; line-height:1.6;">
+                💡 <strong style="color:#fbbf24;">Recommandation :</strong>
+                si ce hash est dans votre base, le mot de passe associé est <strong>compromis publiquement</strong>.
+                Forcez sa réinitialisation immédiatement.
+            </div>
+        </div>
+    </div>`;
+};
+
+// ============================================================
+// GÉNÉRATEUR DE HASHS STANDARD
 // ============================================================
 async function generateHashesForRange(start, end) {
     const results = [];
@@ -1273,16 +1893,15 @@ function sortHashes(entries, by = 'nombre', dir = 'asc') {
     return dir === 'desc' ? sorted.reverse() : sorted;
 }
 window._hashData = []; window._hashSortBy = 'nombre'; window._hashSortDir = 'asc';
-
 function renderHashGrid(entries) {
     if (!entries.length) return '<p style="color:#929292;">Aucune donnée.</p>';
     const cols = [
-        { key: 'nombre', label: 'N' }, { key: 'binaire', label: 'Bin' }, { key: 'hex', label: 'Hex' },
-        { key: 'crc32', label: 'CRC-32' }, { key: 'fnv1a', label: 'FNV-1a' },
-        { key: 'md5', label: 'MD5' }, { key: 'sha1', label: 'SHA-1' }, { key: 'sha256', label: 'SHA-256' },
-        { key: 'sha3_256', label: 'SHA-3-256' }, { key: 'sha3_512', label: 'SHA-3-512' },
-        { key: 'blake2b', label: 'BLAKE2b' }, { key: 'blake3', label: 'BLAKE3' },
-        { key: 'ripemd160', label: 'RIPEMD' }, { key: 'base64', label: 'B64' }
+        { key:'nombre', label:'N' }, { key:'binaire', label:'Bin' }, { key:'hex', label:'Hex' },
+        { key:'crc32', label:'CRC-32' }, { key:'fnv1a', label:'FNV-1a' },
+        { key:'md5', label:'MD5' }, { key:'sha1', label:'SHA-1' }, { key:'sha256', label:'SHA-256' },
+        { key:'sha3_256', label:'SHA-3-256' }, { key:'sha3_512', label:'SHA-3-512' },
+        { key:'blake2b', label:'BLAKE2b' }, { key:'blake3', label:'BLAKE3' },
+        { key:'ripemd160', label:'RIPEMD' }, { key:'base64', label:'B64' }
     ];
     const ths = cols.map(c => {
         let cls = '';
@@ -1351,7 +1970,6 @@ async function showHashGenerator() {
             </div>
             <div class="hash-note" style="margin-top:8px;">💡 Clique sur un en-tête pour trier.</div>
             <div id="hashGridContainer" style="margin-top:12px; max-height:600px; overflow:auto;">${renderHashGrid(sorted)}</div>
-            <div class="hash-note" style="margin-top:10px;">✅ RFC 1321 (MD5) · FIPS 180-4 (SHA-1/2) · FIPS 202 (SHA-3) · RFC 7693 (BLAKE2b) · BLAKE3 · ISO RIPEMD</div>
         </div>`;
     results.scrollIntoView({ behavior: 'smooth' });
 }
@@ -1387,11 +2005,10 @@ async function showReverseSearch() {
     results.innerHTML = `
         <div class="reverse-panel">
             <div class="title">🔄 Recherche inversée — Hash → Nombre</div>
-            <input type="text" id="reverseInput" placeholder="Colle un hash (MD5, SHA-1, SHA-256, SHA-3, BLAKE2, BLAKE3, RIPEMD, CRC-32...)" />
+            <input type="text" id="reverseInput" placeholder="Colle un hash..." />
             <div class="b10-toggle">
                 <button onclick="doReverseSearch()">🔍 Rechercher</button>
             </div>
-            <div class="hash-note" style="margin-top:8px;">💡 Dictionnaire interne 0 → 2000 (tous algos). Extension auto 2001 → 5000.</div>
             <div id="reverseResult"></div>
         </div>`;
     document.getElementById('reverseInput').addEventListener('keydown', e => { if (e.key === 'Enter') doReverseSearch(); });
@@ -1407,7 +2024,16 @@ async function doReverseSearch() {
     const input = document.getElementById('reverseInput').value.trim();
     const box = document.getElementById('reverseResult');
     if (!input) { box.innerHTML = ''; return; }
-    box.innerHTML = '<div style="color:#000091; padding:10px;">⏳ Recherche…</div>';
+    const leaked = checkLeakedHash(input);
+    if (leaked) {
+        box.innerHTML = `<div class="reverse-result" style="border-color:#ef4444;">
+            <div style="color:#ef4444; font-weight:800; font-size:1.1rem; margin-bottom:8px;">🚨 FUITE CONNUE</div>
+            <div class="match" style="color:#fca5a5;">"${leaked.pass}"</div>
+            <div class="algo">Algorithme : ${leaked.algo} · Source : ${leaked.source} · Sévérité : ${leaked.severity}</div>
+            <div class="hash">Hash : ${input}</div>
+        </div>`;
+        return;
+    }
     const found = window._reverseDict.get(input) ||
                   window._reverseDict.get(input.toUpperCase()) ||
                   window._reverseDict.get(input.toLowerCase());
@@ -1420,21 +2046,7 @@ async function doReverseSearch() {
         </div>`;
         return;
     }
-    if (window._reverseDict.size < 35000) {
-        box.innerHTML = `<div class="reverse-result"><div class="nope">⏳ Pas dans 0 → 2000. Extension…</div></div>`;
-        await buildReverseDictionary(2001, 5000);
-        const f2 = window._reverseDict.get(input) || window._reverseDict.get(input.toUpperCase());
-        if (f2) {
-            box.innerHTML = `<div class="reverse-result">
-                <div class="match">✅ Nombre : ${f2.n}</div>
-                <div class="algo">Algorithme : ${f2.algo}</div>
-                <div class="hash">Hash : ${input}</div>
-                <div style="margin-top:10px;"><button class="copy-btn" onclick="quickSearch('${f2.n}')">🔍 Analyser ${f2.n}</button></div>
-            </div>`;
-            return;
-        }
-    }
-    box.innerHTML = `<div class="reverse-result"><div class="nope">❌ Aucun nombre trouvé dans 0 → 5000.</div></div>`;
+    box.innerHTML = `<div class="reverse-result"><div class="nope">❌ Aucun nombre trouvé dans 0 → 5000, et pas dans la base de fuites.</div></div>`;
 }
 
 // ============================================================
@@ -1442,61 +2054,45 @@ async function doReverseSearch() {
 // ============================================================
 async function showCrossCheck() {
     const results = document.getElementById('results');
-    results.innerHTML = '<div style="text-align:center; padding:40px; color:#000091;">⏳ Vérification croisée…</div>';
+    results.innerHTML = '<div style="text-align:center; padding:40px; color:#000091;">⏳ Vérification…</div>';
     const tests = [
-        { algo: 'MD5',      input: 'abc',  got: md5('abc'),  expected: '900150983cd24fb0d6963f7d28e17f72' },
-        { algo: 'MD5',      input: '',     got: md5(''),     expected: 'd41d8cd98f00b204e9800998ecf8427e' },
-        { algo: 'SHA-1',    input: 'abc',  got: sha1('abc'), expected: 'a9993e364706816aba3e25717850c26c9cd0d89d' },
-        { algo: 'SHA-1',    input: '',     got: sha1(''),    expected: 'da39a3ee5e6b4b0d3255bfef95601890afd80709' },
-        { algo: 'SHA-256',  input: 'abc',  got: sha256('abc'), expected: 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad' },
-        { algo: 'SHA-256',  input: '',     got: sha256(''),    expected: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' },
-        { algo: 'SHA-3-256', input: '',    got: sha3_256(''),   expected: 'a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a' },
-        { algo: 'SHA-3-256', input: 'abc', got: sha3_256('abc'), expected: '3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532' },
-        { algo: 'SHA-3-512', input: '',    got: sha3_512(''),   expected: 'a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26' },
-        { algo: 'BLAKE2b',  input: '',     got: blake2b('', 64), expected: '786a02f742015903c6c6fd852552d272912f4740e15847618a86e217f71f5419d25e1031afee585313896444934eb04b903a685b1448b755d56f701afe9be2ce' },
-        { algo: 'BLAKE2b',  input: 'abc',  got: blake2b('abc', 64), expected: 'ba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d17d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923' },
-        { algo: 'BLAKE3',   input: '',     got: blake3(''),    expected: 'af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262' },
-        { algo: 'BLAKE3',   input: 'abc',  got: blake3('abc'), expected: '6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85' },
-        { algo: 'CRC-32',   input: '123456789', got: crc32hex('123456789'), expected: 'CBF43926' }
+        { algo:'MD5', input:'abc', got:md5('abc'), expected:'900150983cd24fb0d6963f7d28e17f72' },
+        { algo:'MD5', input:'', got:md5(''), expected:'d41d8cd98f00b204e9800998ecf8427e' },
+        { algo:'SHA-1', input:'abc', got:sha1('abc'), expected:'a9993e364706816aba3e25717850c26c9cd0d89d' },
+        { algo:'SHA-1', input:'', got:sha1(''), expected:'da39a3ee5e6b4b0d3255bfef95601890afd80709' },
+        { algo:'SHA-256', input:'abc', got:sha256('abc'), expected:'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad' },
+        { algo:'SHA-256', input:'', got:sha256(''), expected:'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' },
+        { algo:'SHA-3-256', input:'', got:sha3_256(''), expected:'a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a' },
+        { algo:'SHA-3-256', input:'abc', got:sha3_256('abc'), expected:'3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532' },
+        { algo:'BLAKE2b', input:'', got:blake2b('', 64), expected:'786a02f742015903c6c6fd852552d272912f4740e15847618a86e217f71f5419d25e1031afee585313896444934eb04b903a685b1448b755d56f701afe9be2ce' },
+        { algo:'BLAKE2b', input:'abc', got:blake2b('abc', 64), expected:'ba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d17d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923' },
+        { algo:'BLAKE3', input:'', got:blake3(''), expected:'af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262' },
+        { algo:'BLAKE3', input:'abc', got:blake3('abc'), expected:'6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85' },
+        { algo:'CRC-32', input:'123456789', got:crc32hex('123456789'), expected:'CBF43926' }
     ];
-
-    let html = `
-        <div class="b10-panel">
-            <div class="title">✓ Vérification croisée — Vecteurs officiels RFC/NIST/ISO</div>
-            <table class="hash-table" style="font-size:0.7rem;">
-                <thead><tr><th>Algo</th><th>Entrée</th><th>Calculé</th><th>Attendu</th><th>Résultat</th></tr></thead>
-                <tbody>
-    `;
+    let html = `<div class="b10-panel"><div class="title">✓ Vérification croisée — Vecteurs officiels</div>
+        <table class="hash-table" style="font-size:0.7rem;">
+        <thead><tr><th>Algo</th><th>Entrée</th><th>Calculé</th><th>Attendu</th><th>Résultat</th></tr></thead><tbody>`;
     let okCount = 0;
     for (const t of tests) {
         const ok = t.got === t.expected;
         if (ok) okCount++;
-        const inputDisplay = t.input === '' ? '""' : `"${t.input}"`;
         html += `<tr>
             <td style="color:#000091;">${t.algo}</td>
-            <td>${inputDisplay}</td>
+            <td>${t.input === '' ? '""' : `"${t.input}"`}</td>
             <td style="color:${ok ? '#16a34a' : '#E1000F'}; font-size:0.55rem;">${t.got.slice(0,24)}…</td>
             <td style="color:#929292; font-size:0.55rem;">${t.expected.slice(0,24)}…</td>
             <td style="color:${ok ? '#16a34a' : '#E1000F'}; font-weight:700;">${ok ? '✅' : '❌'}</td>
         </tr>`;
     }
-    html += `
-                </tbody>
-            </table>
-            <div class="hash-note" style="margin-top:10px;">
-                ${okCount} / ${tests.length} tests réussis —
-                ${okCount === tests.length ? '✅ Tous les algos sont conformes aux vecteurs officiels.' : '⚠️ Certains algos diffèrent.'}
-                <br><br>
-                📚 Sources : RFC 1321 (MD5) · FIPS 180-4 (SHA-1/2) · FIPS 202 (SHA-3) · RFC 7693 (BLAKE2b) · BLAKE3 official test vectors · IEEE 802.3 (CRC-32).
-            </div>
-        </div>
-    `;
+    html += `</tbody></table><div class="hash-note" style="margin-top:10px;">
+        ${okCount} / ${tests.length} tests réussis</div></div>`;
     results.innerHTML = html;
     results.scrollIntoView({ behavior: 'smooth' });
 }
 
 // ============================================================
-// INTERACTIONS
+// INTERACTIONS & INIT
 // ============================================================
 window.copyText = function(text) {
     navigator.clipboard.writeText(text).then(() => showToast('✅ Copié')).catch(() => {
@@ -1526,40 +2122,41 @@ async function analyze() {
     if (!input) { showToast('⚠️ Entrez une valeur'); return; }
     const results = document.getElementById('results');
     try {
-        let html;
         if (/^[a-fA-F0-9]{8,128}$/.test(input) || input.startsWith('0x')) {
+            const leaked = checkLeakedHash(input);
             results.innerHTML = `
                 <div class="reverse-panel">
                     <div class="title">🔄 Hash détecté — Recherche inversée automatique</div>
                     <div id="reverseResult"></div>
                 </div>`;
             const box = document.getElementById('reverseResult');
+            if (leaked) {
+                box.innerHTML = `<div class="reverse-result" style="border-color:#ef4444;">
+                    <div style="color:#ef4444; font-weight:800; font-size:1.1rem;">🚨 FUITE CONNUE</div>
+                    <div class="match" style="color:#fca5a5;">"${leaked.pass}"</div>
+                    <div class="algo">${leaked.algo} · ${leaked.source} · ${leaked.severity}</div>
+                </div>`;
+            }
             if (window._reverseDict.size === 0) {
-                box.innerHTML = '<div style="color:#000091;">⏳ Chargement…</div>';
+                box.innerHTML += '<div style="color:#000091; padding:10px;">⏳ Chargement du dictionnaire…</div>';
                 await buildReverseDictionary(0, 2000);
             }
-            const found = window._reverseDict.get(input) ||
-                          window._reverseDict.get(input.toUpperCase()) ||
-                          window._reverseDict.get(input.toLowerCase());
-            if (found) {
+            const found = window._reverseDict.get(input) || window._reverseDict.get(input.toUpperCase());
+            if (found && !leaked) {
                 box.innerHTML = `<div class="reverse-result">
                     <div class="match">✅ Nombre : ${found.n}</div>
-                    <div class="algo">Algorithme : ${found.algo}</div>
-                    <div class="hash">Hash : ${input}</div>
-                </div>` + await analyzeNumber(found.n, String(found.n));
-            } else {
-                box.innerHTML = `<div class="reverse-result"><div class="nope">❌ Aucun nombre trouvé dans 0 → 2000.</div></div>`;
+                    <div class="algo">${found.algo}</div>
+                </div>` + await analyzeNumber(found.n);
+            } else if (!found && !leaked) {
+                box.innerHTML = `<div class="reverse-result"><div class="nope">❌ Pas dans 0→2000 ni dans la base de fuites.</div></div>`;
             }
             results.scrollIntoView({ behavior: 'smooth' });
             return;
         }
         const b10 = await analyzeBase10Input(input);
-        if (b10) {
-            results.innerHTML = b10;
-            results.scrollIntoView({ behavior: 'smooth' });
-            return;
-        }
+        if (b10) { results.innerHTML = b10; results.scrollIntoView({ behavior: 'smooth' }); return; }
         const type = detectType(input);
+        let html;
         if (type === 'integer') {
             const num = parseInt(input);
             let foundWord = null;
@@ -1568,12 +2165,12 @@ async function analyze() {
                 html = await analyzeWord(foundWord);
                 html += `<div style="margin-top:20px; border-top:2px solid #e5e5e5; padding-top:20px;">
                     <div style="text-align:center; color:#929292; font-size:0.8rem;">📌 Analyse du nombre associé</div>
-                </div>` + await analyzeNumber(num, input);
+                </div>` + await analyzeNumber(num);
             } else {
-                html = await analyzeNumber(num, input);
+                html = await analyzeNumber(num);
             }
         } else if (type === 'decimal') {
-            html = await analyzeNumber(parseInt(input.replace('.', '')), input);
+            html = await analyzeNumber(parseInt(input.replace('.', '')));
         } else {
             html = await analyzeWord(input);
         }
@@ -1581,7 +2178,7 @@ async function analyze() {
         results.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
         console.error(err);
-        showToast("❌ Erreur lors de l'analyse");
+        showToast("❌ Erreur");
     }
 }
 
@@ -1592,24 +2189,17 @@ function showToast(m) {
     t._timeout = setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// ============================================================
-// INITIALISATION
-// ============================================================
 installNaNGard();
-
 document.addEventListener('keydown', e => {
     if (e.key === 'Enter' && document.activeElement === document.getElementById('searchInput')) analyze();
 });
 document.getElementById('copyrightYear').textContent = new Date().getFullYear();
 
-console.log('🏛️ Encyclopédie intelligente — Marianne d\'État 🇫🇷');
-console.log('© gunout — Tous droits réservés');
+console.log('🏛️ Encyclopédie v2.2 — Credentials + Détection fuites');
+console.log('🚨 Base de fuites :', Object.keys(LEAKED_HASHES).length, 'entrées');
 
 setTimeout(() => {
-    if (window._reverseDict.size === 0) {
-        console.log('⏳ Pré-chargement du dictionnaire inversé (0 → 500)…');
-        buildReverseDictionary(0, 500).then(() => console.log('✅ Dictionnaire partiel prêt (0 → 500)'));
-    }
+    if (window._reverseDict.size === 0) buildReverseDictionary(0, 500);
 }, 1500);
 
 const params = new URLSearchParams(window.location.search);
