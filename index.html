@@ -445,6 +445,19 @@ body {
     color: #a78bfa; font-size: 0.75rem; padding: 20px;
     text-align: center; font-style: italic;
 }
+.section-header-alert {
+    margin: 16px 0 8px; color: #fca5a5; font-weight: 800;
+    font-size: 1rem; letter-spacing: 1px;
+}
+.section-header-magic {
+    margin: 16px 0 8px; color: #f0abfc; font-weight: 800;
+    font-size: 1rem; letter-spacing: 1px;
+}
+details.neutral-details { margin: 16px 0; }
+details.neutral-details summary {
+    cursor: pointer; color: #a78bfa; font-weight: 700;
+    font-size: 0.85rem; padding: 8px 0;
+}
 
 .footer-officiel {
     background: #fff; border-top: 2px solid #000091;
@@ -497,7 +510,7 @@ body {
       <em>Liberté</em>
       <em>Égalité</em>
       <em>Fraternité</em>
-      <div class="ref-legale">Monitor Encyclopédie v2.2 · Mots ↔ Nombres ↔ Hashs ↔ Magie ↔ Fuites</div>
+      <div class="ref-legale">Monitor Encyclopédie v2.3 · Mots ↔ Nombres ↔ Hashs ↔ Magie ↔ Fuites</div>
     </div>
   </div>
 </div>
@@ -573,7 +586,7 @@ body {
         console.log('✅ BLAKE3 WASM (local) chargé et prêt');
     }).catch(e => {
         console.warn('⚠️ Erreur chargement BLAKE3 WASM :', e.message);
-        console.warn('⚠️ Fallback JS utilisé');
+        console.warn('⚠️ Fallback JS utilisé (mode fb3-…)');
     });
 </script>
 
@@ -582,7 +595,7 @@ body {
 
 // ============================================================
 // © gunout — Encyclopédie intelligente · Marianne d'État
-// v2.2 — Credentials Magiques + Détection de fuites
+// v2.3 — Credentials Magiques + Détection fuites + 5 correctifs
 // ============================================================
 
 const WORD_TO_NUMBER = {
@@ -1021,6 +1034,10 @@ function blake2b(str, outLen = 64) {
         out[i] = Number((h[Math.floor(i/8)] >> BigInt((i%8)*8)) & 0xFFn);
     return bytesToHex(out);
 }
+
+// ============================================================
+// BLAKE3 — WASM avec fallback DISTINCT (correctif #1)
+// ============================================================
 function blake3(str) {
     if (window._blake3Ready && window._blake3Hash) {
         try {
@@ -1032,8 +1049,11 @@ function blake3(str) {
             return hex;
         } catch (e) {}
     }
-    return sha256(str).slice(0, 64);
+    // ⚠️ Fallback DISTINCT : préfixe "fb3-" pour signaler clairement la simulation
+    return 'fb3-' + sha256('blake3-fallback:' + str).slice(0, 60);
 }
+function isBlake3Simulated(h) { return typeof h === 'string' && h.startsWith('fb3-'); }
+
 function ripemd160(str) {
     const s = sha256(str);
     let h = '';
@@ -1057,7 +1077,14 @@ async function buildFullHashTable(text) {
     rows.push({ name: 'SHA-3-256',  tag: '✓ sûr',     cls: 'ok',   val: sha3_256(text) });
     rows.push({ name: 'SHA-3-512',  tag: '✓ sûr',     cls: 'ok',   val: sha3_512(text) });
     rows.push({ name: 'BLAKE2b',    tag: '✓ sûr',     cls: 'ok',   val: blake2b(text, 64) });
-    rows.push({ name: 'BLAKE3',     tag: '✓ sûr',     cls: 'ok',   val: blake3(text) });
+    const b3 = blake3(text);
+    const b3Sim = isBlake3Simulated(b3);
+    rows.push({
+        name: 'BLAKE3',
+        tag: b3Sim ? '⚠ SIMULÉ (WASM absent)' : '✓ sûr',
+        cls: b3Sim ? 'warn' : 'ok',
+        val: b3
+    });
     rows.push({ name: 'RIPEMD-160', tag: '✓ sûr',     cls: 'ok',   val: ripemd160(text) });
     if (window.crypto && window.crypto.subtle) {
         try {
@@ -1300,18 +1327,19 @@ async function analyzeWord(text) {
 }
 
 // ============================================================
-// ✨ GÉNÉRATEUR DE HASH MAGIQUES — v2 avec correctifs
+// ✨ GÉNÉRATEUR DE HASH MAGIQUES — v3 avec correctifs
 // ============================================================
+// Correctif #2 : mots FR stricts (fee, bec retirés)
 const MAGIC_FRENCH_WORDS = [
-    'ace','aide','aile','bac','bec','bide','cafe','cede','dada','decade',
-    'facade','face','fade','fee','fiche','fide','idee','aube','baffe',
-    'bief','biffe','cafe','cede','dace','decadi','defi','defie','fac','fada',
-    'fade','fifre','fiche','abbaye','abbé','café','bèche','béé'
+    'ace','aide','aile','bac','bide','cafe','cede','dada','decade',
+    'facade','face','fade','fiche','fide','idee','aube','baffe',
+    'bief','biffe','decadi','defi','defie','fac','fada','fifre',
+    'abbaye','abbé','café','bèche','béé'
 ];
 const MAGIC_BLACKLIST = new Set([
     'dad','dead','beef','bad','bed','cab','fed','ice','idea','acid',
     'face','cafe','fade','feed','dab','fab','add','ade','bee','bid',
-    'cad','fad','bide'
+    'cad','fad','bide','fee','bec'
 ]);
 function containsFrenchWord(hexLower) {
     for (const w of MAGIC_FRENCH_WORDS) {
@@ -1344,7 +1372,9 @@ function analyzeMagicHash(h) {
     const ratio = hexLetters / h.length;
     if (ratio > 0.7) tags.push({ label: 'Riche en lettres', cls: 'purple' });
     if (ratio < 0.2) tags.push({ label: 'Riche en chiffres', cls: 'blue' });
-    if (uniqueChars >= 13) tags.push({ label: 'Très diversifié', cls: 'purple' });
+
+    // Correctif #4 : "Très diversifié" devient rare
+    if (uniqueChars >= 15 && h.length >= 32) tags.push({ label: 'Très diversifié', cls: 'purple' });
     if (uniqueChars <= 4)  tags.push({ label: 'Très répétitif', cls: 'gold' });
 
     return {
@@ -1356,7 +1386,7 @@ function analyzeMagicHash(h) {
     };
 }
 function isTrulyMagical(m) {
-    return m.isPalindrome || m.isLettersOnly || m.isDigitsOnly || m.uniqueChars >= 14;
+    return m.isPalindrome || m.isLettersOnly || m.isDigitsOnly || m.uniqueChars >= 15;
 }
 function findMagicNonce(baseStr, hashFn, predicate, maxTries = 20000) {
     for (let i = 0; i <= maxTries; i++) {
@@ -1427,10 +1457,13 @@ function renderMagicResult(seed, results) {
         const tags = r.magic.tags.length
             ? r.magic.tags.map(t => `<span class="magic-tag ${t.cls}">${t.label}</span>`).join(' ')
             : '<span class="magic-tag">—</span>';
+        const simTag = isBlake3Simulated(r.hash)
+            ? '<span class="magic-tag" style="background:rgba(251,191,36,.2);color:#fcd34d;border-color:#fbbf24;">⚠ SIMULÉ</span>'
+            : '';
         return `<div class="row">
             <div class="algo-name" style="color:${r.color};">${r.algo}</div>
             <div class="hash-val">${r.hash}</div>
-            ${tags}
+            ${simTag}${tags}
         </div>
         <div style="font-size:0.6rem; color:#a78bfa; padding-left:130px; margin-bottom:8px; line-height:1.5;">
             Entrée : <span style="color:#f0abfc;">"${r.input}"</span>
@@ -1588,6 +1621,7 @@ const LEAKED_HASHES = {
     '6437b3ac38465133ffb63b75273a8db548c558465d79db03fd359c6cd5bd9d85': { pass: 'abc',      algo: 'BLAKE3', source: 'test vector', severity: 'none' }
 };
 function checkLeakedHash(hash) {
+    if (isBlake3Simulated(hash)) return null; // les hashs simulés ne peuvent pas être "fuités"
     const h = hash.toLowerCase().trim();
     if (LEAKED_HASHES[h]) return { ...LEAKED_HASHES[h], hash: h, exact: true };
     for (const [k, v] of Object.entries(LEAKED_HASHES)) {
@@ -1660,13 +1694,18 @@ async function generateCredentialMagicHashes(username, password) {
             return true;
         })
         .sort((a, b) => {
-            const scoreA = (a.leaked ? 1000 : 0) + (a.magic.isPalindrome ? 100 : 0)
-                + (a.magic.isLettersOnly ? 50 : 0) + a.magic.tags.length;
-            const scoreB = (b.leaked ? 1000 : 0) + (b.magic.isPalindrome ? 100 : 0)
-                + (b.magic.isLettersOnly ? 50 : 0) + b.magic.tags.length;
-            return scoreB - scoreA;
+            // Correctif #5 : tri pondéré par pertinence
+            const leakScore = r => r.leaked
+                ? (r.leaked.severity === 'critical' ? 3000 : r.leaked.severity === 'high' ? 2000 : 1000)
+                : 0;
+            const magicScore = r => r.leaked ? 0
+                : (r.magic.isPalindrome ? 100 : 0)
+                + (r.magic.isLettersOnly ? 80 : 0)
+                + (r.magic.tags.filter(t => t.cls === 'green').length * 30)
+                + r.magic.tags.length;
+            return (leakScore(b) + magicScore(b)) - (leakScore(a) + magicScore(a));
         })
-        .slice(0, 30);
+        .slice(0, 40);
 }
 window.showCredentialMagic = function() {
     const results = document.getElementById('results');
@@ -1712,7 +1751,7 @@ window.runCredentialMagic = async function() {
     const pass = (document.getElementById('credPass')?.value || '').trim();
     const out = document.getElementById('credOutput');
     if (!user || !pass) { out.innerHTML = '<div class="magic-empty">⚠️ Entre un username ET un password.</div>'; return; }
-    out.innerHTML = '<div class="magic-empty">🔑 Analyse en cours… (traduction + 12 combinaisons × 6 algos + détection fuites)</div>';
+    out.innerHTML = '<div class="magic-empty">🔑 Analyse en cours…</div>';
     try {
         const results = await generateCredentialMagicHashes(user, pass);
         const uRole = detectCredentialRole(user);
@@ -1728,26 +1767,26 @@ window.runCredentialMagic = async function() {
             <span style="color:${pRole === 'pass' ? '#22c55e' : pRole === 'user' ? '#f59e0b' : '#a78bfa'};">${pRole}</span>
             ${pTrans ? ` · <span class="lbl">traduction :</span> <span style="color:#f0abfc;">${pTrans}</span>` : ''}
         </div>`;
-        if (!results.length) {
-            out.innerHTML = header + `<div class="magic-empty">
-                Aucun hash magique ni fuite détectée pour "${user}"/"${pass}".<br>
-                Essaie un autre couple.
-            </div>`;
-            return;
-        }
-        const leakedCount = results.filter(r => r.leaked).length;
-        const rows = results.map(r => {
+
+        // Correctif #3 : partition en 3 sections
+        const alerts  = results.filter(r => r.leaked);
+        const magical = results.filter(r => !r.leaked && r.magic.tags.length > 0);
+        const neutral = results.filter(r => !r.leaked && r.magic.tags.length === 0);
+
+        const renderRow = (r) => {
             const tags = r.magic.tags.map(t => `<span class="magic-tag ${t.cls}">${t.label}</span>`).join(' ');
             const leakTag = r.leaked
                 ? `<span class="magic-tag" style="background:rgba(239,68,68,.25);color:#fca5a5;border-color:#ef4444;font-weight:800;">🚨 FUITE: ${r.leaked.pass} (${r.leaked.source})</span>`
                 : '';
-            const sevColor = r.leaked
-                ? (r.leaked.severity === 'critical' ? '#ef4444' : r.leaked.severity === 'high' ? '#f59e0b' : '#22c55e')
-                : '#22c55e';
+            const simTag = isBlake3Simulated(r.hash)
+                ? '<span class="magic-tag" style="background:rgba(251,191,36,.2);color:#fcd34d;border-color:#fbbf24;">⚠ SIMULÉ</span>'
+                : '';
+            const sev = r.leaked?.severity;
+            const sevColor = sev === 'critical' ? '#ef4444' : sev === 'high' ? '#f59e0b' : '#22c55e';
             return `<div class="row">
                 <div class="algo-name" style="color:${sevColor};">${r.algo}</div>
                 <div class="hash-val">${r.hash}</div>
-                ${leakTag}${tags}
+                ${leakTag}${simTag}${tags}
             </div>
             <div style="font-size:0.6rem; color:#a78bfa; padding-left:130px; margin-bottom:8px; line-height:1.5;">
                 <span style="color:#fbbf24;">${r.combiner}</span>
@@ -1756,32 +1795,46 @@ window.runCredentialMagic = async function() {
                 <span style="color:#a78bfa;">(${r.pairLabel})</span>
                 ${r.leaked ? ` · <span style="color:${sevColor};">⚠ ${r.leaked.severity.toUpperCase()}</span>` : ''}
             </div>`;
-        }).join('');
-        const stats = {
-            total: results.length,
-            leaked: leakedCount,
-            palindromes: results.filter(r => r.magic.isPalindrome).length,
-            lettersOnly: results.filter(r => r.magic.isLettersOnly).length
         };
-        out.innerHTML = header + `
-            <div class="magic-result" style="border-color:${leakedCount ? '#ef4444' : '#22c55e'};">${rows}</div>
-            <div class="magic-stats">
-                <div class="ms" style="border-color:#22c55e;"><span class="n">${stats.total}</span><span class="l">hashs trouvés</span></div>
-                <div class="ms" style="border-color:${leakedCount ? '#ef4444' : '#4c1d95'};">
-                    <span class="n" style="color:${leakedCount ? '#fca5a5' : '#f0abfc'};">${stats.leaked}</span>
-                    <span class="l">🚨 fuites détectées</span>
-                </div>
-                <div class="ms"><span class="n">${stats.palindromes}</span><span class="l">palindromes</span></div>
-                <div class="ms"><span class="n">${stats.lettersOnly}</span><span class="l">lettres seules</span></div>
+
+        let html = header;
+
+        if (alerts.length) {
+            html += `<div class="section-header-alert">🔴 ALERTES — ${alerts.length} fuite(s) détectée(s)</div>
+                <div class="magic-result" style="border-color:#ef4444;">${alerts.map(renderRow).join('')}</div>`;
+        }
+        if (magical.length) {
+            html += `<div class="section-header-magic">✨ HASH MAGIQUES — ${magical.length} découverte(s)</div>
+                <div class="magic-result" style="border-color:#a855f7;">${magical.map(renderRow).join('')}</div>`;
+        }
+        if (neutral.length) {
+            html += `<details class="neutral-details">
+                <summary>🔇 Autres hashs (${neutral.length}) — cliquer pour afficher</summary>
+                <div class="magic-result" style="border-color:#4c1d95;">${neutral.map(renderRow).join('')}</div>
+            </details>`;
+        }
+        if (!alerts.length && !magical.length && !neutral.length) {
+            html += `<div class="magic-empty">Aucun hash exploitable pour "${user}"/"${pass}".</div>`;
+        }
+
+        html += `<div class="magic-stats">
+            <div class="ms" style="border-color:${alerts.length ? '#ef4444' : '#4c1d95'};">
+                <span class="n" style="color:${alerts.length ? '#fca5a5' : '#f0abfc'};">${alerts.length}</span>
+                <span class="l">🔴 fuites</span>
             </div>
-            <div class="magic-seed" style="margin-top:12px; font-size:0.65rem; line-height:1.7;">
-                <span class="lbl">Paires :</span> original · traduit FR · mixte · inversé<br>
-                <span class="lbl">Combinaisons :</span> user, pass, user:pass, user|pass, user_pass, user.pass,
-                user@pass, pass:user, user+pass, userPass, passUser, md5(user:pass)<br>
-                <span class="lbl">Algos :</span> MD5, SHA-256, SHA-3-256, BLAKE2b, BLAKE3, RIPEMD-160<br>
-                <span class="lbl">Base fuites :</span> RockYou, HIBP, SecLists (extrait ${Object.keys(LEAKED_HASHES).length} entrées)
-            </div>
-        `;
+            <div class="ms" style="border-color:#a855f7;"><span class="n">${magical.length}</span><span class="l">✨ magiques</span></div>
+            <div class="ms"><span class="n">${neutral.length}</span><span class="l">🔇 autres</span></div>
+            <div class="ms"><span class="n">${magical.filter(r=>r.magic.isPalindrome).length}</span><span class="l">palindromes</span></div>
+        </div>
+        <div class="magic-seed" style="margin-top:12px; font-size:0.65rem; line-height:1.7;">
+            <span class="lbl">Paires :</span> original · traduit FR · mixte · inversé<br>
+            <span class="lbl">Combinaisons :</span> user, pass, user:pass, user|pass, user_pass, user.pass,
+            user@pass, pass:user, user+pass, userPass, passUser, md5(user:pass)<br>
+            <span class="lbl">Algos :</span> MD5, SHA-256, SHA-3-256, BLAKE2b, BLAKE3, RIPEMD-160<br>
+            <span class="lbl">Base fuites :</span> RockYou, HIBP, SecLists (extrait ${Object.keys(LEAKED_HASHES).length} entrées)
+        </div>`;
+
+        out.innerHTML = html;
     } catch (e) {
         out.innerHTML = `<div class="magic-empty">❌ Erreur : ${e.message}</div>`;
         console.error(e);
@@ -1822,6 +1875,15 @@ window.runLeakCheck = function() {
     const input = (document.getElementById('leakInput')?.value || '').trim();
     const out = document.getElementById('leakOutput');
     if (!input) { out.innerHTML = '<div class="magic-empty">⚠️ Colle un hash.</div>'; return; }
+    if (isBlake3Simulated(input)) {
+        out.innerHTML = `<div class="magic-result" style="border-color:#fbbf24;">
+            <div style="padding:16px; color:#fcd34d; font-size:0.85rem;">
+                ⚠ Hash BLAKE3 simulé (préfixe <code>fb3-</code>) — non vérifiable dans la base de fuites.<br>
+                <span style="font-size:0.7rem; color:#a78bfa;">Chargez blake3.js (WASM) pour de vrais hashs BLAKE3.</span>
+            </div>
+        </div>`;
+        return;
+    }
     const found = checkLeakedHash(input);
     if (!found) {
         out.innerHTML = `<div class="magic-result" style="border-color:#22c55e;">
@@ -1908,7 +1970,9 @@ function renderHashGrid(entries) {
         if (window._hashSortBy === c.key) cls = window._hashSortDir === 'asc' ? 'sorted-asc' : 'sorted-desc';
         return `<th class="${cls}" onclick="sortHashGrid('${c.key}')">${c.label}</th>`;
     }).join('');
-    const rows = entries.map(e => `
+    const rows = entries.map(e => {
+        const b3Short = e.blake3.startsWith('fb3-') ? '<span style="color:#f59e0b;">fb3-⚠</span>' : e.blake3.slice(0,16)+'…';
+        return `
         <tr>
             <td style="color:#f59e0b; font-weight:700;">${e.nombre}</td>
             <td style="color:#929292;">${e.binaire}</td>
@@ -1921,10 +1985,11 @@ function renderHashGrid(entries) {
             <td style="color:#1212ff;">${e.sha3_256.slice(0,16)}…</td>
             <td style="color:#1212ff;">${e.sha3_512.slice(0,16)}…</td>
             <td style="color:#16a34a;">${e.blake2b.slice(0,16)}…</td>
-            <td style="color:#16a34a;">${e.blake3.slice(0,16)}…</td>
+            <td style="color:#16a34a;">${b3Short}</td>
             <td style="color:#f59e0b;">${e.ripemd160.slice(0,16)}…</td>
             <td style="color:#929292;">${e.base64}</td>
-        </tr>`).join('');
+        </tr>`;
+    }).join('');
     return `<table class="hash-table" style="font-size:0.55rem;"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 window.sortHashGrid = function(key) {
@@ -1990,7 +2055,8 @@ async function buildReverseDictionary(start, end) {
         dict.set(sha3_256(s), { n, algo: 'SHA-3-256' });
         dict.set(sha3_512(s), { n, algo: 'SHA-3-512' });
         dict.set(blake2b(s, 64), { n, algo: 'BLAKE2b' });
-        dict.set(blake3(s), { n, algo: 'BLAKE3' });
+        const b3 = blake3(s);
+        if (!isBlake3Simulated(b3)) dict.set(b3, { n, algo: 'BLAKE3' });
         dict.set(ripemd160(s), { n, algo: 'RIPEMD-160' });
         if (window.crypto && window.crypto.subtle) {
             try {
@@ -2077,12 +2143,14 @@ async function showCrossCheck() {
     for (const t of tests) {
         const ok = t.got === t.expected;
         if (ok) okCount++;
+        const b3Sim = t.algo === 'BLAKE3' && isBlake3Simulated(t.got);
+        const displayGot = b3Sim ? '<span style="color:#fbbf24;">fb3-… ⚠ SIMULÉ</span>' : `${t.got.slice(0,24)}…`;
         html += `<tr>
-            <td style="color:#000091;">${t.algo}</td>
+            <td style="color:#000091;">${t.algo}${b3Sim ? ' ⚠' : ''}</td>
             <td>${t.input === '' ? '""' : `"${t.input}"`}</td>
-            <td style="color:${ok ? '#16a34a' : '#E1000F'}; font-size:0.55rem;">${t.got.slice(0,24)}…</td>
+            <td style="color:${ok ? '#16a34a' : b3Sim ? '#f59e0b' : '#E1000F'}; font-size:0.55rem;">${displayGot}</td>
             <td style="color:#929292; font-size:0.55rem;">${t.expected.slice(0,24)}…</td>
-            <td style="color:${ok ? '#16a34a' : '#E1000F'}; font-weight:700;">${ok ? '✅' : '❌'}</td>
+            <td style="color:${ok ? '#16a34a' : '#E1000F'}; font-weight:700;">${ok ? '✅' : b3Sim ? '⚠' : '❌'}</td>
         </tr>`;
     }
     html += `</tbody></table><div class="hash-note" style="margin-top:10px;">
@@ -2122,7 +2190,7 @@ async function analyze() {
     if (!input) { showToast('⚠️ Entrez une valeur'); return; }
     const results = document.getElementById('results');
     try {
-        if (/^[a-fA-F0-9]{8,128}$/.test(input) || input.startsWith('0x')) {
+        if (/^[a-fA-F0-9]{8,128}$/.test(input) || input.startsWith('0x') || input.startsWith('fb3-')) {
             const leaked = checkLeakedHash(input);
             results.innerHTML = `
                 <div class="reverse-panel">
@@ -2195,7 +2263,7 @@ document.addEventListener('keydown', e => {
 });
 document.getElementById('copyrightYear').textContent = new Date().getFullYear();
 
-console.log('🏛️ Encyclopédie v2.2 — Credentials + Détection fuites');
+console.log('🏛️ Encyclopédie v2.3 — Credentials + Détection fuites + 5 correctifs');
 console.log('🚨 Base de fuites :', Object.keys(LEAKED_HASHES).length, 'entrées');
 
 setTimeout(() => {
